@@ -1,13 +1,34 @@
-# Example project mixing libigl and fcpw
-
+# Modified project mixing libigl, fcpw and fpdc
 
     git clone --recursive https://github.com/alecjacobson/fcpw-libigl-example/
 
+## Compile
+
+Go to the folder **fcpw-libigl-example**
+
+    cd fcpw-libigl-example
+
+Run the command cmake
+
+    cmake .
+
+Execute make
+
+    make
+
+This should create the executable `fcpw-libigl-fpdc-example.exe`
+
 ## Run
 
-    ./fcpw-test [path-to-mesh] 
+### Windows
+    fcpw-libigl-fpdc-example.exe [path-to-mesh] 
 
-    ./fcpw-test [path-to-mesh] [path-to-queries].dmat
+    fcpw-libigl-fpdc-example.exe [path-to-mesh] [path-to-queries].dmat
+
+### Linux
+    ./fcpw-libigl-fpdc-example [path-to-mesh] 
+
+    ./fcpw-libigl-fpdc-example [path-to-mesh] [path-to-queries].dmat
 
 Will output 
 

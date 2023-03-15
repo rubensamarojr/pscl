@@ -1,6 +1,6 @@
 # Modified project mixing libigl, fcpw and fpdc
 
-    git clone --recursive https://github.com/alecjacobson/fcpw-libigl-example/
+    git clone --recursive https://github.com/rubensamarojr/fcpw-libigl-example/
 
 ## Compile
 

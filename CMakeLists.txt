@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.1.0)
-project(fcpw-libigl-example)
+project(fcpw-libigl-fpdc-example)
 
 list(PREPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 

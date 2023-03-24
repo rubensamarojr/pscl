@@ -40,7 +40,7 @@ Will output
 
 Moai | Oblong | Bunny | Cube
 :-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
-<img src="https://github.com/rubensamarojr/fcpw-libigl-example/blob/main/images/Moai-01.png"  width="200">  |  <img src="https://github.com/rubensamarojr/fcpw-libigl-example/blob/main/images/Oblong-01.png"  width="200">  |  <img src="https://github.com/rubensamarojr/fcpw-libigl-example/blob/main/images/Bunny-01.png"  width="200">  |  <img src="https://github.com/rubensamarojr/fcpw-libigl-example/blob/main/images/Cube-01.png"  width="200">
+<img src="https://github.com/rubensamarojr/fcpw-libigl-example/blob/main/images/Moai-01.png"  width="200">  |  <img src="https://github.com/rubensamarojr/fcpw-libigl-example/blob/main/images/Oblong-01.png"  width="200">  |  <img src="https://github.com/rubensamarojr/fcpw-libigl-example/blob/main/images/Bunny-01.png"  width="300">  |  <img src="https://github.com/rubensamarojr/fcpw-libigl-example/blob/main/images/Cube-01.png"  width="200">
 
 Tube |
 :-------------------------:

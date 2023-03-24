@@ -36,3 +36,12 @@ Will output
     - `I.dmat`  #I list of indices into triangles
     - `UV.dmat`  #Q by 2 list of barycentric coordinates
 
+### Mesh geometries
+
+Moai | Oblong | Bunny | Cube
+:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
+<img src="https://github.com/rubensamarojr/fcpw-libigl-example/blob/main/images/Moai-01.png"  width="200">  |  <img src="https://github.com/rubensamarojr/fcpw-libigl-example/blob/main/images/Oblong-01.png"  width="200">  |  <img src="https://github.com/rubensamarojr/fcpw-libigl-example/blob/main/images/Bunny-01.png"  width="200">  |  <img src="https://github.com/rubensamarojr/fcpw-libigl-example/blob/main/images/Cube-01.png"  width="200">
+
+Tube |
+:-------------------------:
+<img src="https://github.com/rubensamarojr/fcpw-libigl-example/blob/main/images/Tube-01.png" height="100"> |

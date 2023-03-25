@@ -6,6 +6,10 @@ Cube | Tube | Moai | Oblong | Bunny
 :-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
 <img src="https://github.com/rubensamarojr/fcpw-libigl-example/blob/main/images/Cube-01.png"  width="100">  |  <img src="https://github.com/rubensamarojr/fcpw-libigl-example/blob/main/images/Tube-01.png" height="150"> | <img src="https://github.com/rubensamarojr/fcpw-libigl-example/blob/main/images/Moai-01.png"  width="150">  |  <img src="https://github.com/rubensamarojr/fcpw-libigl-example/blob/main/images/Oblong-01.png"  width="150">  |  <img src="https://github.com/rubensamarojr/fcpw-libigl-example/blob/main/images/Bunny-01.png"  width="250">
 
+Repository of the header-only C++ library **Fastest Closest Points in the West (FPCW)**
+
+https://github.com/rohan-sawhney/fcpw
+
 ## Compile
 
     git clone --recursive https://github.com/rubensamarojr/fcpw-libigl-example/

@@ -38,10 +38,7 @@ Will output
 
 ### Mesh geometries
 
-Moai | Oblong | Bunny | Cube
-:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
-<img src="https://github.com/rubensamarojr/fcpw-libigl-example/blob/main/images/Moai-01.png"  width="200">  |  <img src="https://github.com/rubensamarojr/fcpw-libigl-example/blob/main/images/Oblong-01.png"  width="200">  |  <img src="https://github.com/rubensamarojr/fcpw-libigl-example/blob/main/images/Bunny-01.png"  width="300">  |  <img src="https://github.com/rubensamarojr/fcpw-libigl-example/blob/main/images/Cube-01.png"  width="200">
+Cube | Tube | Moai | Oblong | Bunny
+:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
+<img src="https://github.com/rubensamarojr/fcpw-libigl-example/blob/main/images/Cube-01.png"  width="100">  |  <img src="https://github.com/rubensamarojr/fcpw-libigl-example/blob/main/images/Tube-01.png" height="150"> | <img src="https://github.com/rubensamarojr/fcpw-libigl-example/blob/main/images/Moai-01.png"  width="150">  |  <img src="https://github.com/rubensamarojr/fcpw-libigl-example/blob/main/images/Oblong-01.png"  width="150">  |  <img src="https://github.com/rubensamarojr/fcpw-libigl-example/blob/main/images/Bunny-01.png"  width="250">
 
-Tube |
-:-------------------------:
-<img src="https://github.com/rubensamarojr/fcpw-libigl-example/blob/main/images/Tube-01.png" height="100"> |

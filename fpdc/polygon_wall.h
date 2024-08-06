@@ -3,12 +3,129 @@
 
 //#include "mps.h"
 #include <set>
+#include <unordered_set>
+#include <unordered_map>
+#include <tuple>
 #include <vector>
+#include <array>
 #include "stl_reader.h"
 
 
-class cellGrid;
-class mesh {
+class Point2 {
+	public:
+		Point2():x(0),y(0){}
+		Point2(float a, float b):x(a),y(b){}
+		float x, y;
+};
+class Point: public Point2 {
+	public:
+		Point(): Point2(), z(0) {} 
+    	Point(float a, float b, float c): Point2(a, b), z(c) {}
+		float z;
+};
+
+const std::array<std::array<int, 3>, 27> neighPos = {{
+    {{-1, -1, -1}}, // 0
+    {{-1, -1, 0}},  // 1
+    {{-1, -1, 1}},  // 2
+    {{-1, 0, -1}},  // 3
+    {{-1, 0, 0}},   // 4
+    {{-1, 0, 1}},   // 5
+    {{-1, 1, -1}},  // 6
+    {{-1, 1, 0}},   // 7
+    {{-1, 1, 1}},   // 8
+    {{0, -1, -1}},  // 9
+    {{0, -1, 0}},   // 10
+    {{0, -1, 1}},   // 11
+    {{0, 0, -1}},   // 12
+    {{0, 0, 0}},    // 13
+    {{0, 0, 1}},    // 14
+    {{0, 1, -1}},   // 15
+    {{0, 1, 0}},    // 16
+    {{0, 1, 1}},    // 17
+    {{1, -1, -1}},  // 18
+    {{1, -1, 0}},   // 19
+    {{1, -1, 1}},   // 20
+    {{1, 0, -1}},   // 21
+    {{1, 0, 0}},    // 22
+    {{1, 0, 1}},    // 23
+    {{1, 1, -1}},   // 24
+    {{1, 1, 0}},    // 25
+    {{1, 1, 1}}     // 26
+}};
+struct hash_tuple { 
+  
+    template <class T1, class T2, class T3> 
+  
+    std::size_t operator()(const std::tuple<T1, T2, T3>& x) const
+    { 
+        return std::get<0>(x) 
+               ^ std::get<1>(x) 
+               ^ std::get<2>(x); 
+    } 
+}; 
+  
+class cellGrid{
+		public:
+	/// Constructor
+	cellGrid(void);
+
+  	/// Destructor
+  	virtual ~cellGrid(void);
+
+	/// Initialization and dividing domain to get nCell && dCell
+	void initCell(float dCx, float lSxMin, float lSyMin ,float lSzMin, float lSxMax, float lSyMax ,float lSzMax, int nel);
+
+
+	void getBounds(int a[][2], float *b, float *c, float *d);
+	
+	std::vector<std::array<int,3>> getNeighbors(int x, int y, int z);
+	void precomputeNeighborIndices();
+	int flatIndex(int x, int y, int z);
+	void tdimIndex(int flatIndex, int& x, int& y, int& z) const ;
+	///Boolean AABB - Triangle intersection Function
+	///ref: https://fileadmin.cs.lth.se/cs/Personal/Tomas_Akenine-Moller/code/tribox_tam.pdf	
+	bool triangleAABB_intersection(float *cen, float normX, float normY, float normZ, float v0x, float v0y, float v0z, 
+	float v1x, float v1y, float v1z, float v2x, float v2y, float v2z);
+
+	/// Function that return the cell position
+	int getCellPosX(float cx);
+	int getCellPosY(float cy);
+	int getCellPosZ(float cz);
+
+	/// Gets coordinates and return the cell center
+
+	float getCellCenterX(float cx);
+	float getCellCenterY(float cy);
+	float getCellCenterZ(float cz);
+
+	
+	/// Return the (d-th - 1) element id on the cell [a][b][c] if it exists, return -1 otherwise
+	int getCellBuffer(int a, int b, int c, int d);
+	int getNumCells(int dir);
+
+	protected:
+		
+	int res;
+	int numCells[3];
+	float eCells[3];
+	float minSpc[3];
+	float maxSpc[3];
+
+	bool enoughmemory;	
+
+	///For each cell gives the triangles intersecting it
+	std::vector<std::vector<int>> neighborIndices;
+
+
+	std::vector<std::vector<unsigned short int> > cellBufferFlattened;
+	std::vector<std::vector<std::vector<std::vector<unsigned short int> > > > cellBuffer;
+	std::vector<std::unordered_set<unsigned short int>> candidatesSet_flat;
+	std::vector<std::vector<std::vector<std::unordered_set<unsigned short int> > > > candidates_set;
+
+	//		//		//		//
+};
+class mesh: public cellGrid {
 public:
 
 	/// Initializes the mesh from the STL-file specified through path
@@ -18,40 +135,71 @@ public:
   	/// Destructor
   	virtual ~mesh(void);
   	/// Vector operations
-  	static void subtraction(double *a, double *b, double *c);
-	static double squaredDist(double *a, double *b);
+  	static void subtraction(const float *a, const float *b, float *c);
+	static double squaredDist(const float *a, const float *b);
   	/// Get variables outside polygon_wall.cpp
-    long getnElements(void);
-    long getnNodes(long ielem);
-    double getNodePositionX(long ielem, long inode);
-    double getNodePositionY(long ielem, long inode);
-    double getNodePositionZ(long ielem, long inode);
-	double getNormalX(long ielem);
-	double getNormalY(long ielem);
-	double getNormalZ(long ielem);
+    int getnElements(void);
+    int getnNodes(int ielem);
+    float getNodePositionX(int ielem, int inode);
+    float getNodePositionY(int ielem, int inode);
+    float getNodePositionZ(int ielem, int inode);
+	float getNormalX(int ielem);
+	float getNormalY(int ielem);
+	float getNormalZ(int ielem);
+	int getCellPosX(float cx);
+	int getCellPosY(float cy);
+	int getCellPosZ(float cz);
+	void set_partdist(float a){partdist2 = double(a)*double(a);};
 
+	void set_reserve(bool flat);
+	bool do_reserve(){return enoughmemory;};
   	/// Read mesh file (STL)
-  	void readMeshFile(const char * meshfilename);
+  	void readMeshFile(const char * meshfilename,const float dcell,const float  VminX,const float  VminY,const float  VminZ,const float  VmaxX,const float  VmaxY,const float  VmaxZ, int opt, int simR);
   	/// Initialize the component values of PND and number of neighbors
 
-	void findCandidates(int cx, int cy, int cz, int ncx, int ncy, int ncz, cellGrid *grid);
-	void fillCandidates(cellGrid *grid);
+	static Point2 intersectionPointZ(const Point& p1, const Point& p2, const float p);
+	bool intersectTrianglePlaneZ(const float z, std::vector<Point2> &intersectionPoints, const int t);
+	void planeInterpolationXY(const Point2 &a, const Point2 &b, const float e,std::vector<std::set<int> > &cellcoords);
+	void planeInterpolationXZ(const Point2 &a, const Point2 &b, const float e,std::vector<std::set<int> > &cellcoords);
+	void planeInterpolationYZ(const Point2 &a, const Point2 &b, const float e,std::vector<std::set<int> > &cellcoords);
+	void clearCellBuffer();
+	void clearCellBuffer_flat();
+	void fillBuffer();
 
-	long calcDist(double *p, double reL, int cpx, int cpy, int cpz, double *closestPoint, double &cqd);
+	// void fillbx(const std::vector<std::vector<int> >&cellcd, const int x, const int t);
+	// void fillby(const std::vector<std::vector<int> >&cellcd, const int y, const int t);
+	// void fillb(const std::vector<std::vector<int> >&cellcd, const int z, const int t);
+	void fillBopt();
+	void fillBopt_flat();
+	void fillBopt_reserve();
+	void fillBopt_reserveflat();
+	// void findCandidates(int cx, int cy, int cz, int ncx, int ncy, int ncz);
+	void clearCandidates();
+	void clearCandidates_flat();
+
+	void fillCandidates();
+	void fillCandidates2();
+	void fillCandidates3();
+	void fillCandidates4();
+	void fillCandidates5();
+	void fillCandidates_seq();
+	void fillCandidates_flat();
+
+	int calcDist(const float *p, const double reL2, const int cpx, const int cpy, const int cpz, float *closestPoint, double &cqd);
+	int calcDist_flat(const float *p, const double reL2, const int fIndex, float *closestPoint, double &cqd);
     /// Find closest point on the mesh from a particle
   	/// Real-time collision detection, Ericson, Chapter 5 - Pg 141 - function ClosestPtPointTriangle
-    void closestPointMesh(int nMesh, int *type,  double *quaddev, double *pndS, double pndS0, double reL, int nPart, long *index, double *dMesh,
-        long *idNearMesh, long *idNearElement, double *x, double *y, double *z, double *mx, double *my, double *mz, cellGrid *grid);
+    void closestPointMesh(int nMesh, int *type,  float *quaddev, float *pndS, float pndS0, float reL, int nPart, int *index, float *dMesh,
+        int *idNearMesh, int *idNearElement, float *x, float *y, float *z, float *mx, float *my, float *mz);
 
 
 	///
-	double calcNearestPoint(double *a, double *b, double *c, double *p, double *nearest);
-
-
+	double calcNearestPoint(const float *a, const float *b, const float *c, const float *p, float *nearest);
+	void writeCellBufferToFile(const std::string& filename);
 private:
 	struct position
 	{
-		double x, y, z;
+		float x, y, z;
 	};
 	/// Mesh Normals
 	struct normals
@@ -62,81 +210,33 @@ private:
 	struct nodes
 	{
 		position *pos;
-//		long *ID;							/// specifies the node index
-//		double *dx, *dy, *dz;				/// specifies the node displacement
-//		double *ux, *uy, *uz;				/// specifies the node velocity
-//		double *forceX, *forceY, *forceZ;	/// specifies the node force
+//		int *ID;							/// specifies the node index
+//		float *dx, *dy, *dz;				/// specifies the node displacement
+//		float *ux, *uy, *uz;				/// specifies the node velocity
+//		float *forceX, *forceY, *forceZ;	/// specifies the node force
 	};
 	/// Mesh elements
 	struct element
 	{
 		nodes *node;
-		long nNodes;		/// number of nodes belonging to the element
+		int nNodes;		/// number of nodes beinting to the element
 		normals normal;   /// Mesh transformation matrix
-//		long ID;			/// specifies the element index
-//		double press;		/// specifies the element pressure
-//		long *nodeID;		/// specifies the nodes index
-//		double *nodeDX, *nodeDY, *nodeDZ;	/// specifies the node displacement
-//		double *nodeUX, *nodeUY, *nodeUZ;	/// specifies the node velocity
+//		int ID;			/// specifies the element index
+//		float press;		/// specifies the element pressure
+//		int *nodeID;		/// specifies the nodes index
+//		float *nodeDX, *nodeDY, *nodeDZ;	/// specifies the node displacement
+//		float *nodeUX, *nodeUY, *nodeUZ;	/// specifies the node velocity
 
-//		double* partN1;		/// specifies the shape function
-//		double* partN2;
-//		double* partN3;
+//		float* partN1;		/// specifies the shape function
+//		float* partN2;
+//		float* partN3;
 	};
-	long nElements;		                                /// number of finite elements
+	int nElements;		                                /// number of finite elements
+	int simResolution;
 	element *elem;
  					/// Particles near the mesh
-	std::vector<std::vector<std::vector<std::set<long> > > > candidates_set;                 
+	double partdist2;
 };
 
-class cellGrid{
-		public:
-	/// Constructor
-	cellGrid(void);
-
-  	/// Destructor
-  	virtual ~cellGrid(void);
-
-	/// Initialization and dividing domain to get nCell && dCell
-	void initCell(double dCx, double lSxMin, double lSyMin ,double lSzMin, double lSxMax, double lSyMax ,double lSzMax);
-
-	void fillBuffer(mesh *mesh);
-
-	void getBounds(int a[][2], double *b, double *c, double *d);
-	
-	///Boolean AABB - Triangle intersection Function
-	///ref: https://fileadmin.cs.lth.se/cs/Personal/Tomas_Akenine-Moller/code/tribox_tam.pdf	
-	bool triangleAABB_intersection(double *cen, double normX, double normY, double normZ, double v0x, double v0y, double v0z, 
-	double v1x, double v1y, double v1z, double v2x, double v2y, double v2z);
-
-	/// Function that return the cell position
-	int getCellPosX(double cx);
-	int getCellPosY(double cy);
-	int getCellPosZ(double cz);
-
-	/// Gets coordinates and return the cell center
-
-	double getCellCenterX(double cx);
-	double getCellCenterY(double cy);
-	double getCellCenterZ(double cz);
-	
-	/// Return the (d-th - 1) element id on the cell [a][b][c] if it exists, return -1 otherwise
-	long getCellBuffer(int a, int b, int c, long d);
-	int getNumCells(int dir);
-
-	private:
-
-	
-	int numCells[3];
-	double eCells[3];
-	double minSpc[3];
-	double maxSpc[3];
-
-	///For each cell gives the triangles intersecting it
-	std::vector<std::vector<std::vector<std::vector<long> > > > cellBuffer;	
-	//		//		//		//
-
-	long nEl;
-};
 
 #endif

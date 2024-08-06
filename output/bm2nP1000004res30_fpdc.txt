@@ -1,0 +1,16 @@
+BufferIt0;0
+FillIt0;0.0158389
+BufferIt1;0
+FillIt1;0
+BufferIt2;0
+FillIt2;0
+BufferMean;0
+FillMean;0.00527962
+QueryIt0;0.160211
+QueryPPIt0;0.165491
+QueryIt1;0.15757
+QueryPPIt1;0.16285
+QueryIt2;0.157737
+QueryPPIt2;0.163016
+QueryMean;0.158506
+QueryPPMean;0.163786

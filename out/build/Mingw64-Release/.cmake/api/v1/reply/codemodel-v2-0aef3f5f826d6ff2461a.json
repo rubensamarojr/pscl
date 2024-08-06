@@ -1,0 +1,177 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						2,
+						4
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Release-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.1.0"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0
+					]
+				},
+				{
+					"build" : "_deps/libigl-build",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-_deps.libigl-build-Release-e4d7b70f1bbfc9725024.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.1.0"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 1,
+					"source" : "out/build/Mingw64-Release/_deps/libigl-src",
+					"targetIndexes" : 
+					[
+						2
+					]
+				},
+				{
+					"build" : "fcpw",
+					"childIndexes" : 
+					[
+						3
+					],
+					"jsonFile" : "directory-fcpw-Release-3d621109bc39606d7d8b.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.1.0"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 2,
+					"source" : "fcpw"
+				},
+				{
+					"build" : "fcpw/deps/enoki",
+					"jsonFile" : "directory-fcpw.deps.enoki-Release-9304e92ecacffa6074bd.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "2.8.12"
+					},
+					"parentIndex" : 2,
+					"projectIndex" : 3,
+					"source" : "fcpw/deps/enoki"
+				},
+				{
+					"build" : "fcpwtest",
+					"jsonFile" : "directory-fcpwtest-Release-0813896c6dd3e389c2bf.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.1.0"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "fcpwtest",
+					"targetIndexes" : 
+					[
+						1
+					]
+				}
+			],
+			"name" : "Release",
+			"projects" : 
+			[
+				{
+					"childIndexes" : 
+					[
+						1,
+						2
+					],
+					"directoryIndexes" : 
+					[
+						0,
+						4
+					],
+					"name" : "fcpw-libigl-fpdc-example",
+					"targetIndexes" : 
+					[
+						0,
+						1
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						1
+					],
+					"name" : "libigl",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						2
+					]
+				},
+				{
+					"childIndexes" : 
+					[
+						3
+					],
+					"directoryIndexes" : 
+					[
+						2
+					],
+					"name" : "fcpw",
+					"parentIndex" : 0
+				},
+				{
+					"directoryIndexes" : 
+					[
+						3
+					],
+					"name" : "enoki",
+					"parentIndex" : 2
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "fcpw-libigl-fpdc-example::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-fcpw-libigl-fpdc-example-Release-4f9a6d7e741808486403.json",
+					"name" : "fcpw-libigl-fpdc-example",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "fcpwtest::@5e961b1cb92d02fe6e83",
+					"jsonFile" : "target-fcpwtest-Release-30f3fe364a42ed25e1f4.json",
+					"name" : "fcpwtest",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "igl_core::@7e03116a751a0a925ea3",
+					"jsonFile" : "target-igl_core-Release-e2f4bbf8f1ad4fadaca3.json",
+					"name" : "igl_core",
+					"projectIndex" : 1
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Users/marce/Downloads/fcpw-libigl-example/out/build/Mingw64-Release",
+		"source" : "C:/Users/marce/Downloads/fcpw-libigl-example"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 6
+	}
+}

@@ -8,6 +8,7 @@
 #include <iostream>
 #include <cmath>
 #include <omp.h>
+#define eps static_cast<float>(10e-6)
 
 /*
 mesh::mesh(const std::string& path, const int numMesh) {
@@ -32,7 +33,7 @@ cellGrid::~cellGrid(void)
 
 
 
-void cellGrid::initCell(double dCx, double lSxMin, double lSyMin ,double lSzMin, double lSxMax, double lSyMax ,double lSzMax){
+void cellGrid::initCell(float dCx, float lSxMin, float lSyMin ,float lSzMin, float lSxMax, float lSyMax ,float lSzMax, int nel){
 
 	///Need to be called from init.cpp with the mesh
     ///Memory allocation
@@ -46,27 +47,62 @@ void cellGrid::initCell(double dCx, double lSxMin, double lSyMin ,double lSzMin,
     eCells[2] = dCx;		//dCell[2]
 
 	//fprintf(stderr, "\n* QUANTIDADE DE CELULAS [x][y][z]:::[%d][%d][%d] ", nCx,nCy,nCz);
-	//fprintf(stderr, "\n* TAMANHO DAS CELULAS [x][y][z]:::[%f][%f][%f] ", dCx,dCy,dCz);
+	fprintf(stderr, "\n* CELLSIZE [x][y][z]:::[%f][%f][%f] ", dCx,dCx,dCx);
 
-	int nCx = int((lSxMax - lSxMin)/dCx) +1;
-	int nCy = int((lSyMax - lSyMin)/dCx) +1;
-	int nCz = int((lSzMax - lSzMin)/dCx) +1;
+	int nCx = static_cast<int>((lSxMax - lSxMin)/dCx) +1;
+	int nCy = static_cast<int>((lSyMax - lSyMin)/dCx) +1;
+	int nCz = static_cast<int>((lSzMax - lSzMin)/dCx) +1;
 
 
     numCells[0] = nCx; 	//nCell[0]
     numCells[1] = nCy; 	//nCell[1]
     numCells[2] = nCz;	//nCell[2]
-	//printf("\nnumcells = %d,%d,%d",numCells[0],numCells[1],numCells[2]);
+	printf("\nnumcells = %d,%d,%d\n",numCells[0],numCells[1],numCells[2]);
 
 	/// Simulation boundaries(max and min coordinates on each direction)
 
 	minSpc[0] = lSxMin;				//limSpace[0][1]
 	minSpc[1] = lSyMin;				//limSpace[1][1]
 	minSpc[2] = lSzMin;				//limSpace[2][1]
+	
 
 	maxSpc[0] = lSxMax;				//limSpace[0][1]
 	maxSpc[1] = lSyMax;				//limSpace[1][1]
 	maxSpc[2] = lSzMax;				//limSpace[2][1]
+
+	// double multi_factor = 1;
+	// if (nCx*nCy*nCz > 10000){
+	// 	multi_factor = 10;
+	// 	if (double(std::min(nCx,std::min(nCy,nCz)))/double(std::max(nCx,std::max(nCy,nCz))) < 0.1) multi_factor = 1;
+	// }
+	// if (nCx*nCy*nCz > 100000){
+	// 	multi_factor = 5;
+	// 	if (double(std::min(nCx,std::min(nCy,nCz)))/double(std::max(nCx,std::max(nCy,nCz))) < 0.1) multi_factor = 1;
+	// }
+	// if(nCx*nCy*nCz > 1000000){
+	// 	multi_factor = 2;
+	// 	if (double(std::min(nCx,std::min(nCy,nCz)))/double(std::max(nCx,std::max(nCy,nCz))) < 0.1) multi_factor = 1;
+	// }
+	// if(nCx*nCy*nCz > 5000000){
+	// 	multi_factor = 0.5;
+	// 	if (double(std::min(nCx,std::min(nCy,nCz)))/double(std::max(nCx,std::max(nCy,nCz))) < 0.1) multi_factor = 1;
+	// }
+	// if(nCx*nCy*nCz > 10000000){
+	// 	multi_factor = 0.1;
+	// 	if (double(std::min(nCx,std::min(nCy,nCz)))/double(std::max(nCx,std::max(nCy,nCz))) < 0.1) multi_factor = 1;
+	// }
+	// printf("numElements: %d\n",nel);
+	// printf("totalcells = %d\n", nCx*nCy*nCz);
+	// multi_factor = 0.25;
+	// if(nCx*nCy*nCz < 10000) res = nel;
+	// if(res > nel) res = nel;
+
+	int totalCells = numCells[0] * numCells[1] * numCells[2];
+	
+	candidatesSet_flat.resize(totalCells);
+	cellBufferFlattened.resize(totalCells);
+	precomputeNeighborIndices();
+	
 
 	cellBuffer.resize(numCells[0]);
 	for(int i=0; i<numCells[0]; i++)
@@ -74,15 +110,18 @@ void cellGrid::initCell(double dCx, double lSxMin, double lSyMin ,double lSzMin,
 		cellBuffer[i].resize(numCells[1]);
 		for(int j=0; j<numCells[1]; j++){
 			cellBuffer[i][j].resize(numCells[2]);
+			// 	for(int k=0; k<numCells[2]; k++){
+	// 		// 		candidates_set[i][j][k].reserve(res);
+				// }
 		}
-
-	}
 	
+	}
+
 }
 
-void cellGrid::getBounds(int a[][2], double *b, double *c, double *d){
-	// double e = 0.55*eCells[0];
-	double e = 0.0*eCells[0];
+void cellGrid::getBounds(int a[][2], float *b, float *c, float *d){
+	// float e = 0.55*eCells[0];
+	float e = 0.0*eCells[0];
 	/// Minimum
 	///(X_Vertex0, X_Vertex1, X_Vertex2)
 	int x0 = getCellPosX(b[0]-e);
@@ -106,7 +145,7 @@ void cellGrid::getBounds(int a[][2], double *b, double *c, double *d){
 	int z1 = getCellPosZ(d[1]-e);
 	int z2 = getCellPosZ(d[2]-e);
 	
-	aux = int(std::min(z0, z1));
+	aux = static_cast<int>(std::min(z0, z1));
 	a[2][0] = std::min(aux, z2);
 	
 	/// Maximum
@@ -134,114 +173,9 @@ void cellGrid::getBounds(int a[][2], double *b, double *c, double *d){
 	*/
 }
 
-void cellGrid::fillBuffer(mesh *mesh){
-	int a, b, c;
-	int n, t, i, j, k;
-	for(i=0; i<(numCells[0]); i++)
-		for(j=0; j<(numCells[1]); j++)
-			for(k=0;(k< numCells[2]); k++)
-				cellBuffer[i][j][k].clear();
-			
-	nEl = mesh->getnElements(); 
-	double cen[3];
-	double normalx, normaly, normalz;
-	double vx[3], vy[3], vz[3];
-	int bound[3][2] = {0,0,0,0,0,0};
-	for (t=0; t<nEl; t++){
-			
-		for(n = 0; n<3; n++){
-			vx[n] = mesh->getNodePositionX(t,n);
-			vy[n] = mesh->getNodePositionY(t,n);
-			vz[n] = mesh->getNodePositionZ(t,n);
-		}
-	
-		///store the cells of the vertices as cells containing the triangle defined by its vertices
-		//for(n= 0; n < 3; n++){
-		//	a = getCellPosX(vx[n]);
-		//	b = getCellPosY(vy[n]);
-		//	c = getCellPosZ(vz[n]);
-		//	cellBuffer[a][b][c].push_back(t);			
-		//	}
-		///define the domain of cells to test the triangle
 
-		
-		getBounds(bound, vx, vy, vz);
-		normalx = mesh->getNormalX(t);
-		normaly = mesh->getNormalY(t);
-		normalz = mesh->getNormalZ(t);
-		
-		for (i = bound[0][0]; i<=bound[0][1]; i++){
-			for (j = bound[1][0]; j<=bound[1][1]; j++){
-				for (k = bound[2][0]; k<=bound[2][1]; k++){	
-					if((i<0) || (j<0) || (k<0))
-						continue;
-					if((i>=numCells[0]) || (j>=numCells[1]) || (k>=numCells[2]))
-						continue;
-					//cellBuffer[i][j][k].size() == 0 means theres no element in it yet
-					//if(cellBuffer[i][j][k].size()==0 || cellBuffer[i][j][k].back()!=t){
-						
-						cen[0] = getCellCenterX(i);
-						cen[1] = getCellCenterY(j);
-						cen[2] = getCellCenterZ(k);
-						
-						if(triangleAABB_intersection(cen, normalx, normaly, normalz, vx[0], vy[0], vz[0], vx[1], vy[1], vz[1], vx[2], vy[2], vz[2])){
-						
-							cellBuffer[i][j][k].push_back(t);
-						
-						}	
-					//}	
-					//cellBuffer[i][j][k].back() = means triangle vertex in cell->avoid double test
-					/*else if (){						
-						cen[0] = getCellCenterX(i);
-						cen[1] = getCellCenterY(j);
-						cen[2] = getCellCenterZ(k);
-						if(triangleAABB_intersection(cen, normalx, normaly, normalz, vx[0], vy[0], vz[0], vx[1], vy[1], vz[1], vx[2], vy[2], vz[2])){
-							
-							cellBuffer[i][j][k].push_back(t);
-						}						
-					}
-					*/
-				}
-			}
-		}
-	}	
-	
-/*	
-	int ncellx = cellBuffer.size();
-	int ncelly = cellBuffer[0].size();
-	int ncellz = cellBuffer[0][0].size();
-	
-	fprintf(stderr, "\n*cell nx - %d", ncellx);
-	fprintf(stderr, "\n*cell ny - %d", ncelly);
-	fprintf(stderr, "\n*cell nz - %d", ncellz);
-	
-	for (i = 0; i < ncellx*0.5 ; i++){
-			for (j = 0 ; j < 2; j++){
-				for (k = 0; k < ncellz; k++){	
-					long nelem = cellBuffer[i][j][k].size();
-					if (nelem == 0) fprintf(stderr, "\n*cellBuffer[%d][%d][%d]-> [/] ",i,j,k);
-					else{
-						fprintf(stderr, "\n*cellBuffer[%d][%d][%d]",i,j,k);
-						for(int l = 0; l<nelem;l++){
-							fprintf(stderr, "\n*cellBuffer[%d][%d][%d][%ld] = %ld",i,j,k,l,cellBuffer[i][j][k][l]);
-						}
-					}
-				}
-			}
-		}
-	
-	fprintf(stderr, "\n*cell nx - %d", ncellx);
-	fprintf(stderr, "\n*cell ny - %d", ncelly);
-	fprintf(stderr, "\n*cell nz - %d", ncellz);
-*/
-	
-	
-
-
-}
-
-bool cellGrid::triangleAABB_intersection(double *cen, double normX, double normY, double normZ, double v0x, double v0y, double v0z, 
-double v1x, double v1y, double v1z, double v2x, double v2y, double v2z){
+bool cellGrid::triangleAABB_intersection(float *cen, float normX, float normY, float normZ, float v0x, float v0y, float v0z, 
+float v1x, float v1y, float v1z, float v2x, float v2y, float v2z){
 	/*
 	/ ref: https://fileadmin.cs.lth.se/cs/Personal/Tomas_Akenine-Moller/code/tribox_tam.pdf
 	/ cen[2] = center of aabb coordinates
@@ -250,12 +184,12 @@ double v1x, double v1y, double v1z, double v2x, double v2y, double v2z){
 	*/
 
 	int X,Y,Z;
-	double v0[3] = {0.0,0.0,0.0};
-	double v1[3] = {0.0,0.0,0.0};
-	double v2[3] = {0.0,0.0,0.0};
+	float v0[3] = {0.0,0.0,0.0};
+	float v1[3] = {0.0,0.0,0.0};
+	float v2[3] = {0.0,0.0,0.0};
 	
-	double normalAux[3] = {normX,normY,normZ};
-	double v[3][3]={v0x,v0y,v0z,v1x,v1y,v1z,v2x,v2y,v2z};
+	float normalAux[3] = {normX,normY,normZ};
+	float v[3][3]={v0x,v0y,v0z,v1x,v1y,v1z,v2x,v2y,v2z};
 
 	X = 0;
 	Y = 1;
@@ -294,7 +228,7 @@ double v1x, double v1y, double v1z, double v2x, double v2y, double v2z){
 
 	//Projection array(projecting triangle vertices onto aij vectors)
 	//p[0]-> value that repeats among the three projections; p[1]-> unique value among the three projections
-	double p[2], r;
+	float p[2], r;
 
 	//
 	//a0:
@@ -450,86 +384,44 @@ double v1x, double v1y, double v1z, double v2x, double v2y, double v2z){
 
 	// Testing separating axis from the triangle normal
 	//Note that calculating the plane distance on this case requires v0 before translation to origin
-	double plane_dist = normalAux[X]*v0x + normalAux[Y]*v0y + normalAux[Z]*v0z;
+	const float plane_dist = normalAux[X]*v0x + normalAux[Y]*v0y + normalAux[Z]*v0z;
 
-	double s = normalAux[X]*cen[X] + normalAux[Y]*cen[Y] + normalAux[Z]*cen[Z] - plane_dist;
+	const float s = normalAux[X]*cen[X] + normalAux[Y]*cen[Y] + normalAux[Z]*cen[Z] - plane_dist;
 	r = eCells[0] * fabs(normalAux[X]) + eCells[1] * fabs(normalAux[Y]) + eCells[2] * fabs(normalAux[Z]);
 	return (fabs(s)<=r);
 }
 
 
-/* UNUTILIZED
-/// Return the cell position on the cellIndex list from the coordinates given
-long cellGrid::getPositionByCoords(double cx, double cy, double cz){
-
-	///cx = coordinate in x direction
-	///cy = coordinate in y direction
-	///cz = coordinate in z direction
-
-	long position;
-	double dx, dy, dz;
-
-	dx = cx - minSpc[0];
-	dy = cy - minSpc[1];
-	dz = cz - minSpc[2];
-
-	position = long(dz/eCells[2])*getCellsPerDepth(); //adding the cells per unit of depth times depth(Z)
-	position += long(dy/eCells[1])*numCells[0];
-	position += long(dx/eCells[0]);
-
-	return position;
-}
-
-/// Update the coords array with the coordinates of the cell center from the cell position on the cellIndex list
-void cellGrid::getCoordByPosition(long pos, double *coords){
-	int posY, posZ;
-
-	posZ = int(pos / getCellsPerDepth()); 		//Z coordinate considering the Z extent as the unit
-	pos = pos % getCellsPerDepth();
-
-	posY = int(pos / numCells[0]);		//Y coordinate considering the Y extent as the unit
-	pos = pos % numCells[0];		//X coordinate considering the X extent as the unit
-
-
-
-	//the (position on the list in each direction plus half) times the extent of the cell resulting in its center
-	coords[0] = (pos+0.5)*eCells[0] + minSpc[0];
-	coords[1] = (posY+0.5)*eCells[1] + minSpc[1];
-	coords[2] = (posZ+0.5)*eCells[2] + minSpc[2];
-
-}
-*/
-
 /// Calculate the Cell position on direction by the given direction coordinate
 
-int cellGrid::getCellPosX(double cx){
+int cellGrid::getCellPosX(float cx){
 	
 	//fprintf(stderr, "\n*cell coordinate x - %f", cx);
-	//fprintf(stderr, "\n*cell position x - %d", int((cx - minSpc[0])/eCells[0]));
-	return int((cx - minSpc[0])/eCells[0]);
+	//fprintf(stderr, "\n*cell position x - %d", static_cast<int>((cx - minSpc[0])/eCells[0]));
+	return static_cast<int>((cx - minSpc[0])/eCells[0]);
 }
-int cellGrid::getCellPosY(double cy){
+int cellGrid::getCellPosY(float cy){
 	
 	//fprintf(stderr, "\n*cell coordinate y - %f", cy);
-	//fprintf(stderr, "\n*cell position y - %d", int((cy - minSpc[1])/eCells[1]));
-	return int((cy - minSpc[1])/eCells[1]);
+	//fprintf(stderr, "\n*cell position y - %d", static_cast<int>((cy - minSpc[1])/eCells[1]));
+	return static_cast<int>((cy - minSpc[1])/eCells[1]);
 }
-int cellGrid::getCellPosZ(double cz){
+int cellGrid::getCellPosZ(float cz){
 	
-	return int((cz - minSpc[2])/eCells[2]);
+	return static_cast<int>((cz - minSpc[2])/eCells[2]);
 }
 
 
 /// Calculate the Cell center coordinate on direction by the given direction position
-double cellGrid::getCellCenterX(double cx){
+float cellGrid::getCellCenterX(float cx){
 
 	return (cx+0.5)*eCells[0] + minSpc[0];
 }
-double cellGrid::getCellCenterY(double cy){
+float cellGrid::getCellCenterY(float cy){
 
 	return (cy+0.5)*eCells[1] + minSpc[1];
 }
-double cellGrid::getCellCenterZ(double cz){
+float cellGrid::getCellCenterZ(float cz){
 
 	return (cz+0.5)*eCells[2] + minSpc[2];
 }
@@ -541,12 +433,11 @@ int cellGrid::getNumCells(int dir){
 }
 
 /// Return the (d-th - 1) element id on the cell [a][b][c] if it exists, return -1 otherwise
-long cellGrid::getCellBuffer(int a, int b, int c, long d){
+int cellGrid::getCellBuffer(int a, int b, int c, int d){
 	if (cellBuffer[a][b][c].size() <= d) return -1; ///Returning -1 means the cell does not have any more elements
 	return cellBuffer[a][b][c][d];
 
 }
-
 
 ///
 ///MESH CLASS METHODS
@@ -565,60 +456,95 @@ mesh::~mesh(void)
 
 /// Function to find
 /// subtraction of two vector array.
-void mesh::subtraction(double *a, double *b, double *c)
+void mesh::subtraction(const float *a, const float *b, float *c)
 {
 	c[0] = a[0] - b[0];
 	c[1] = a[1] - b[1];
 	c[2] = a[2] - b[2];
 }
 
-double mesh::squaredDist(double *a, double *b)
+double mesh::squaredDist(const float *a,const float *b)
 {
 	return (a[0]-b[0]) * (a[0]-b[0]) + (a[1]-b[1]) * (a[1]-b[1]) + (a[2]-b[2]) * (a[2]-b[2]);
 }
 
-long mesh::getnElements(void)
+int mesh::getnElements(void)
 {
    return nElements;
 }
 
-long mesh::getnNodes(long ielem)
+int mesh::getnNodes(int ielem)
 {
    return elem[ielem].nNodes;
 }
 
-double mesh::getNodePositionX(long ielem, long inode)
+float mesh::getNodePositionX(int ielem, int inode)
 {
    return elem[ielem].node[inode].pos->x;
 }
 
-double mesh::getNodePositionY(long ielem, long inode)
+float mesh::getNodePositionY(int ielem, int inode)
 {
    return elem[ielem].node[inode].pos->y;
 }
 
-double mesh::getNodePositionZ(long ielem, long inode)
+float mesh::getNodePositionZ(int ielem, int inode)
 {
    return elem[ielem].node[inode].pos->z;
 }
 
-double mesh::getNormalX(long ielem)
+float mesh::getNormalX(int ielem)
 {
    return elem[ielem].normal.pos->x;
 }
-double mesh::getNormalY(long ielem)
+float mesh::getNormalY(int ielem)
 {
    return elem[ielem].normal.pos->y;
 }
-double mesh::getNormalZ(long ielem)
+float mesh::getNormalZ(int ielem)
 {
    return elem[ielem].normal.pos->z;
 }
 
+/// Calculate the Cell position on direction by the given direction coordinate
+
+int mesh::getCellPosX(float cx){
+	
+	//fprintf(stderr, "\n*cell coordinate x - %f", cx);
+	//fprintf(stderr, "\n*cell position x - %d", static_cast<int>((cx - minSpc[0])/eCells[0]));
+	return static_cast<int>((cx - minSpc[0])/eCells[0]);
+}
+int mesh::getCellPosY(float cy){
+	
+	//fprintf(stderr, "\n*cell coordinate y - %f", cy);
+	//fprintf(stderr, "\n*cell position y - %d", static_cast<int>((cy - minSpc[1])/eCells[1]));
+	return static_cast<int>((cy - minSpc[1])/eCells[1]);
+}
+int mesh::getCellPosZ(float cz){
+	
+	return static_cast<int>((cz - minSpc[2])/eCells[2]);
+}
+
+void mesh::set_reserve(bool flat){
+	enoughmemory = false;
+	res = static_cast<int>(nElements/std::min(numCells[0],std::min(numCells[1],numCells[2])));
+	
+	printf("Estimate Reserve for each cell = %d\n",res);
+	printf("Estimate usage of memory: %d Mb\n", int(res*numCells[0]*numCells[1]*numCells[2]*10e-6*2));
+	if ((res*numCells[0]*numCells[1]*numCells[2]*10e-6*2) < 1500){
+		enoughmemory = true;
+		if (flat){
+			for(int i=0; i<numCells[0]*numCells[1]*numCells[2]; i++) {cellBufferFlattened[i].reserve(res);}//candidates_set[i][j][k].reserve(res); }
+		
+		}else{
+			for(int i=0; i<numCells[0]; i++) for(int j=0; j<numCells[1]; j++) for(int k=0; k<numCells[2]; k++) {cellBuffer[i][j][k].reserve(res);}//candidates_set[i][j][k].reserve(res); }
+		}
+	}
+}
 /// https://github.com/sreiter/stl_reader
-void mesh::readMeshFile(const char * meshfilename)
+void mesh::readMeshFile(const char * meshfilename,const float dcell,const float  VminX,const float  VminY,const float  VminZ,const float  VmaxX,const float  VmaxY,const float  VmaxZ, int opt, int simR)
 {	
-	std::vector<double> coords, normal_vecs;
+	std::vector<float> coords, normal_vecs;
 	std::vector<unsigned int> elems, solids;
 	try {
 
@@ -634,7 +560,7 @@ void mesh::readMeshFile(const char * meshfilename)
 			elem[ielem].nNodes = 3; /// number of nodes per element
 			elem[ielem].node = (struct nodes*) malloc(3*sizeof(struct nodes));
 			for(int inode = 0; inode < 3; ++inode) {
-				double* c = &coords[3 * elems [3 * ielem + inode]];
+				float* c = &coords[3 * elems [3 * ielem + inode]];
           		//std::cout << "(" << c[0] << ", " << c[1] << ", " << c[2] << ") \n";
 				elem[ielem].node[inode].pos = (struct position*) malloc(1*sizeof(struct position));
 				elem[ielem].node[inode].pos->x = c[0];
@@ -645,7 +571,7 @@ void mesh::readMeshFile(const char * meshfilename)
 			
 			//std::cout << std::endl;
 		
-			double* n = &normal_vecs[3 * ielem];
+			float* n = &normal_vecs[3 * ielem];
 			//std::cout   << "normal of triangle " << ielem << ": "
 			//			<< "(" << n[0] << ", " << n[1] << ", " << n[2] << ")\n";
 						
@@ -675,109 +601,1705 @@ void mesh::readMeshFile(const char * meshfilename)
                   << elem[ielem].Rref[3] << ", " << elem[ielem].Rref[4] << ", " << elem[ielem].Rref[5] << ", "
                   << elem[ielem].Rref[6] << ", " << elem[ielem].Rref[7] << ", " << elem[ielem].Rref[8] << ", " << std::endl;
 	}*/
-}
 
 
-void mesh::fillCandidates(cellGrid *grid){
+	// float minx = elem[0].node[0].pos->x;
+	// float miny = elem[0].node[0].pos->y;
+	// float minz = elem[0].node[0].pos->z;
 
-	int nc0 = grid->getNumCells(0);
-	int nc1 = grid->getNumCells(1);
-	int nc2 = grid->getNumCells(2);
+	// float maxx = elem[0].node[0].pos->x;
+	// float maxy = elem[0].node[0].pos->y;
+	// float maxz = elem[0].node[0].pos->z;
 
-	candidates_set.resize(nc0);
-		for(int i=0; i<nc0; i++)
+	// for (int t = 0; t< nElements; t++){
+	// 	for(int inode = 0;inode<3;inode++){
+	// 		if(elem[t].node[inode].pos->x<minx) minx = elem[t].node[inode].pos->x;
+	// 		if(elem[t].node[inode].pos->y<miny) miny = elem[t].node[inode].pos->y;
+	// 		if(elem[t].node[inode].pos->z<minz) minz = elem[t].node[inode].pos->z;
+	// 		if(elem[t].node[inode].pos->x>maxx) maxx = elem[t].node[inode].pos->x;
+	// 		if(elem[t].node[inode].pos->y>maxy) maxy = elem[t].node[inode].pos->y;
+	// 		if(elem[t].node[inode].pos->z>maxz) maxz = elem[t].node[inode].pos->z;
+	// 	}	
+	// }
+	simResolution = simR;
+	initCell(dcell, VminX, VminY, VminZ, VmaxX, VmaxY, VmaxZ, nElements);
+	
+    set_reserve(opt == 2);		
+	candidates_set.resize(numCells[0]);
+		for(int i=0; i<numCells[0]; i++)
 		{
-			candidates_set[i].resize(nc1);
-			for(int j=0; j<nc1; j++){
-				candidates_set[i][j].resize(nc2);
+			candidates_set[i].resize(numCells[1]);
+			for(int j=0; j<numCells[1]; j++){
+				candidates_set[i][j].resize(numCells[2]);
+				// for (int k = 0; k < numCells[2];k++){
+				// 	candidates_set[i][j][k].reserve(3*res);
+				// }
 			}
 
 		}
-	#pragma omp parallel for 
-	for(int i =0; i < nc0; i++){
-		for(int j = 0; j < nc1; j++){
-			for(int k = 0; k < nc2; k++){
-				findCandidates(i,j,k,nc0,nc1,nc2,grid);
-				//if (candidates_set[i][j][k].size() == 0){
-				//	 findCandidates(i,j,k,nc0,nc1,nc2,grid,2);
-				//}
-			}
-		}
-		
-	}
+
 }
-void mesh::findCandidates(int cx, int cy, int cz, int ncx, int ncy, int ncz, cellGrid *grid){
-	long id;
-	//if (cx==0 && cy == 15 && cz == 3) fprintf(stderr, "\n * ID = %ld \n",id);
-	for(int i=cx-1 ; i<= cx+1; i++){
-		for(int j =cy-1 ; j<= cy+1; j++){
-			for(int k =cz-1 ; k<= cz+1; k++){
 
-				if((i<0) || (j<0) || (k<0))
-					continue;
-				if((i>=ncx) || (j>=ncy) || (k>=ncz))
-					continue;
+// CALCULA INTERSECÇÃO - 0.5 -> RETORNA PONTOS 
+// USADO EM 1
+Point2 mesh::intersectionPointZ(const Point& p1, const Point& p2, const float p) {
+    Point edgeVector = {p2.x - p1.x, p2.y - p1.y, p2.z - p1.z};
+    float t = -((p1.z - p) / edgeVector.z);
+    return {p1.x + t * edgeVector.x, p1.y + t * edgeVector.y};
+}
+
+// CORTAPLANO - 1 -> RETORNA LINHA
+bool mesh::intersectTrianglePlaneZ(const float z, std::vector<Point2> &intersectionPoints, const int t) {
+    int c = 0;
+    for(int i = 0; i < 3; i++) {
+        int j = (i + 1) % 3; 
+        Point p1 (elem[t].node[i].pos->x,elem[t].node[i].pos->y,elem[t].node[i].pos->z);
+        Point p2 (elem[t].node[j].pos->x,elem[t].node[j].pos->y,elem[t].node[j].pos->z);
+        // float s = (p1.z - z) * (p2.z - z);
+        if (fabs(p1.z - p2.z) < eps && fabs(p1.z - z) < eps){
+			Point2 pa (p1.x,p1.y);
+			Point2 pb (p2.x,p2.y);
+			intersectionPoints[0] = pa;
+			
+			intersectionPoints[1] = pb;
+			return true;
+		}
+		if ((p1.z - z) * (p2.z - z) <= 0) {
+            Point2 pt = intersectionPointZ(p1, p2,z);
+            intersectionPoints[c] = pt;
+            c++;
+        }
+    }
+    // printf("\nintersectionPoints[0].x=%f,\nintersectionPoints[0].y=%f, \nintersectionPoints[1].x=%f,\nintersectionPoints[1].y=%f\n",
+    // intersectionPoints[0].x,intersectionPoints[0].y,intersectionPoints[1].x,intersectionPoints[1].y);
+	if (c == 1) intersectionPoints[1] = intersectionPoints[0];
+    return c!=0;
+}
+// LINHA PRA CELULA - 2 - RETORNA CELULA
+void mesh::planeInterpolationXY(const Point2 &a, const Point2 &b, const float e, std::vector<std::set<int>>& cellcoords) {
+    const float einv = 1/e;
+    // Ajustando as coordenadas dos pontos a e b para considerar o deslocamento do ponto de origem do domínio
+    const int p0x = static_cast<int>((a.x - minSpc[0]) *einv);
+    const int p1x = static_cast<int>((b.x - minSpc[0]) *einv);
+    const int p0y = static_cast<int>((a.y - minSpc[1]) *einv);
+    const int p1y = static_cast<int>((b.y - minSpc[1]) *einv);
+
+    // Adicionando as coordenadas do ponto inicial ao vetor de coordenadas da célula
+    cellcoords[p0x].insert(p0y);
+
+    // Calculando os deltas de interpolação
+    const float dx = (b.x - a.x) / (b.y - a.y);
+    const float dy = (b.y - a.y) / (b.x - a.x);
+    
+    if (p1x > p0x) {
+        for (int i = p0x + 1; i <= p1x; i++) {
+            // float inter = a.y - minSpc[1] + (i * e + minSpc[0] - a.x ) * dy;
+            cellcoords[i].insert(static_cast<int>((a.y - minSpc[1] + (i * e + minSpc[0] - a.x ) * dy) *einv));
+            // cellcoords[i].insert(static_cast<int>((a.y - minSpc[1] + (i * e + minSpc[0] - a.x +eps) * dy) *einv));
+        }
+    } else {
+        for (int i = p0x; i > p1x; i--) {
+            // float inter = a.y - minSpc[1] + (i * e - a.x + minSpc[0]) * dy;
+            cellcoords[i-1].insert(static_cast<int>((a.y - minSpc[1] + (i * e - a.x + minSpc[0]) * dy) *einv));
+            // cellcoords[i-1].insert(static_cast<int>((a.y - minSpc[1] + (i * e - a.x + minSpc[0]-eps) * dy) *einv));
+        }
+    }
+
+    if (p1y > p0y) {
+        for (int j = p0y + 1; j <= p1y; j++) {
+            // float inter = a.x - minSpc[0] + (j * e - a.y + minSpc[1]) * dx;
+            cellcoords[static_cast<int>((a.x - minSpc[0] + (j * e - a.y + minSpc[1]) * dx) *einv)].insert(j);
+            // cellcoords[static_cast<int>((a.x - minSpc[0] + (j * e - a.y + minSpc[1]+eps) * dx) *einv)].insert(j);
+        }
+    } else {
+        for (int j = p0y; j > p1y; j--) {
+            // float inter = a.x - minSpc[0] + (j * e - a.y + minSpc[1]) * dx;
+            cellcoords[static_cast<int>((a.x - minSpc[0] + (j * e - a.y + minSpc[1]) * dx) *einv)].insert(j-1);
+            // cellcoords[static_cast<int>((a.x - minSpc[0] + (j * e - a.y + minSpc[1]-eps) * dx) *einv)].insert(j-1);
+        }
+    }
+
+}
+
+// LINHA PRA CELULA - 2 - RETORNA CELULA
+void mesh::planeInterpolationXZ(const Point2 &a, const Point2 &b, const float e, std::vector<std::set<int>>& cellcoords) {
+    const float einv = 1/e;
+    
+    // Ajustando as coordenadas dos pontos a e b para considerar o deslocamento do ponto de origem do domínio
+    const int p0x = static_cast<int>((a.x - minSpc[0]) *einv);
+    const int p1x = static_cast<int>((b.x - minSpc[0]) *einv);
+    const int p0z = static_cast<int>((a.y - minSpc[2]) *einv);
+    const int p1z = static_cast<int>((b.y - minSpc[2]) *einv);
+
+    // Adicionando as coordenadas do ponto inicial ao vetor de coordenadas da célula
+    cellcoords[p0x].insert(p0z);
+
+    // Calculando os deltas de interpolação
+    const float dx = (b.x - a.x) / (b.y - a.y);
+    const float dz = (b.y - a.y) / (b.x - a.x);
+    
+    if (p1x > p0x) {
+        for (int i = p0x + 1; i <= p1x; i++) {
+            // float inter = a.y - minSpc[2] + (i * e + minSpc[0] - a.x ) * dz;
+            cellcoords[i].insert(static_cast<int>((a.y - minSpc[2] + (i * e + minSpc[0] - a.x ) * dz) *einv));
+            // cellcoords[i].insert(static_cast<int>((a.y - minSpc[2] + (i * e + minSpc[0] - a.x +eps) * dz) *einv));
+        }
+    } else {
+        for (int i = p0x; i > p1x; i--) {
+            // float inter = a.y - minSpc[2] + (i * e - a.x + minSpc[0]) * dz;
+            cellcoords[i-1].insert(static_cast<int>((a.y - minSpc[2] + (i * e - a.x + minSpc[0]) * dz) *einv));
+            // cellcoords[i-1].insert(static_cast<int>((a.y - minSpc[2] + (i * e - a.x + minSpc[0]-eps) * dz) *einv));
+        }
+    }
+
+    if (p1z > p0z) {
+        for (int j = p0z + 1; j <= p1z; j++) {
+            // float inter = a.x - minSpc[0] + (j * e - a.y + minSpc[2]) * dx;
+            cellcoords[static_cast<int>((a.x - minSpc[0] + (j * e - a.y + minSpc[2]) * dx) *einv)].insert(j);
+            // cellcoords[static_cast<int>((a.x - minSpc[0] + (j * e - a.y + minSpc[2]) * dx+eps) *einv)].insert(j);
+        }
+    } else {
+        for (int j = p0z; j > p1z; j--) {
+            // float inter = a.x - minSpc[0] + (j * e - a.y + minSpc[2]) * dx;
+            cellcoords[static_cast<int>((a.x - minSpc[0] + (j * e - a.y + minSpc[2]) * dx) *einv)].insert(j-1);
+            // cellcoords[static_cast<int>((a.x - minSpc[0] + (j * e - a.y + minSpc[2]) * dx-eps) *einv)].insert(j-1);
+        }
+    }
+
+}
+
+// LINHA PRA CELULA - 2 - RETORNA CELULA
+void mesh::planeInterpolationYZ(const Point2 &a, const Point2 &b, const float e, std::vector<std::set<int>>& cellcoords) {
+    const float einv = 1/e;
+    
+    // Ajustando as coordenadas dos pontos a e b para considerar o deslocamento do ponto de origem do domínio
+    const int p0y = static_cast<int>((a.x - minSpc[1]) *einv);
+    const int p0z = static_cast<int>((a.y - minSpc[2]) *einv);
+    const int p1y = static_cast<int>((b.x - minSpc[1]) *einv);
+    const int p1z = static_cast<int>((b.y - minSpc[2]) *einv);
+
+    // Adicionando as coordenadas do ponto inicial ao vetor de coordenadas da célula
+    cellcoords[p0y].insert(p0z);
+
+    // Calculando os deltas de interpolação
+    const float dy = (b.x - a.x) / (b.y - a.y);
+    const float dz = (b.y - a.y) / (b.x - a.x);
+    
+    if (p1y > p0y) {
+        for (int i = p0y + 1; i <= p1y; i++) {
+            // float inter = a.y - minSpc[2] + (i * e + minSpc[1] - a.x ) * dz;
+            cellcoords[i].insert(static_cast<int>((a.y - minSpc[2] + (i * e + minSpc[1] - a.x ) * dz) *einv));
+            // cellcoords[i].insert(static_cast<int>((a.y - minSpc[2] + (i * e + minSpc[1] - a.x +eps) * dz) *einv));
+        }
+    } else {
+        for (int i = p0y; i > p1y; i--) {
+            // float inter = a.y - minSpc[2] + (i * e - a.x + minSpc[1]) * dz;
+            cellcoords[i-1].insert(static_cast<int>((a.y - minSpc[2] + (i * e - a.x + minSpc[1]) * dz) *einv));
+            // cellcoords[i-1].insert(static_cast<int>((a.y - minSpc[2] + (i * e - a.x + minSpc[1]-eps) * dz) *einv));
+        }
+    }
+
+    if (p1z > p0z) {
+        for (int j = p0z + 1; j <= p1z; j++) {
+            // float inter = a.x - minSpc[1] + (j * e - a.y + minSpc[2]) * dy;
+            cellcoords[static_cast<int>((a.x - minSpc[1] + (j * e - a.y + minSpc[2]) * dy) *einv)].insert(j);
+            // cellcoords[static_cast<int>((a.x - minSpc[1] + (j * e - a.y + minSpc[2]+eps) * dy) *einv)].insert(j);
+        }
+    } else {
+        for (int j = p0z; j > p1z; j--) {
+            // float inter = a.x - minSpc[1] + (j * e - a.y + minSpc[2]) * dy;
+            cellcoords[static_cast<int>((a.x - minSpc[1] + (j * e - a.y + minSpc[2]) * dy) *einv)].insert(j-1);
+            // cellcoords[static_cast<int>((a.x - minSpc[1] + (j * e - a.y + minSpc[2]-eps) * dy) *einv)].insert(j-1);
+        }
+    }
+
+}
+
+void mesh::clearCellBuffer(){
+	int  i, j, k;
+	for(i=0; i<(numCells[0]); i++)
+		for(j=0; j<(numCells[1]); j++)
+			for(k=0;k<numCells[2]; k++)
+				cellBuffer[i][j][k].clear();
+}
+void mesh::clearCellBuffer_flat(){
+	for(int i=0; i<numCells[0]*numCells[1]*numCells[2]; i++)
+				cellBufferFlattened[i].clear();
+}
+void mesh::clearCandidates_flat(){
+	for(int i=0; i<numCells[0]*numCells[1]*numCells[2]; i++)
+				candidatesSet_flat[i].clear();
+}
+
+void mesh::clearCandidates() {
+    for (auto& plane : candidates_set) {
+        for (auto& row : plane) {
+            for (auto& cell : row) {
+                cell.clear();
+            }
+        }
+    }
+}
+int cellGrid::flatIndex(const int x, const int y, const int z) {
+    return x * numCells[1] * numCells[2] + y * numCells[2] + z;
+}
+void cellGrid::tdimIndex(int flatIndex, int& x, int& y, int& z) const {
+        z = flatIndex % numCells[2];
+        y = (flatIndex / numCells[2]) % numCells[1];
+        x = flatIndex / (numCells[1] * numCells[2]);
+    }
+
+
+std::vector<std::array<int,3>> cellGrid::getNeighbors(int x, int y, int z) {
+	std::vector<std::array<int,3>> neighbors;
+    // Define the possible neighbor offsets
+
+    for (int c = 0; c < 27; c++) {
+        int nx = neighPos[c][0] + x;
+		int ny = neighPos[c][1] + y;
+		int nz = neighPos[c][2] + z;
+        // Check if the neighbor is within bounds
+        if (nx >= 0 && nx < numCells[0] && ny >= 0 && ny < numCells[1] && nz >= 0 && nz < numCells[2]) {
+            neighbors.push_back({nx, ny, nz});
+        }
+    }
+	return neighbors;
+}
+
+void cellGrid::precomputeNeighborIndices() {
+    neighborIndices.resize(numCells[0] * numCells[1] * numCells[2]);
+
+    for (int x = 0; x < numCells[0]; x++) {
+        for (int y = 0; y < numCells[1]; y++) {
+            for (int z = 0; z < numCells[2]; z++) {
+                int fIndex = flatIndex(x, y, z);
+                std::vector<std::array<int,3>> neighbors = getNeighbors(x, y, z);
+                for (const auto& neighbor : neighbors) {
+                    int neighborFlatIndex = flatIndex(neighbor[0], neighbor[1], neighbor[2]);
+					// printf("cell %d,%d,%d, flatindex = %d, flatneigh = %d\n",x,y,z,fIndex,neighborFlatIndex);
+                    neighborIndices[fIndex].push_back(neighborFlatIndex);
+                }
+            }
+        }
+    }
+
+}
+
+
+void mesh::fillBopt(){    
+	if (do_reserve()){ return fillBopt_reserve();}
+
+
+	const float invEc0 = 1/eCells[0];
+	const float invEc1 = 1/eCells[1];
+	const float invEc2 = 1/eCells[2];
+
+	#pragma omp parallel
+    {
+		
+    	std::vector<std::array<int, 3>> localInserts;
+
+        #pragma omp for nowait
+		for (int t = 0; t<nElements;t++){
+
+			bool generalcase = true;
+			std::vector<std::set<int> > cellcd;
 				
-				for (long w = 0; w < nElements; w++){
-					id = grid->getCellBuffer(i,j,k,w);
-					//if (cx==0 && cy == 15 && cz == 3) fprintf(stderr, "\n * cell[%ld][%ld][%ld] \n",i,j,k);
-					//if (cx==0 && cy == 15 && cz == 3) fprintf(stderr, "\n * w = %ld \n",w);
-					//if (cx==0 && cy == 15 && cz == 3) fprintf(stderr, "\n * id = %ld \n",id);
-					if (id == -1) break;
-					candidates_set[cx][cy][cz].insert(id);
-					//fprintf(stderr, "\n * ID = %ld \n",id);
+			// test if in plane yz
+			if (static_cast<int>((elem[t].node[0].pos->x-minSpc[0])*invEc0) == static_cast<int>((elem[t].node[1].pos->x-minSpc[0])*invEc0) && static_cast<int>((elem[t].node[0].pos->x-minSpc[0])*invEc0) == static_cast<int>((elem[t].node[2].pos->x-minSpc[0])*invEc0)){
+				cellcd.resize(numCells[1]);
+				
+				for (auto &p : cellcd) p.clear();	// clear cellcd previous iteration
+				planeInterpolationYZ(Point2(elem[t].node[2].pos->y,elem[t].node[2].pos->z),Point2(elem[t].node[0].pos->y,elem[t].node[0].pos->z),eCells[0],cellcd);
+				planeInterpolationYZ(Point2(elem[t].node[1].pos->y,elem[t].node[1].pos->z),Point2(elem[t].node[0].pos->y,elem[t].node[0].pos->z),eCells[0],cellcd);
+				planeInterpolationYZ(Point2(elem[t].node[2].pos->y,elem[t].node[2].pos->z),Point2(elem[t].node[1].pos->y,elem[t].node[1].pos->z),eCells[0],cellcd);
+				const int x = ((elem[t].node[0].pos->x-minSpc[0])*invEc0);
+				for (int i = 0; i< cellcd.size();i++){
+					if(cellcd[i].size() == 0) continue;
+					
+					for(int j = *cellcd[i].begin(); j<=*--cellcd[i].end();++j){
+					// const auto [min, max] = std::minmax_element(begin(cellcd[i]), end(cellcd[i]));
+					// for(int_fast32_t j = *min; j<=*max;++j){
+						// #pragma omp critical
+						// {cellBuffer[x][i][j].push_back(t);}
+						localInserts.push_back({x, i, j});
+					}
+				} 
+				generalcase = false;
+					
+			}
+
+			// test if in plane xz
+			if (generalcase == true)
+			if (static_cast<int>((elem[t].node[0].pos->y-minSpc[1])*invEc1) == static_cast<int>((elem[t].node[1].pos->y-minSpc[1])*invEc1) && static_cast<int>((elem[t].node[0].pos->y-minSpc[1])*invEc1) == static_cast<int>((elem[t].node[2].pos->y-minSpc[1])*invEc1)){
+				
+				for (auto &p : cellcd) p.clear();	// clear cellcd previous iteration
+				cellcd.resize(numCells[0]);
+				planeInterpolationXZ(Point2(elem[t].node[2].pos->x,elem[t].node[2].pos->z),Point2(elem[t].node[0].pos->x,elem[t].node[0].pos->z),eCells[0],cellcd);
+				planeInterpolationXZ(Point2(elem[t].node[1].pos->x,elem[t].node[1].pos->z),Point2(elem[t].node[0].pos->x,elem[t].node[0].pos->z),eCells[0],cellcd);
+				planeInterpolationXZ(Point2(elem[t].node[2].pos->x,elem[t].node[2].pos->z),Point2(elem[t].node[1].pos->x,elem[t].node[1].pos->z),eCells[0],cellcd);
+				const int y = ((elem[t].node[0].pos->y-minSpc[1])*invEc1);
+				for (int i = 0; i< cellcd.size();i++){
+					if(cellcd[i].size() == 0) continue;
+					for(int j = *cellcd[i].begin(); j<=*--cellcd[i].end();++j){
+					// const auto [min, max] = std::minmax_element(begin(cellcd[i]), end(cellcd[i]));
+					// for(int_fast32_t j = *min; j<=*max;++j){
+						// #pragma omp critical
+						// {cellBuffer[i][y][j].push_back(t);}
+						localInserts.push_back({i, y, j});
+					}
+				} 
+				generalcase = false;
+			}
+			
+			// test if in plane xy
+			if (generalcase == true)
+			if (static_cast<int>((elem[t].node[0].pos->z-minSpc[2])*invEc2) == static_cast<int>((elem[t].node[1].pos->z-minSpc[2])*invEc2) && static_cast<int>((elem[t].node[0].pos->z-minSpc[2])*invEc2) == static_cast<int>((elem[t].node[2].pos->z-minSpc[2])*invEc2)){
+				
+				for (auto &p : cellcd) p.clear();	// clear cellcd previous iteration
+				cellcd.resize(numCells[0]);
+				planeInterpolationXY(Point2(elem[t].node[2].pos->x,elem[t].node[2].pos->y),Point2(elem[t].node[0].pos->x,elem[t].node[0].pos->y),eCells[0],cellcd);
+				planeInterpolationXY(Point2(elem[t].node[1].pos->x,elem[t].node[1].pos->y),Point2(elem[t].node[0].pos->x,elem[t].node[0].pos->y),eCells[0],cellcd);
+				planeInterpolationXY(Point2(elem[t].node[2].pos->x,elem[t].node[2].pos->y),Point2(elem[t].node[1].pos->x,elem[t].node[1].pos->y),eCells[0],cellcd);
+				const int z = ((elem[t].node[0].pos->z-minSpc[2])*invEc2);
+				for (int i = 0; i< cellcd.size();i++){
+					if(cellcd[i].size() == 0) continue;
+					
+					for(int j = *cellcd[i].begin(); j<=*--cellcd[i].end();++j){
+					// const auto [min, max] = std::minmax_element(begin(cellcd[i]), end(cellcd[i]));
+					// for(int_fast32_t j = *min; j<=*max;++j){
+						// #pragma omp critical
+						// {cellBuffer[i][j][z].push_back(t);}
+						localInserts.push_back({i, j, z});
+					}
+				} 
+				generalcase = false;
+			}
+
+			if(generalcase){
+				float zvert[] = {elem[t].node[0].pos->z, elem[t].node[1].pos->z, elem[t].node[2].pos->z};
+
+				auto [min, max] = std::minmax_element(zvert,zvert+3);
+				
+				int mid = 3 - (min-zvert) - (max-zvert); 
+				float midx = elem[t].node[mid].pos->x;
+				float midy = elem[t].node[mid].pos->y;
+				float midz = elem[t].node[mid].pos->z;
+
+				float minx = elem[t].node[min-zvert].pos->x;
+				float miny = elem[t].node[min-zvert].pos->y;
+				float minz = *min;
+
+				float maxx = elem[t].node[max - zvert].pos->x;
+				float maxy = elem[t].node[max - zvert].pos->y;
+				float maxz = *max;
+				
+				// maxz = *max ; minz = *min
+
+				//min-zvert = min index
+				//max-zvert = max index
+				std::vector<Point2> intersections(2), intersectold(2);
+				int k = static_cast<int>((minz-minSpc[2])*invEc2);
+				
+				for (auto &p : cellcd) p.clear();	// clear cellcd previous iteration
+				cellcd.resize(numCells[0]);
+				// checking first vertex
+				{
+				intersectTrianglePlaneZ(static_cast<float>(k+1)*eCells[2]+minSpc[2], intersections,t);
+				// if min,max:{0,1}->mid=2 / min,max:{0,2}->mid=1 / min,max:{1,2}-> mid = 0
+				
+				planeInterpolationXY(intersections[0],intersections[1],eCells[0],cellcd); 
+				planeInterpolationXY(Point2(minx,miny),intersections[0],eCells[0],cellcd); 
+				planeInterpolationXY(Point2(minx,miny),intersections[1],eCells[0],cellcd); 
+				
+				//fill buffer from cellcd 
+				for (int i = 0; i< cellcd.size();i++){
+					if(cellcd[i].size() == 0) continue;
+					
+					for(int j = *cellcd[i].begin(); j<=*--cellcd[i].end();++j){
+					// const auto [min, max] = std::minmax_element(begin(cellcd[i]), end(cellcd[i]));
+					// for(int_fast32_t j = minz; j<=*max;++j){
+						// #pragma omp critical
+						// {cellBuffer[i][j][k].push_back(t);}
+						localInserts.push_back({i, j, k});
+					}
 				}
 				
+				intersectold[0] = intersections[0]; //Salva a interseccao de z-1
+				intersectold[1] = intersections[1];
+				}
+				// from bot+1 to mid-1
+				for(k = static_cast<int>((minz-minSpc[2])*invEc2)+1; k<static_cast<int>((midz-minSpc[2])*invEc2)-1;k++){
+				// for(k = static_cast<int>((minz-minSpc[2])*invEc2)+1; k<static_cast<int>((maxz-minSpc[2])*invEc2);k++){
+
+					if (intersectTrianglePlaneZ(static_cast<float>(k+1)*eCells[2]+minSpc[2], intersections,t)){ // if intersect triang/plane z
+					
+						for (auto &p : cellcd) p.clear();	// clear cellcd previous iteration
+						planeInterpolationXY(intersections[0],intersectold[0],eCells[0],cellcd);
+						planeInterpolationXY(intersections[0],intersections[1],eCells[0],cellcd);
+						planeInterpolationXY(intersectold[0],intersectold[1],eCells[0],cellcd);
+						planeInterpolationXY(intersections[0],intersectold[1],eCells[0],cellcd);
+						planeInterpolationXY(intersections[1],intersectold[0],eCells[0],cellcd);
+						planeInterpolationXY(intersections[1],intersectold[1],eCells[0],cellcd);
+					
+				//fill buffer from cellcd 
+						for (int i = 0; i< cellcd.size();i++){
+							if(cellcd[i].size() == 0) continue;
+							
+							for(int j = *cellcd[i].begin(); j<=*--cellcd[i].end();++j){
+								
+								localInserts.push_back({i, j, k});
+							}
+						}
+						intersectold[0] = intersections[0]; //Salva a interseccao de z-1
+						intersectold[1] = intersections[1];
+						}
+				}		
+				// checking mid vertex 
+				{
+				for (auto &p : cellcd) p.clear();	// clear cellcd previous iteration
+				if (intersectTrianglePlaneZ(midz-eps, intersections,t)){
+					planeInterpolationXY(intersections[0],intersectold[0],eCells[0],cellcd);
+					planeInterpolationXY(intersections[0],intersections[1],eCells[0],cellcd);
+					planeInterpolationXY(intersectold[0],intersectold[1],eCells[0],cellcd);
+					planeInterpolationXY(intersections[0],intersectold[1],eCells[0],cellcd);
+					planeInterpolationXY(intersections[1],intersectold[0],eCells[0],cellcd);
+					planeInterpolationXY(intersections[1],intersectold[1],eCells[0],cellcd);
+					
+					intersectold[0] = intersections[0]; //Salva a interseccao de z-1
+					intersectold[1] = intersections[1];
+
+					k = static_cast<int>((midz-minSpc[2])*invEc2);
+					for (int i = 0; i< cellcd.size();i++){
+							if(cellcd[i].size() == 0) continue;
+							
+							for(int j = *cellcd[i].begin(); j<=*--cellcd[i].end();++j){
+
+								localInserts.push_back({i, j, k});
+							}
+						}
+				}
+				}
+				// from mid to top 
+				for(k = static_cast<int>((midz-minSpc[2])*invEc2); k<static_cast<int>((maxz-minSpc[2])*invEc2);k++){
+
+					if (intersectTrianglePlaneZ(static_cast<float>(k+1)*eCells[2]+minSpc[2], intersections,t)){ // if intersect triang/plane z
+					
+						for (auto &p : cellcd) p.clear();	// clear cellcd previous iteration
+						planeInterpolationXY(intersections[0],intersectold[0],eCells[0],cellcd);
+						planeInterpolationXY(intersections[0],intersections[1],eCells[0],cellcd);
+						planeInterpolationXY(intersectold[0],intersectold[1],eCells[0],cellcd);
+						planeInterpolationXY(intersections[0],intersectold[1],eCells[0],cellcd);
+						planeInterpolationXY(intersections[1],intersectold[0],eCells[0],cellcd);
+						planeInterpolationXY(intersections[1],intersectold[1],eCells[0],cellcd);
+						//fill buffer from cellcd 
+						for (int i = 0; i< cellcd.size();i++){
+							if(cellcd[i].size() == 0) continue;
+							
+							for(int j = *cellcd[i].begin(); j<=*--cellcd[i].end();++j){
+							// const auto [min, max] = std::minmax_element(begin(cellcd[i]), end(cellcd[i]));
+							// for(int_fast32_t j = minz; j<=*max;++j){
+								// #pragma omp critical		
+								// {cellBuffer[i][j][k].push_back(t);}
+								localInserts.push_back({i, j, k});
+							}
+						}
+						intersectold[0] = intersections[0]; //Salva a interseccao de z-1
+						intersectold[1] = intersections[1];
+						}
+				}
+				// checking last vertex
+				{
+					for (auto &p : cellcd) p.clear();	// clear cellcd previous iteration
+					k =static_cast<int>((maxz-minSpc[2])*invEc2);
+					planeInterpolationXY(intersectold[0],intersectold[1],eCells[0],cellcd); 
+					planeInterpolationXY(Point2(maxx,maxy),intersectold[0],eCells[0],cellcd); 
+					planeInterpolationXY(Point2(maxx,maxy),intersectold[1],eCells[0],cellcd); 
+					
+					//fill buffer from cellcd 
+					for (int i = 0; i< cellcd.size();i++){
+						if(cellcd[i].size() == 0) continue;
+						
+						for(int j = *cellcd[i].begin(); j<=*--cellcd[i].end();++j){
+						// const auto [min, max] = std::minmax_element(begin(cellcd[i]), end(cellcd[i]));
+						// for(int_fast32_t j = minz; j<=*max;++j){
+							// #pragma omp critical
+							// {cellBuffer[i][j][k].push_back(t);}
+							localInserts.push_back({i, j, k});
+						}
+					}
+				}
+			}
+			#pragma omp critical
+			{
+				for (const auto& insert : localInserts) {
+					int i = insert[0];
+					int j = insert[1];
+					int k = insert[2];
+					cellBuffer[i][j][k].push_back(t);
+				}
+				localInserts.clear();
+			}	
+		}
+	}
+}
+
+void mesh::fillBopt_flat(){    
+	
+	if (do_reserve()){ return fillBopt_reserveflat();}
+
+	const float invEc0 = 1/eCells[0];
+	const float invEc1 = 1/eCells[1];
+	const float invEc2 = 1/eCells[2];
+
+	#pragma omp parallel
+    {
+		
+    	std::vector<unsigned int> localInserts;
+
+        #pragma omp for 
+		for (int t = 0; t<nElements;t++){
+
+			bool generalcase = true;
+			std::vector<std::set<int> > cellcd;
+
+			float zvert[] = {elem[t].node[0].pos->z, elem[t].node[1].pos->z, elem[t].node[2].pos->z};
+
+			auto [min, max] = std::minmax_element(zvert,zvert+3);
+				
+			int mid = 3 - (min-zvert) - (max-zvert); 
+			float midx = elem[t].node[mid].pos->x;
+			float midy = elem[t].node[mid].pos->y;
+			float midz = elem[t].node[mid].pos->z;
+
+			float minx = elem[t].node[min-zvert].pos->x;
+			float miny = elem[t].node[min-zvert].pos->y;
+			float minz = *min;
+
+			float maxx = elem[t].node[max - zvert].pos->x;
+			float maxy = elem[t].node[max - zvert].pos->y;
+			float maxz = *max;	
+
+			// test if in plane yz
+			if (static_cast<int>((minx-minSpc[0])*invEc0) == static_cast<int>((midx-minSpc[0])*invEc0) && static_cast<int>((minx-minSpc[0])*invEc0) == static_cast<int>((maxx-minSpc[0])*invEc0)){
+				cellcd.resize(numCells[1]);
+				
+				for (auto &p : cellcd) p.clear();	// clear cellcd previous iteration
+				planeInterpolationYZ(Point2(maxy,maxz),Point2(miny,minz),eCells[0],cellcd);
+				planeInterpolationYZ(Point2(midy,midz),Point2(miny,minz),eCells[0],cellcd);
+				planeInterpolationYZ(Point2(maxy,maxz),Point2(midy,midz),eCells[0],cellcd);
+				const int x = ((minx-minSpc[0])*invEc0);
+				const auto [ymin,ymax] = std::minmax({static_cast<int>((miny-minSpc[1])*invEc1),static_cast<int>((midy-minSpc[1])*invEc1),static_cast<int>((maxy-minSpc[1])*invEc1)});
+				for (int i = ymin; i<= ymax;i++){					
+					for(int j = *cellcd[i].begin(); j<=*--cellcd[i].end();++j){
+					// const auto [min, max] = std::minmax_element(begin(cellcd[i]), end(cellcd[i]));
+					// for(int_fast32_t j = *min; j<=*max;++j){
+						// #pragma omp critical
+						// {cellBuffer[x][i][j].push_back(t);}
+						localInserts.push_back(flatIndex(x, i, j));
+					}
+				} 
+				generalcase = false;
+					
+			}
+
+
+			// test if in plane xz
+			if (generalcase == true)
+			if (static_cast<int>((miny-minSpc[1])*invEc1) == static_cast<int>((midy-minSpc[1])*invEc1) && static_cast<int>((miny-minSpc[1])*invEc1) == static_cast<int>((maxy-minSpc[1])*invEc1)){
+				
+				for (auto &p : cellcd) p.clear();	// clear cellcd previous iteration
+				cellcd.resize(numCells[0]);
+				planeInterpolationXZ(Point2(maxx,maxz),Point2(minx,minz),eCells[0],cellcd);
+				planeInterpolationXZ(Point2(midx,midz),Point2(minx,minz),eCells[0],cellcd);
+				planeInterpolationXZ(Point2(maxx,maxz),Point2(midx,midz),eCells[0],cellcd);
+				const int y = ((miny-minSpc[1])*invEc1);
+				const auto [xmin,xmax] = std::minmax({static_cast<int>((minx-minSpc[0])*invEc0),static_cast<int>((midx-minSpc[0])*invEc0),static_cast<int>((maxx-minSpc[0])*invEc0)});
+				for (int i = xmin; i<= xmax;i++){		
+					for(int j = *cellcd[i].begin(); j<=*--cellcd[i].end();++j){
+					// const auto [min, max] = std::minmax_element(begin(cellcd[i]), end(cellcd[i]));
+					// for(int_fast32_t j = *min; j<=*max;++j){
+						// #pragma omp critical
+						// {cellBuffer[i][y][j].push_back(t);}
+						localInserts.push_back(flatIndex(i, y, j));
+					}
+				} 
+				generalcase = false;
+			}
+			
+			// test if in plane xy
+			if (generalcase == true)
+			if (static_cast<int>((minz-minSpc[2])*invEc2) == static_cast<int>((maxz-minSpc[2])*invEc2)){
+				
+				for (auto &p : cellcd) p.clear();	// clear cellcd previous iteration
+				cellcd.resize(numCells[0]);
+				planeInterpolationXY(Point2(maxx,maxy),Point2(minx,miny),eCells[0],cellcd);
+				planeInterpolationXY(Point2(midx,midy),Point2(minx,miny),eCells[0],cellcd);
+				planeInterpolationXY(Point2(maxx,maxy),Point2(midx,midy),eCells[0],cellcd);
+				const int z = ((minz-minSpc[2])*invEc2);
+				const auto [xmin,xmax] = std::minmax({static_cast<int>((minx-minSpc[0])*invEc0),static_cast<int>((midx-minSpc[0])*invEc0),static_cast<int>((maxx-minSpc[0])*invEc0)});
+				for (int i = xmin; i<= xmax;i++){				
+					for(int j = *cellcd[i].begin(); j<=*--cellcd[i].end();++j){
+					// const auto [min, max] = std::minmax_element(begin(cellcd[i]), end(cellcd[i]));
+					// for(int_fast32_t j = *min; j<=*max;++j){
+						// #pragma omp critical
+						// {cellBuffer[i][j][z].push_back(t);}
+						localInserts.push_back(flatIndex(i, j, z));
+					}
+				} 
+				generalcase = false;
+			}
+
+			if(generalcase){
+				cellcd.resize(numCells[0]);
+				// maxz = *max ; minz = *min
+
+				//min-zvert = min index
+				//max-zvert = max index
+				std::vector<Point2> intersections(2), intersectold(2);
+				int k = static_cast<int>((minz-minSpc[2])*invEc2);
+				intersectTrianglePlaneZ(minz, intersections,t);
+				intersectold[0] = intersections[0]; //Salva a interseccao de z-1
+				intersectold[1] = intersections[1];
+				// from bot+1 to mid-1
+				for(k; k<static_cast<int>((midz-minSpc[2])*invEc2);k++){
+				// for(k = static_cast<int>((minz-minSpc[2])*invEc2)+1; k<static_cast<int>((maxz-minSpc[2])*invEc2);k++){
+
+					if (intersectTrianglePlaneZ(static_cast<float>(k+1)*eCells[2]+minSpc[2], intersections,t)){ // if intersect triang/plane z
+					
+						for (auto &p : cellcd) p.clear();	// clear cellcd previous iteration
+						planeInterpolationXY(intersections[0],intersectold[0],eCells[0],cellcd);
+						planeInterpolationXY(intersections[0],intersections[1],eCells[0],cellcd);
+						planeInterpolationXY(intersectold[0],intersectold[1],eCells[0],cellcd);
+						planeInterpolationXY(intersections[0],intersectold[1],eCells[0],cellcd);
+						planeInterpolationXY(intersections[1],intersectold[0],eCells[0],cellcd);
+						planeInterpolationXY(intersections[1],intersectold[1],eCells[0],cellcd);
+					
+				//fill buffer from cellcd 
+						for (int i = 0; i< cellcd.size();i++){
+							if(cellcd[i].size() == 0) continue;
+							
+							for(int j = *cellcd[i].begin(); j<=*--cellcd[i].end();++j){
+								
+								localInserts.push_back(flatIndex(i, j, k));
+							}
+						}
+						intersectold[0] = intersections[0]; //Salva a interseccao de z-1
+						intersectold[1] = intersections[1];
+						}
+				}		
+				// checking mid vertex 
+				{
+				for (auto &p : cellcd) p.clear();	// clear cellcd previous iteration
+				if (intersectTrianglePlaneZ(midz-eps, intersections,t)){
+					planeInterpolationXY(intersections[0],intersectold[0],eCells[0],cellcd);
+					planeInterpolationXY(intersections[0],intersections[1],eCells[0],cellcd);
+					planeInterpolationXY(intersectold[0],intersectold[1],eCells[0],cellcd);
+					planeInterpolationXY(intersections[0],intersectold[1],eCells[0],cellcd);
+					planeInterpolationXY(intersections[1],intersectold[0],eCells[0],cellcd);
+					planeInterpolationXY(intersections[1],intersectold[1],eCells[0],cellcd);
+					
+					intersectold[0] = intersections[0]; //Salva a interseccao de z-1
+					intersectold[1] = intersections[1];
+
+					k = static_cast<int>((midz-minSpc[2])*invEc2);
+					for (int i = 0; i< cellcd.size();i++){
+							if(cellcd[i].size() == 0) continue;
+							
+							for(int j = *cellcd[i].begin(); j<=*--cellcd[i].end();++j){
+
+								localInserts.push_back(flatIndex(i, j, k));
+							}
+						}
+				}
+				}
+				// from mid to top 
+				for(k = static_cast<int>((midz-minSpc[2])*invEc2); k<static_cast<int>((maxz-minSpc[2])*invEc2);k++){
+
+					if (intersectTrianglePlaneZ(static_cast<float>(k+1)*eCells[2]+minSpc[2], intersections,t)){ // if intersect triang/plane z
+					
+						for (auto &p : cellcd) p.clear();	// clear cellcd previous iteration
+						planeInterpolationXY(intersections[0],intersectold[0],eCells[0],cellcd);
+						planeInterpolationXY(intersections[0],intersections[1],eCells[0],cellcd);
+						planeInterpolationXY(intersectold[0],intersectold[1],eCells[0],cellcd);
+						planeInterpolationXY(intersections[0],intersectold[1],eCells[0],cellcd);
+						planeInterpolationXY(intersections[1],intersectold[0],eCells[0],cellcd);
+						planeInterpolationXY(intersections[1],intersectold[1],eCells[0],cellcd);
+						//fill buffer from cellcd 
+						for (int i = 0; i< cellcd.size();i++){
+							if(cellcd[i].size() == 0) continue;
+							
+							for(int j = *cellcd[i].begin(); j<=*--cellcd[i].end();++j){
+							// const auto [min, max] = std::minmax_element(begin(cellcd[i]), end(cellcd[i]));
+							// for(int_fast32_t j = minz; j<=*max;++j){
+								// #pragma omp critical		
+								// {cellBuffer[i][j][k].push_back(t);}
+								localInserts.push_back(flatIndex(i, j, k));
+							}
+						}
+						intersectold[0] = intersections[0]; //Salva a interseccao de z-1
+						intersectold[1] = intersections[1];
+						}
+				}
+				
+				// checking last vertex
+				{
+					for (auto &p : cellcd) p.clear();	// clear cellcd previous iteration
+					k =static_cast<int>((maxz-minSpc[2])*invEc2);
+					planeInterpolationXY(intersectold[0],intersectold[1],eCells[0],cellcd); 
+					planeInterpolationXY(Point2(maxx,maxy),intersectold[0],eCells[0],cellcd); 
+					planeInterpolationXY(Point2(maxx,maxy),intersectold[1],eCells[0],cellcd); 
+					
+					//fill buffer from cellcd 
+					for (int i = 0; i< cellcd.size();i++){
+						if(cellcd[i].size() == 0) continue;
+						
+						for(int j = *cellcd[i].begin(); j<=*--cellcd[i].end();++j){
+						// const auto [min, max] = std::minmax_element(begin(cellcd[i]), end(cellcd[i]));
+						// for(int_fast32_t j = minz; j<=*max;++j){
+							// #pragma omp critical
+							// {cellBuffer[i][j][k].push_back(t);}
+							localInserts.push_back(flatIndex(i, j, k));
+						}
+					}
+				}
+			}
+			#pragma omp critical
+			{			
+			for (const auto& insert : localInserts) {
+					cellBufferFlattened[insert].push_back(t);
+			}
+			localInserts.clear();
 			}
 		}
-	}
-			
-	//fprintf(stderr, "\n * Cell[%ld][%ld][%ld] \n",cx, cy, cz);
-	//fprintf(stderr, "\n * Cell[%ld][%ld][%ld] \n",old[0], old[1], old[2]);
-	//if(candidates_set.empty()) fprintf(stderr, "\n * Cell[%ld][%ld][%ld]  VAZIA!!!!!!!!!!!!!!!!!!!! \n",cx, cy, cz);
-	/*
-	if(cy <=1){
-		
-		fprintf(stderr, "\n * Cell[%ld][%ld][%ld] \n",cx, cy, cz);
-		for (std::set<long>::iterator it=candidates_set.begin(); it!=candidates_set.end(); ++it){
-			fprintf(stderr, "\n * ID = %ld \n",*it);
-		}
-	}*/
 
+	}
+
+		
 }
-long mesh::calcDist(double *p, double range, int cpx, int cpy, int cpz, double *closestPoint, double &cqd){
-	cqd = range*range;
-	long cid = -1;
-	double quadDist;
-	double point[3] = {-1.0,-1.0,-1.0};
-	//fprintf(stderr, "i = [%f], j = [%f], k = [%f]", p[X], p[Y], p[Z]);
-	//fprintf(stderr, "Pi = [%d], Pj = [%d], Pk = [%d]", grid->getCellPosX(p[X]), grid->getCellPosY(p[Y]), grid->getCellPosZ(p[Z]));
+void mesh::fillBopt_reserveflat(){    
+	
+
+	const float invEc0 = 1/eCells[0];
+	const float invEc1 = 1/eCells[1];
+	const float invEc2 = 1/eCells[2];
+
+	#pragma omp parallel for 
+		for (int t = 0; t<nElements;t++){
+
+			bool generalcase = true;
+			std::vector<std::set<int> > cellcd;
+
+			float zvert[] = {elem[t].node[0].pos->z, elem[t].node[1].pos->z, elem[t].node[2].pos->z};
+
+			auto [min, max] = std::minmax_element(zvert,zvert+3);
+				
+			int mid = 3 - (min-zvert) - (max-zvert); 
+			float midx = elem[t].node[mid].pos->x;
+			float midy = elem[t].node[mid].pos->y;
+			float midz = elem[t].node[mid].pos->z;
+
+			float minx = elem[t].node[min-zvert].pos->x;
+			float miny = elem[t].node[min-zvert].pos->y;
+			float minz = *min;
+
+			float maxx = elem[t].node[max - zvert].pos->x;
+			float maxy = elem[t].node[max - zvert].pos->y;
+			float maxz = *max;	
+
+			// test if in plane yz
+			if (static_cast<int>((minx-minSpc[0])*invEc0) == static_cast<int>((midx-minSpc[0])*invEc0) && static_cast<int>((minx-minSpc[0])*invEc0) == static_cast<int>((maxx-minSpc[0])*invEc0)){
+				cellcd.resize(numCells[1]);
+				
+				for (auto &p : cellcd) p.clear();	// clear cellcd previous iteration
+				planeInterpolationYZ(Point2(maxy,maxz),Point2(miny,minz),eCells[0],cellcd);
+				planeInterpolationYZ(Point2(midy,midz),Point2(miny,minz),eCells[0],cellcd);
+				planeInterpolationYZ(Point2(maxy,maxz),Point2(midy,midz),eCells[0],cellcd);
+				const int x = ((minx-minSpc[0])*invEc0);
+				const auto [ymin,ymax] = std::minmax({static_cast<int>((miny-minSpc[1])*invEc1),static_cast<int>((midy-minSpc[1])*invEc1),static_cast<int>((maxy-minSpc[1])*invEc1)});
+				for (int i = ymin; i<= ymax;i++){					
+					for(int j = *cellcd[i].begin(); j<=*--cellcd[i].end();++j){
+					// const auto [min, max] = std::minmax_element(begin(cellcd[i]), end(cellcd[i]));
+					// for(int_fast32_t j = *min; j<=*max;++j){
+						// #pragma omp critical
+						// {cellBuffer[x][i][j].push_back(t);}
+						cellBufferFlattened[flatIndex(x, i, j)].push_back(t);
+					}
+				} 
+				generalcase = false;
+					
+			}
+
+
+			// test if in plane xz
+			if (generalcase == true)
+			if (static_cast<int>((miny-minSpc[1])*invEc1) == static_cast<int>((midy-minSpc[1])*invEc1) && static_cast<int>((miny-minSpc[1])*invEc1) == static_cast<int>((maxy-minSpc[1])*invEc1)){
+				
+				for (auto &p : cellcd) p.clear();	// clear cellcd previous iteration
+				cellcd.resize(numCells[0]);
+				planeInterpolationXZ(Point2(maxx,maxz),Point2(minx,minz),eCells[0],cellcd);
+				planeInterpolationXZ(Point2(midx,midz),Point2(minx,minz),eCells[0],cellcd);
+				planeInterpolationXZ(Point2(maxx,maxz),Point2(midx,midz),eCells[0],cellcd);
+				const int y = ((miny-minSpc[1])*invEc1);
+				const auto [xmin,xmax] = std::minmax({static_cast<int>((minx-minSpc[0])*invEc0),static_cast<int>((midx-minSpc[0])*invEc0),static_cast<int>((maxx-minSpc[0])*invEc0)});
+				for (int i = xmin; i<= xmax;i++){		
+					for(int j = *cellcd[i].begin(); j<=*--cellcd[i].end();++j){
+					// const auto [min, max] = std::minmax_element(begin(cellcd[i]), end(cellcd[i]));
+					// for(int_fast32_t j = *min; j<=*max;++j){
+						// #pragma omp critical
+						// {cellBuffer[i][y][j].push_back(t);}
+						cellBufferFlattened[flatIndex(i, y, j)].push_back(t);
+					}
+				} 
+				generalcase = false;
+			}
+			
+			// test if in plane xy
+			if (generalcase == true)
+			if (static_cast<int>((minz-minSpc[2])*invEc2) == static_cast<int>((maxz-minSpc[2])*invEc2)){
+				
+				for (auto &p : cellcd) p.clear();	// clear cellcd previous iteration
+				cellcd.resize(numCells[0]);
+				planeInterpolationXY(Point2(maxx,maxy),Point2(minx,miny),eCells[0],cellcd);
+				planeInterpolationXY(Point2(midx,midy),Point2(minx,miny),eCells[0],cellcd);
+				planeInterpolationXY(Point2(maxx,maxy),Point2(midx,midy),eCells[0],cellcd);
+				const int z = ((minz-minSpc[2])*invEc2);
+				const auto [xmin,xmax] = std::minmax({static_cast<int>((minx-minSpc[0])*invEc0),static_cast<int>((midx-minSpc[0])*invEc0),static_cast<int>((maxx-minSpc[0])*invEc0)});
+				for (int i = xmin; i<= xmax;i++){				
+					for(int j = *cellcd[i].begin(); j<=*--cellcd[i].end();++j){
+					// const auto [min, max] = std::minmax_element(begin(cellcd[i]), end(cellcd[i]));
+					// for(int_fast32_t j = *min; j<=*max;++j){
+						// #pragma omp critical
+						// {cellBuffer[i][j][z].push_back(t);}
+						cellBufferFlattened[flatIndex(i, j, z)].push_back(t);
+					}
+				} 
+				generalcase = false;
+			}
+
+			if(generalcase){
+				cellcd.resize(numCells[0]);
+				// maxz = *max ; minz = *min
+
+				//min-zvert = min index
+				//max-zvert = max index
+				std::vector<Point2> intersections(2), intersectold(2);
+				int k = static_cast<int>((minz-minSpc[2])*invEc2);
+				intersectTrianglePlaneZ(minz, intersections,t);
+				intersectold[0] = intersections[0]; //Salva a interseccao de z-1
+				intersectold[1] = intersections[1];
+				// from bot+1 to mid-1
+				for(k; k<static_cast<int>((midz-minSpc[2])*invEc2);k++){
+				// for(k = static_cast<int>((minz-minSpc[2])*invEc2)+1; k<static_cast<int>((maxz-minSpc[2])*invEc2);k++){
+
+					if (intersectTrianglePlaneZ(static_cast<float>(k+1)*eCells[2]+minSpc[2], intersections,t)){ // if intersect triang/plane z
+					
+						for (auto &p : cellcd) p.clear();	// clear cellcd previous iteration
+						planeInterpolationXY(intersections[0],intersectold[0],eCells[0],cellcd);
+						planeInterpolationXY(intersections[0],intersections[1],eCells[0],cellcd);
+						planeInterpolationXY(intersectold[0],intersectold[1],eCells[0],cellcd);
+						planeInterpolationXY(intersections[0],intersectold[1],eCells[0],cellcd);
+						planeInterpolationXY(intersections[1],intersectold[0],eCells[0],cellcd);
+						planeInterpolationXY(intersections[1],intersectold[1],eCells[0],cellcd);
+					
+				//fill buffer from cellcd 
+						for (int i = 0; i< cellcd.size();i++){
+							if(cellcd[i].size() == 0) continue;
+							
+							for(int j = *cellcd[i].begin(); j<=*--cellcd[i].end();++j){
+								
+								cellBufferFlattened[flatIndex(i, j, k)].push_back(t);
+							}
+						}
+						intersectold[0] = intersections[0]; //Salva a interseccao de z-1
+						intersectold[1] = intersections[1];
+						}
+				}		
+				// checking mid vertex 
+				{
+				for (auto &p : cellcd) p.clear();	// clear cellcd previous iteration
+				if (intersectTrianglePlaneZ(midz-eps, intersections,t)){
+					planeInterpolationXY(intersections[0],intersectold[0],eCells[0],cellcd);
+					planeInterpolationXY(intersections[0],intersections[1],eCells[0],cellcd);
+					planeInterpolationXY(intersectold[0],intersectold[1],eCells[0],cellcd);
+					planeInterpolationXY(intersections[0],intersectold[1],eCells[0],cellcd);
+					planeInterpolationXY(intersections[1],intersectold[0],eCells[0],cellcd);
+					planeInterpolationXY(intersections[1],intersectold[1],eCells[0],cellcd);
+					
+					intersectold[0] = intersections[0]; //Salva a interseccao de z-1
+					intersectold[1] = intersections[1];
+
+					k = static_cast<int>((midz-minSpc[2])*invEc2);
+					for (int i = 0; i< cellcd.size();i++){
+							if(cellcd[i].size() == 0) continue;
+							
+							for(int j = *cellcd[i].begin(); j<=*--cellcd[i].end();++j){
+
+								cellBufferFlattened[flatIndex(i, j, k)].push_back(t);
+							}
+						}
+				}
+				}
+				// from mid to top 
+				for(k = static_cast<int>((midz-minSpc[2])*invEc2); k<static_cast<int>((maxz-minSpc[2])*invEc2);k++){
+
+					if (intersectTrianglePlaneZ(static_cast<float>(k+1)*eCells[2]+minSpc[2], intersections,t)){ // if intersect triang/plane z
+					
+						for (auto &p : cellcd) p.clear();	// clear cellcd previous iteration
+						planeInterpolationXY(intersections[0],intersectold[0],eCells[0],cellcd);
+						planeInterpolationXY(intersections[0],intersections[1],eCells[0],cellcd);
+						planeInterpolationXY(intersectold[0],intersectold[1],eCells[0],cellcd);
+						planeInterpolationXY(intersections[0],intersectold[1],eCells[0],cellcd);
+						planeInterpolationXY(intersections[1],intersectold[0],eCells[0],cellcd);
+						planeInterpolationXY(intersections[1],intersectold[1],eCells[0],cellcd);
+						//fill buffer from cellcd 
+						for (int i = 0; i< cellcd.size();i++){
+							if(cellcd[i].size() == 0) continue;
+							
+							for(int j = *cellcd[i].begin(); j<=*--cellcd[i].end();++j){
+							// const auto [min, max] = std::minmax_element(begin(cellcd[i]), end(cellcd[i]));
+							// for(int_fast32_t j = minz; j<=*max;++j){
+								// #pragma omp critical		
+								// {cellBuffer[i][j][k].push_back(t);}
+								cellBufferFlattened[flatIndex(i, j, k)].push_back(t);
+							}
+						}
+						intersectold[0] = intersections[0]; //Salva a interseccao de z-1
+						intersectold[1] = intersections[1];
+						}
+				}
+				
+				// checking last vertex
+				{
+					for (auto &p : cellcd) p.clear();	// clear cellcd previous iteration
+					k =static_cast<int>((maxz-minSpc[2])*invEc2);
+					planeInterpolationXY(intersectold[0],intersectold[1],eCells[0],cellcd); 
+					planeInterpolationXY(Point2(maxx,maxy),intersectold[0],eCells[0],cellcd); 
+					planeInterpolationXY(Point2(maxx,maxy),intersectold[1],eCells[0],cellcd); 
+					
+					//fill buffer from cellcd 
+					for (int i = 0; i< cellcd.size();i++){
+						if(cellcd[i].size() == 0) continue;
+						
+						for(int j = *cellcd[i].begin(); j<=*--cellcd[i].end();++j){
+						// const auto [min, max] = std::minmax_element(begin(cellcd[i]), end(cellcd[i]));
+						// for(int_fast32_t j = minz; j<=*max;++j){
+							// #pragma omp critical
+							// {cellBuffer[i][j][k].push_back(t);}
+							cellBufferFlattened[flatIndex(i, j, k)].push_back(t);
+						}
+					}
+				}
+			}
+
+	}
+
+		
+}
+
+
+void mesh::fillCandidates_flat(){
+    #pragma omp parallel for 
+    for (int i = 0; i < numCells[0]*numCells[1]*numCells[2]; i++) {
+        for (const auto &n : neighborIndices[i]) {
+                candidatesSet_flat[i].insert(cellBufferFlattened[n].begin(), cellBufferFlattened[n].end());
+        }
+    }
+}
+void mesh::fillBopt_reserve(){    
+	const float invEc0 = 1/eCells[0];
+	const float invEc1 = 1/eCells[1];
+	const float invEc2 = 1/eCells[2];
+
+	#pragma omp parallel for
+	for (int t = 0; t<nElements;t++){
+
+		bool generalcase = true;
+		std::vector<std::set<int> > cellcd;
+			
+		// test if in plane yz
+		if (static_cast<int>((elem[t].node[0].pos->x-minSpc[0])*invEc0) == static_cast<int>((elem[t].node[1].pos->x-minSpc[0])*invEc0) && static_cast<int>((elem[t].node[0].pos->x-minSpc[0])*invEc0) == static_cast<int>((elem[t].node[2].pos->x-minSpc[0])*invEc0)){
+			cellcd.resize(numCells[1]);
+			
+			for (auto &p : cellcd) p.clear();	// clear cellcd previous iteration
+			planeInterpolationYZ(Point2(elem[t].node[2].pos->y,elem[t].node[2].pos->z),Point2(elem[t].node[0].pos->y,elem[t].node[0].pos->z),eCells[0],cellcd);
+			planeInterpolationYZ(Point2(elem[t].node[1].pos->y,elem[t].node[1].pos->z),Point2(elem[t].node[0].pos->y,elem[t].node[0].pos->z),eCells[0],cellcd);
+			planeInterpolationYZ(Point2(elem[t].node[2].pos->y,elem[t].node[2].pos->z),Point2(elem[t].node[1].pos->y,elem[t].node[1].pos->z),eCells[0],cellcd);
+			const int x = ((elem[t].node[0].pos->x-minSpc[0])*invEc0);
+			for (int i = 0; i< cellcd.size();i++){
+				if(cellcd[i].size() == 0) continue;
+				
+				for(int j = *cellcd[i].begin(); j<=*--cellcd[i].end();++j){
+				// const auto [min, max] = std::minmax_element(begin(cellcd[i]), end(cellcd[i]));
+				// for(int_fast32_t j = *min; j<=*max;++j){
+					// #pragma omp critical
+					{cellBuffer[x][i][j].push_back(t);}
+				}
+			} 
+			generalcase = false;
+				
+		}
+
+		// test if in plane xz
+		if (generalcase == true)
+		if (static_cast<int>((elem[t].node[0].pos->y-minSpc[1])*invEc1) == static_cast<int>((elem[t].node[1].pos->y-minSpc[1])*invEc1) && static_cast<int>((elem[t].node[0].pos->y-minSpc[1])*invEc1) == static_cast<int>((elem[t].node[2].pos->y-minSpc[1])*invEc1)){
+			
+			for (auto &p : cellcd) p.clear();	// clear cellcd previous iteration
+			cellcd.resize(numCells[0]);
+			planeInterpolationXZ(Point2(elem[t].node[2].pos->x,elem[t].node[2].pos->z),Point2(elem[t].node[0].pos->x,elem[t].node[0].pos->z),eCells[0],cellcd);
+			planeInterpolationXZ(Point2(elem[t].node[1].pos->x,elem[t].node[1].pos->z),Point2(elem[t].node[0].pos->x,elem[t].node[0].pos->z),eCells[0],cellcd);
+			planeInterpolationXZ(Point2(elem[t].node[2].pos->x,elem[t].node[2].pos->z),Point2(elem[t].node[1].pos->x,elem[t].node[1].pos->z),eCells[0],cellcd);
+			const int y = ((elem[t].node[0].pos->y-minSpc[1])*invEc1);
+			for (int i = 0; i< cellcd.size();i++){
+				if(cellcd[i].size() == 0) continue;
+				for(int j = *cellcd[i].begin(); j<=*--cellcd[i].end();++j){
+				// const auto [min, max] = std::minmax_element(begin(cellcd[i]), end(cellcd[i]));
+				// for(int_fast32_t j = *min; j<=*max;++j){
+					// #pragma omp critical
+					{cellBuffer[i][y][j].push_back(t);}
+				}
+			} 
+			generalcase = false;
+		}
+		
+		// test if in plane xy
+		if (generalcase == true)
+		if (static_cast<int>((elem[t].node[0].pos->z-minSpc[2])*invEc2) == static_cast<int>((elem[t].node[1].pos->z-minSpc[2])*invEc2) && static_cast<int>((elem[t].node[0].pos->z-minSpc[2])*invEc2) == static_cast<int>((elem[t].node[2].pos->z-minSpc[2])*invEc2)){
+			
+			for (auto &p : cellcd) p.clear();	// clear cellcd previous iteration
+			cellcd.resize(numCells[0]);
+			planeInterpolationXY(Point2(elem[t].node[2].pos->x,elem[t].node[2].pos->y),Point2(elem[t].node[0].pos->x,elem[t].node[0].pos->y),eCells[0],cellcd);
+			planeInterpolationXY(Point2(elem[t].node[1].pos->x,elem[t].node[1].pos->y),Point2(elem[t].node[0].pos->x,elem[t].node[0].pos->y),eCells[0],cellcd);
+			planeInterpolationXY(Point2(elem[t].node[2].pos->x,elem[t].node[2].pos->y),Point2(elem[t].node[1].pos->x,elem[t].node[1].pos->y),eCells[0],cellcd);
+			const int z = ((elem[t].node[0].pos->z-minSpc[2])*invEc2);
+			for (int i = 0; i< cellcd.size();i++){
+				if(cellcd[i].size() == 0) continue;
+				
+				for(int j = *cellcd[i].begin(); j<=*--cellcd[i].end();++j){
+				// const auto [min, max] = std::minmax_element(begin(cellcd[i]), end(cellcd[i]));
+				// for(int_fast32_t j = *min; j<=*max;++j){
+					// #pragma omp critical
+					{cellBuffer[i][j][z].push_back(t);}
+				}
+			} 
+			generalcase = false;
+		}
+
+		if(generalcase){
+			float zvert[] = {elem[t].node[0].pos->z, elem[t].node[1].pos->z, elem[t].node[2].pos->z};
+
+			auto [min, max] = std::minmax_element(zvert,zvert+3);
+			
+			int mid = 3 - (min-zvert) - (max-zvert); 
+			float midx = elem[t].node[mid].pos->x;
+			float midy = elem[t].node[mid].pos->y;
+			float midz = elem[t].node[mid].pos->z;
+
+			float minx = elem[t].node[min-zvert].pos->x;
+			float miny = elem[t].node[min-zvert].pos->y;
+			float minz = *min;
+
+			float maxx = elem[t].node[max - zvert].pos->x;
+			float maxy = elem[t].node[max - zvert].pos->y;
+			float maxz = *max;
+			
+			// maxz = *max ; minz = *min
+
+			//min-zvert = min index
+			//max-zvert = max index
+			std::vector<Point2> intersections(2), intersectold(2);
+			int k = static_cast<int>((minz-minSpc[2])*invEc2);
+			
+			for (auto &p : cellcd) p.clear();	// clear cellcd previous iteration
+			cellcd.resize(numCells[0]);
+			// checking first vertex
+			{
+			intersectTrianglePlaneZ(static_cast<float>(k+1)*eCells[2]+minSpc[2], intersections,t);
+			// if min,max:{0,1}->mid=2 / min,max:{0,2}->mid=1 / min,max:{1,2}-> mid = 0
+			
+			planeInterpolationXY(intersections[0],intersections[1],eCells[0],cellcd); 
+			planeInterpolationXY(Point2(minx,miny),intersections[0],eCells[0],cellcd); 
+			planeInterpolationXY(Point2(minx,miny),intersections[1],eCells[0],cellcd); 
+			
+			if (static_cast<int>((midz-minSpc[2])*invEc2) == k){
+				planeInterpolationXY(Point2(minx,miny),Point2(midx,midy),eCells[0],cellcd);
+				planeInterpolationXY(Point2(midx,midy),intersections[0],eCells[0],cellcd); 
+				planeInterpolationXY(Point2(midx,midy),intersections[1],eCells[0],cellcd);
+			}
+
+			//fill buffer from cellcd 
+			for (int i = 0; i< cellcd.size();i++){
+				if(cellcd[i].size() == 0) continue;
+				
+				for(int j = *cellcd[i].begin(); j<=*--cellcd[i].end();++j){
+				// const auto [min, max] = std::minmax_element(begin(cellcd[i]), end(cellcd[i]));
+				// for(int_fast32_t j = minz; j<=*max;++j){
+					// #pragma omp critical
+					{cellBuffer[i][j][k].push_back(t);}
+				}
+			}
+			
+			intersectold[0] = intersections[0]; //Salva a interseccao de z-1
+			intersectold[1] = intersections[1];
+			}
+			// from bot+1 to mid-1
+			for(k = static_cast<int>((minz-minSpc[2])*invEc2)+1; k<static_cast<int>((midz-minSpc[2])*invEc2)-1;k++){
+			// for(k = static_cast<int>((minz-minSpc[2])*invEc2)+1; k<static_cast<int>((maxz-minSpc[2])*invEc2);k++){
+
+				if (intersectTrianglePlaneZ(static_cast<float>(k+1)*eCells[2]+minSpc[2], intersections,t)){ // if intersect triang/plane z
+				
+					for (auto &p : cellcd) p.clear();	// clear cellcd previous iteration
+					planeInterpolationXY(intersections[0],intersectold[0],eCells[0],cellcd);
+					planeInterpolationXY(intersections[0],intersections[1],eCells[0],cellcd);
+					planeInterpolationXY(intersectold[0],intersectold[1],eCells[0],cellcd);
+					planeInterpolationXY(intersections[0],intersectold[1],eCells[0],cellcd);
+					planeInterpolationXY(intersections[1],intersectold[0],eCells[0],cellcd);
+					planeInterpolationXY(intersections[1],intersectold[1],eCells[0],cellcd);
+				
+			//fill buffer from cellcd 
+					for (int i = 0; i< cellcd.size();i++){
+						if(cellcd[i].size() == 0) continue;
+						
+						for(int j = *cellcd[i].begin(); j<=*--cellcd[i].end();++j){
+							cellBuffer[i][j][k].push_back(t);
+						}
+					}
+					intersectold[0] = intersections[0]; //Salva a interseccao de z-1
+					intersectold[1] = intersections[1];
+					}
+			}		
+			// checking mid vertex 
+			{
+			for (auto &p : cellcd) p.clear();	// clear cellcd previous iteration
+			if (intersectTrianglePlaneZ(midz-eps, intersections,t)){
+				planeInterpolationXY(intersections[0],intersectold[0],eCells[0],cellcd);
+				planeInterpolationXY(intersections[0],intersections[1],eCells[0],cellcd);
+				planeInterpolationXY(intersectold[0],intersectold[1],eCells[0],cellcd);
+				planeInterpolationXY(intersections[0],intersectold[1],eCells[0],cellcd);
+				planeInterpolationXY(intersections[1],intersectold[0],eCells[0],cellcd);
+				planeInterpolationXY(intersections[1],intersectold[1],eCells[0],cellcd);
+				
+				intersectold[0] = intersections[0]; //Salva a interseccao de z-1
+				intersectold[1] = intersections[1];
+
+				k = static_cast<int>((midz-minSpc[2])*invEc2);
+				for (int i = 0; i< cellcd.size();i++){
+						if(cellcd[i].size() == 0) continue;
+						
+						for(int j = *cellcd[i].begin(); j<=*--cellcd[i].end();++j){
+
+							cellBuffer[i][j][k].push_back(t);
+						}
+					}
+			}
+			}
+			// from mid to top 
+			for(k = static_cast<int>((midz-minSpc[2])*invEc2); k<static_cast<int>((maxz-minSpc[2])*invEc2);k++){
+
+				if (intersectTrianglePlaneZ(static_cast<float>(k+1)*eCells[2]+minSpc[2], intersections,t)){ // if intersect triang/plane z
+				
+					for (auto &p : cellcd) p.clear();	// clear cellcd previous iteration
+					planeInterpolationXY(intersections[0],intersectold[0],eCells[0],cellcd);
+					planeInterpolationXY(intersections[0],intersections[1],eCells[0],cellcd);
+					planeInterpolationXY(intersectold[0],intersectold[1],eCells[0],cellcd);
+					planeInterpolationXY(intersections[0],intersectold[1],eCells[0],cellcd);
+					planeInterpolationXY(intersections[1],intersectold[0],eCells[0],cellcd);
+					planeInterpolationXY(intersections[1],intersectold[1],eCells[0],cellcd);
+					//fill buffer from cellcd 
+					for (int i = 0; i< cellcd.size();i++){
+						if(cellcd[i].size() == 0) continue;
+						
+						for(int j = *cellcd[i].begin(); j<=*--cellcd[i].end();++j){
+						// const auto [min, max] = std::minmax_element(begin(cellcd[i]), end(cellcd[i]));
+						// for(int_fast32_t j = minz; j<=*max;++j){
+							// #pragma omp critical		
+							{cellBuffer[i][j][k].push_back(t);}
+						}
+					}
+					intersectold[0] = intersections[0]; //Salva a interseccao de z-1
+					intersectold[1] = intersections[1];
+					}
+			}
+			// checking last vertex
+			{
+				for (auto &p : cellcd) p.clear();	// clear cellcd previous iteration
+				k =static_cast<int>((maxz-minSpc[2])*invEc2);
+				intersectTrianglePlaneZ(static_cast<float>(k)*eCells[2]+minSpc[2], intersections,t);
+				planeInterpolationXY(intersections[0],intersections[1],eCells[0],cellcd); 
+				planeInterpolationXY(Point2(maxx,maxy),intersections[0],eCells[0],cellcd); 
+				planeInterpolationXY(Point2(maxx,maxy),intersections[1],eCells[0],cellcd); 
+				
+				if (static_cast<int>((midz-minSpc[2])*invEc2) == k){
+					planeInterpolationXY(Point2(maxx,maxy),Point2(midx,midy),eCells[0],cellcd);
+					planeInterpolationXY(Point2(midx,midy),intersections[0],eCells[0],cellcd); 
+					planeInterpolationXY(Point2(midx,midy),intersections[1],eCells[0],cellcd);
+				}
+				//fill buffer from cellcd 
+				for (int i = 0; i< cellcd.size();i++){
+					if(cellcd[i].size() == 0) continue;
+					
+					for(int j = *cellcd[i].begin(); j<=*--cellcd[i].end();++j){
+					// const auto [min, max] = std::minmax_element(begin(cellcd[i]), end(cellcd[i]));
+					// for(int_fast32_t j = minz; j<=*max;++j){
+						// #pragma omp critical
+							cellBuffer[i][j][k].push_back(t);
+					}
+				}
+			}
+		}
+	
+	}
+}
+
+void mesh::fillBuffer() {
+    #pragma omp parallel
+    {
+        std::vector<std::array<int, 3>> localInserts;
+
+        #pragma omp for
+        for (int t = 0; t < nElements; t++) {
+            float cen[3];
+            float normalx, normaly, normalz;
+            float vx[3], vy[3], vz[3];
+            int bound[3][2] = {0, 0, 0, 0, 0, 0};
+
+            for (int n = 0; n < 3; n++) {
+                vx[n] = getNodePositionX(t, n);
+                vy[n] = getNodePositionY(t, n);
+                vz[n] = getNodePositionZ(t, n);
+            }
+
+            getBounds(bound, vx, vy, vz);
+            normalx = getNormalX(t);
+            normaly = getNormalY(t);
+            normalz = getNormalZ(t);
+
+            for (int i = bound[0][0]; i <= bound[0][1]; i++) {
+                if (i < 0 || (i >= numCells[0])) continue;
+                for (int j = bound[1][0]; j <= bound[1][1]; j++) {
+                    if (j < 0 || (j >= numCells[1])) continue;
+                    for (int k = bound[2][0]; k <= bound[2][1]; k++) {
+                        if (k < 0 || (k >= numCells[2])) continue;
+
+                        cen[0] = getCellCenterX(i);
+                        cen[1] = getCellCenterY(j);
+                        cen[2] = getCellCenterZ(k);
+
+                        if (triangleAABB_intersection(cen, normalx, normaly, normalz, vx[0], vy[0], vz[0], vx[1], vy[1], vz[1], vx[2], vy[2], vz[2])) {
+                            localInserts.push_back({i, j, k});
+                        }
+                    }
+                }
+            }
+
+            #pragma omp critical
+            {
+                for (const auto& insert : localInserts) {
+                    int i = insert[0];
+                    int j = insert[1];
+                    int k = insert[2];
+                    cellBuffer[i][j][k].push_back(t);
+                }
+                localInserts.clear();
+            }
+        }
+    }
+}
+void mesh::fillCandidates() {
+	int x = std::max_element(numCells,numCells+3) - numCells;
+	int xmin = std::min_element(numCells,numCells+3) - numCells;
+	int xmid = (3 - x - xmin);
+	if (numCells[xmin] > 12 && numCells[xmid] > 12)
+	// 3 2 2
+    #pragma omp parallel num_threads(12)
+    {	
+        int numThreads = omp_get_num_threads();
+        int tid = omp_get_thread_num(); // Thread ID
+		// printf("\nthread = %d",tid);
+		
+		int threaddomain[3];
+
+		threaddomain[x] = static_cast<int>(tid/4);
+		threaddomain[(x+1)%3] = static_cast<int>(tid/2)%2;
+		threaddomain[(x+2)%3] = static_cast<int>(tid%2);
+		
+		int chunkSize[3];
+
+        chunkSize[x] = (numCells[x] + 2) / 3; // Ceiling division
+
+        chunkSize[(x+1)%3] = (numCells[(x+1)%3] + 1) /2; // Ceiling division
+		chunkSize[(x+2)%3] = (numCells[(x+2)%3] + 1) /2; // Ceiling division
+
+		// printf("thread: %d , domain: %d,%d,%d\n",tid, threaddomain[0],threaddomain[1],threaddomain[2]);
+
+        int startIdxI = threaddomain[0] * chunkSize[0];
+        int startIdxJ = threaddomain[1] * chunkSize[1];
+        int startIdxK = threaddomain[2] * chunkSize[2];
+
+        int endIdxI = std::min((threaddomain[0] + 1) * chunkSize[0], numCells[0]);
+        int endIdxJ = std::min((threaddomain[1] + 1) * chunkSize[1], numCells[1]);
+        int endIdxK = std::min((threaddomain[2] + 1) * chunkSize[2], numCells[2]);
+		
+        for (int i = startIdxI; i < endIdxI; i++) {
+			
+            const int startX = std::max(i - 1, 0);
+            const int endX = std::min(i + 1, numCells[0] - 1);
+
+            for (int j = startIdxJ; j < endIdxJ; j++) {
+
+                    const int startY = std::max(j - 1, 0);
+                    const int endY = std::min(j + 1, numCells[1] - 1);
+
+                for (int k = startIdxK; k < endIdxK; k++) {
+					
+                    const int startZ = std::max(k - 1, 0);
+                    const int endZ = std::min(k + 1, numCells[2] - 1);
+					
+                    auto& cell = cellBuffer[i][j][k];
+
+                    for (int ii = startX; ii <= endX; ++ii) {
+                        for (int jj = startY; jj <= endY; ++jj) {
+                            for (int kk = startZ; kk <= endZ; ++kk) {
+								//#pragma omp critical
+                                
+                                {candidates_set[i][j][k].insert(cellBuffer[ii][jj][kk].begin(), cellBuffer[ii][jj][kk].end());}
+                            }
+                        }
+                    }
+					
+					// cellBuffer[i][j][k].clear();
+                }
+            }
+        }
+    }
+	else if (numCells[xmin] < 12 && numCells[xmid] > 12)
+	// 4 3 1
+	#pragma omp parallel num_threads(12)
+    {
+        int numThreads = omp_get_num_threads();
+        int tid = omp_get_thread_num(); // Thread ID
+		// printf("\nthread = %d",tid);
+		
+		int threaddomain[3];
+		threaddomain[x] = static_cast<int>(tid %4);
+		threaddomain[xmid] = static_cast<int>(tid %3);
+		threaddomain[xmin] = 0;
+
+		int chunkSize[3];
+
+		chunkSize[x] = (numCells[x] + 3) / 4; 
+		chunkSize[xmid] = (numCells[xmid] + 2 ) / 3;
+		chunkSize[xmin] = numCells[xmin];
+
+		// printf("thread: %d , domain: %d,%d,%d\n",tid, threaddomain[0],threaddomain[1],threaddomain[2]);
+
+        int startIdxI = threaddomain[0] * chunkSize[0];
+        int startIdxJ = threaddomain[1] * chunkSize[1];
+        int startIdxK = threaddomain[2] * chunkSize[2];
+
+        int endIdxI = std::min((threaddomain[0] + 1) * chunkSize[0], numCells[0]);
+        int endIdxJ = std::min((threaddomain[1] + 1) * chunkSize[1], numCells[1]);
+        int endIdxK = std::min((threaddomain[2] + 1) * chunkSize[2], numCells[2]);
+		
+        for (int i = startIdxI; i < endIdxI; i++) {
+			
+            const int startX = std::max(i - 1, 0);
+            const int endX = std::min(i + 1, numCells[0] - 1);
+
+            for (int j = startIdxJ; j < endIdxJ; j++) {
+
+                    const int startY = std::max(j - 1, 0);
+                    const int endY = std::min(j + 1, numCells[1] - 1);
+
+                for (int k = startIdxK; k < endIdxK; k++) {
+					
+                    const int startZ = std::max(k - 1, 0);
+                    const int endZ = std::min(k + 1, numCells[2] - 1);
+					
+                    auto& cell = cellBuffer[i][j][k];
+
+                    for (int ii = startX; ii <= endX; ++ii) {
+                        for (int jj = startY; jj <= endY; ++jj) {
+                            for (int kk = startZ; kk <= endZ; ++kk) {
+								//#pragma omp critical
+                                
+                                {candidates_set[i][j][k].insert(cellBuffer[ii][jj][kk].begin(), cellBuffer[ii][jj][kk].end());}
+                            }
+                        }
+                    }
+					
+					// cellBuffer[i][j][k].clear();
+                }
+            }
+        }
+    }
+	else if (numCells[xmid] < 12 && numCells[x]>24)
+	// 6 2 1
+	#pragma omp parallel num_threads(12)
+    {
+        int numThreads = omp_get_num_threads();
+        int tid = omp_get_thread_num(); // Thread ID
+		// printf("\nthread = %d",tid);
+		
+		int threaddomain[3];
+		threaddomain[x] = static_cast<int>(tid % 6);
+		threaddomain[xmid] = static_cast<int>(tid/ 6);
+		threaddomain[xmin] = 0;
+
+		int chunkSize[3];
+
+		chunkSize[x] = (numCells[x] + 5) / 6; 
+		chunkSize[xmid] = (numCells[xmid] + 1 ) / 2;
+		chunkSize[xmin] = numCells[xmin];
+
+		// printf("thread: %d , domain: %d,%d,%d\n",tid, threaddomain[0],threaddomain[1],threaddomain[2]);
+
+        int startIdxI = threaddomain[0] * chunkSize[0];
+        int startIdxJ = threaddomain[1] * chunkSize[1];
+        int startIdxK = threaddomain[2] * chunkSize[2];
+
+        int endIdxI = std::min((threaddomain[0] + 1) * chunkSize[0], numCells[0]);
+        int endIdxJ = std::min((threaddomain[1] + 1) * chunkSize[1], numCells[1]);
+        int endIdxK = std::min((threaddomain[2] + 1) * chunkSize[2], numCells[2]);
+		
+        for (int i = startIdxI; i < endIdxI; i++) {
+			
+            const int startX = std::max(i - 1, 0);
+            const int endX = std::min(i + 1, numCells[0] - 1);
+
+            for (int j = startIdxJ; j < endIdxJ; j++) {
+
+                    const int startY = std::max(j - 1, 0);
+                    const int endY = std::min(j + 1, numCells[1] - 1);
+
+                for (int k = startIdxK; k < endIdxK; k++) {
+					
+                    const int startZ = std::max(k - 1, 0);
+                    const int endZ = std::min(k + 1, numCells[2] - 1);
+					
+                    auto& cell = cellBuffer[i][j][k];
+
+                    for (int ii = startX; ii <= endX; ++ii) {
+                        for (int jj = startY; jj <= endY; ++jj) {
+                            for (int kk = startZ; kk <= endZ; ++kk) {
+								//#pragma omp critical
+                                {candidates_set[i][j][k].insert(cellBuffer[ii][jj][kk].begin(), cellBuffer[ii][jj][kk].end());}
+                            }
+                        }
+                    }
+					
+					// cellBuffer[i][j][k].clear();
+                }
+            }
+        }
+    }
+	else fillCandidates_seq();
+}
+void mesh::fillCandidates2() {
+    #pragma omp parallel for collapse(3)
+    for (int i = 0; i < numCells[0]; i++) {
+        for (int j = 0; j < numCells[1]; j++) {
+            for (int k = 0; k < numCells[2]; k++) {
+                const int startX = std::max(i - 1, 0);
+                const int startY = std::max(j - 1, 0);
+                const int startZ = std::max(k - 1, 0);
+                const int endX = std::min(i + 1, numCells[0] - 1);
+                const int endY = std::min(j + 1, numCells[1] - 1);
+                const int endZ = std::min(k + 1, numCells[2] - 1);
+				
+                auto& cell = cellBuffer[i][j][k];
+                for (int ii = startX; ii <= endX; ++ii) {
+                    for (int jj = startY; jj <= endY; ++jj) {
+                        for (int kk = startZ; kk <= endZ; ++kk) {
+                            candidates_set[ii][jj][kk].insert(cell.begin(), cell.end());
+                        }
+                    }
+                }
+				
+            	cell.clear();
+            }
+        }
+    }
+}
+
+void mesh::fillCandidates3() {
+	
+    #pragma omp parallel
+    {
+		
+		std::unordered_map<std::tuple<int, int, int>, std::set<int>, hash_tuple> localcandidatesSet_flat;
+
+
+        #pragma omp for collapse(3)
+        for (int i = 0; i < numCells[0]; i++) {
+            for (int j = 0; j < numCells[1]; j++) {
+                for (int k = 0; k < numCells[2]; k++) {
+                    const int startX = std::max(i - 1, 0);
+                    const int startY = std::max(j - 1, 0);
+                    const int startZ = std::max(k - 1, 0);
+                    const int endX = std::min(i + 1, numCells[0] - 1);
+                    const int endY = std::min(j + 1, numCells[1] - 1);
+                    const int endZ = std::min(k + 1, numCells[2] - 1);
+
+                    auto& cell = cellBuffer[i][j][k];
+
+                    for (int ii = startX; ii <= endX; ++ii) {
+                        for (int jj = startY; jj <= endY; ++jj) {
+                            for (int kk = startZ; kk <= endZ; ++kk) {
+                                auto key = std::make_tuple(ii, jj, kk);
+                                localcandidatesSet_flat[key].insert(cell.begin(), cell.end());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Synchronize insertion into candidates_set
+        
+        {
+            for (auto& entry : localcandidatesSet_flat) {
+                auto& key = entry.first;
+                auto& localSet = entry.second;
+				 // Separate tuple key into components i, j, k
+                int i = std::get<0>(key);
+                int j = std::get<1>(key);
+                int k = std::get<2>(key);
+
+                // Access and insert into candidates_set
+                candidates_set[i][j][k].insert(localSet.begin(), localSet.end());
+            }
+        }
+    }
+}
+
+void mesh::fillCandidates4(){
+	
+	#pragma omp parallel for collapse(3) 
+		for(int i =0; i < numCells[0]; i++){
+			for(int j = 0; j < numCells[1]; j++){
+				for(int k = 0; k < numCells[2]; k++){
+					for (int c = 0; c<27; c++){
+						if(neighPos[c][0]+i < 0 or neighPos[c][0]+i >= numCells[0]) continue;
+						if(neighPos[c][1]+j < 0 or neighPos[c][1]+j >= numCells[1]) continue;
+						if(neighPos[c][2]+k < 0 or neighPos[c][2]+k >= numCells[2]) continue;
+						candidates_set[i][j][k].insert(cellBuffer[i+neighPos[c][0]][j+neighPos[c][1]][k+neighPos[c][2]].begin(), cellBuffer[i+neighPos[c][0]][j+neighPos[c][1]][k+neighPos[c][2]].end());
+						
+					}
+					
+					// cellBuffer[i][j][k].clear();
+				}
+			}
+			
+		}
+	
+}
+void mesh::fillCandidates5(){
+	
+	#pragma omp parallel for collapse(3)
+		for(int i =0; i < numCells[0]; i++){
+			for(int j = 0; j < numCells[1]; j++){
+				for(int k = 0; k < numCells[2]; k++){
+                    auto& cell = cellBuffer[i][j][k];
+						for (int c = 0; c<27; c++){
+							if(neighPos[c][0]+i < 0 or neighPos[c][0]+i >= numCells[0]) continue;
+							if(neighPos[c][1]+j < 0 or neighPos[c][1]+j >= numCells[1]) continue;
+							if(neighPos[c][2]+k < 0 or neighPos[c][2]+k >= numCells[2]) continue;
+							
+							candidates_set[i+neighPos[c][0]][j+neighPos[c][1]][k+neighPos[c][2]].insert(cell.begin(), cell.end());
+							
+						}
+					}
+					// cellBuffer[i][j][k].clear();
+			}
+			
+		}
+	
+}
+void mesh::fillCandidates_seq(){
+	
+		for(int i =0; i < numCells[0]; i++){
+			for(int j = 0; j < numCells[1]; j++){
+				for(int k = 0; k < numCells[2]; k++){
+					const int startX = std::max(i - 1, 0);
+					const int startY = std::max(j - 1, 0);
+					const int startZ = std::max(k - 1, 0);
+					const int endX = std::min(i + 1, numCells[0] - 1);
+					const int endY = std::min(j + 1, numCells[1] - 1);
+					const int endZ = std::min(k + 1, numCells[2] - 1);
+					for (int ii = startX; ii <= endX; ++ii) {
+							for (int jj = startY; jj <= endY; ++jj) {
+								for (int kk = startZ; kk <= endZ; ++kk) {
+									const int bufferSize = cellBuffer[ii][jj][kk].size(); // Calculate size once
+									for (int w = 0; w < bufferSize; ++w) {
+										candidates_set[i][j][k].insert(cellBuffer[ii][jj][kk][w]);
+									}
+								}
+							}
+						}
+					// cellBuffer[i][j][k].clear();
+				}
+			}
+			
+		}
+	
+}
+int mesh::calcDist(const float *p, const double range, const int cpx, const int cpy, const int cpz, float *closestPoint, double &cqd){
 	if(candidates_set[cpx][cpy][cpz].empty()){
 		
-		return cid;
+		return -1;
 	}
-	double a[3], b[3], c[3];
-	long id;
-	
-	for (std::set<long>::iterator it=candidates_set[cpx][cpy][cpz].begin(); it!=candidates_set[cpx][cpy][cpz].end(); ++it){
-		id = *it;
-		a[0] = elem[id].node[0].pos->x;
-		a[1] = elem[id].node[0].pos->y;
-		a[2] = elem[id].node[0].pos->z;
-
-		b[0] = elem[id].node[1].pos->x;
-		b[1] = elem[id].node[1].pos->y;
-		b[2] = elem[id].node[1].pos->z;
-
-		c[0] = elem[id].node[2].pos->x;
-		c[1] = elem[id].node[2].pos->y;
-		c[2] = elem[id].node[2].pos->z;
+	int cid = -1;
+	int id;
+	double threshold = 0.2*partdist2;
+	double quadDist;
+	float point[3] = {-1.0,-1.0,-1.0};
+	float a[3], b[3], c[3];	
+	for (const auto& it : candidates_set[cpx][cpy][cpz]) {
+        id = it;
+        const auto& elem_id = elem[id];
+		float a[3] = { elem_id.node[0].pos->x, elem_id.node[0].pos->y, elem_id.node[0].pos->z };
+        float b[3] = { elem_id.node[1].pos->x, elem_id.node[1].pos->y, elem_id.node[1].pos->z };
+        float c[3] = { elem_id.node[2].pos->x, elem_id.node[2].pos->y, elem_id.node[2].pos->z };
 		quadDist = calcNearestPoint(a,b,c,p,point);
-		
 		if(quadDist < cqd){
 			cqd = quadDist;
 			cid = id;
-			for(int i =0; i<=2; i++) closestPoint[i] = point[i]; 
+			closestPoint[0] = point[0];
+			closestPoint[1] = point[1];
+			closestPoint[2] = point[2]; 
+			// if (cqd < threshold) return cid;
+		}
+
+	}
+	return cid;
+
+}
+int mesh::calcDist_flat(const float *p, const double range, const int fIndex, float *closestPoint, double &cqd){
+	if(candidatesSet_flat[fIndex].empty()){
+		
+		return -1;
+	}
+	int cid = -1;
+	int id;
+	double threshold = 0.2*partdist2; 
+	double quadDist;
+	float point[3] = {-1.0,-1.0,-1.0};
+	float a[3], b[3], c[3];	
+	for (const auto& it : candidatesSet_flat[fIndex]) {
+        id = it;
+        const auto& elem_id = elem[id];
+		float a[3] = { elem_id.node[0].pos->x, elem_id.node[0].pos->y, elem_id.node[0].pos->z };
+        float b[3] = { elem_id.node[1].pos->x, elem_id.node[1].pos->y, elem_id.node[1].pos->z };
+        float c[3] = { elem_id.node[2].pos->x, elem_id.node[2].pos->y, elem_id.node[2].pos->z };
+		quadDist = calcNearestPoint(a,b,c,p,point);
+		if(quadDist < cqd){
+			cqd = quadDist;
+			cid = id;
+			closestPoint[0] = point[0];
+			closestPoint[1] = point[1];
+			closestPoint[2] = point[2]; 
+			// if (cqd < threshold) return cid;
 		}
 
 	}
@@ -788,14 +2310,14 @@ long mesh::calcDist(double *p, double range, int cpx, int cpy, int cpz, double *
 /*
 /// Find closest point on the mesh from a particle i
 /// Real-time collision detection, Ericson, Chapter 5 - Pg 141 - function ClosestPtPointTriangle
-void mesh::closestPointMesh(int nMesh, int *type, double *quaddev, double *pndS, double pndS0, double reL, int nPart, long *index, double *dMesh,
-    long *idNearMesh, long *idNearElement, double *x, double *y, double *z, double *mx, double *my, double *mz, cellGrid *grid)
+void mesh::closestPointMesh(int nMesh, int *type, float *quaddev, float *pndS, float pndS0, float reL, int nPart, int *index, float *dMesh,
+    int *idNearMesh, int *idNearElement, float *x, float *y, float *z, float *mx, float *my, float *mz, cellGrid *grid)
 {
-	double reL2 = reL*reL;
+	float reL2 = reL*reL;
 	//fprintf(stderr, "\n * RAIO LARG = %f \n",reL);
 	struct timeval t1, t2;
-	double beta = 0.90;
-	double elapsedTime;
+	float beta = 0.90;
+	float elapsedTime;
 	int idElement[nPart];
 	for(int i=0; i<nPart; i++)
 	{
@@ -817,7 +2339,7 @@ void mesh::closestPointMesh(int nMesh, int *type, double *quaddev, double *pndS,
 		if(type[m]==51)
 		{
 			
-			double testPoint[3] = {x[i], y[i], z[i]};
+			float testPoint[3] = {x[i], y[i], z[i]};
 			int cpx, cpy, cpz;
 			cpx = grid->getCellPosX(testPoint[0]);
 			cpy = grid->getCellPosY(testPoint[1]);
@@ -825,9 +2347,9 @@ void mesh::closestPointMesh(int nMesh, int *type, double *quaddev, double *pndS,
 
 			//fprintf(stderr, "\n * x,y,z = %f - %f - %f \n",testPoint[0], testPoint[1], testPoint[2]);
 			///Find the closest points to TestPoint
-			double closestPoint[3] = {0.0,0.0,0.0};     ///the coordinates of the closest point will be returned here
-			double closestPointDist2 = 0;   ///the squared distance to the closest point will be returned here
-			long elemId;           ///the cell id of the cell containing the closest point will be returned here
+			float closestPoint[3] = {0.0,0.0,0.0};     ///the coordinates of the closest point will be returned here
+			float closestPointDist2 = 0;   ///the squared distance to the closest point will be returned here
+			int elemId;           ///the cell id of the cell containing the closest point will be returned here
 			//fprintf(stderr, "\n * closestPointDist2 = %f \n",closestPointDist2);
 			/// Get the coordinates of the closest point
 			//fprintf(stderr, "\n * x,y,z = %f - %f - %f \n", closestPoint[0], closestPoint[1], closestPoint[2]);
@@ -874,21 +2396,21 @@ void mesh::closestPointMesh(int nMesh, int *type, double *quaddev, double *pndS,
   			int m = index[i];
 			if(type[m]==51)
 			{
-				double p[3]; /// Position of particle i
+				float p[3]; /// Position of particle i
 				p[0] = x[i];
 				p[1] = y[i];
 				p[2] = z[i];
-				double mp[3], pmp[3];
+				float mp[3], pmp[3];
 				mp[0] = mx[i];
 				mp[1] = my[i];
 				mp[2] = mz[i];
 				subtraction(p,mp,pmp); /// pmp = p - mp
 				/// Square of distance between particle i and wall particle
-				double dpw2 = squaredNorm(pmp)/4.0;
+				float dpw2 = squaredNorm(pmp)/4.0;
 				/// Calculate the distance between mesh and particle
 				if (dpw2 < reL2)
 				{
-					double dpw = sqrt(dpw2);
+					float dpw = sqrt(dpw2);
 					if(dMesh[i] == 0.0)
 					{
 						dMesh[i] = dpw;
@@ -909,122 +2431,114 @@ void mesh::closestPointMesh(int nMesh, int *type, double *quaddev, double *pndS,
 
 */
 
-double mesh::calcNearestPoint(double *a, double *b, double *c, double *p, double *nearest){
+double mesh::calcNearestPoint(const float  *a, const float  *b, const float  *c, const float *p, float *nearest){
 	/// Real-time collision detection, Ericson, Chapter 5 - Pg 141 - function ClosestPtPointTriangle
 	/// Returns the nearest point of the triangle a,b,c to particle p on pointer *nearest and squaredDistance(nearest, p)
 	
-	int X,Y,Z;
-	X = 0; Y = 1; Z = 2;
-	double ab[3], ac[3], ap[3];
-	double d1, d2;
-	subtraction(b,a,ab);
-	subtraction(c,a,ac);
-	subtraction(p,a,ap);
+	
+	const float ab[3] = {b[0]-a[0],b[1]-a[1],b[2]-a[2]};
+	const float ac[3] = {c[0]-a[0],c[1]-a[1],c[2]-a[2]};
+	const float ap[3] = {p[0]-a[0],p[1]-a[1],p[2]-a[2]};
 
-	/*
-	int flag = 0;
-	if(p[X]> 0.009 && p[X]<0.011 && p[Y] < -0.29 && p[Y]>-0.291 && p[Z] == 0.14) flag = 1;
-	if(flag == 1){
-	fprintf(stderr, "\n *a = [%f][%f][%f]", a[X], a[Y], a[Z]);
-	fprintf(stderr, "\n *b = [%f][%f][%f]", b[X], b[Y], b[Z]);
-	fprintf(stderr, "\n *c = [%f][%f][%f]", c[X], c[Y], c[Z]);
-	fprintf(stderr, "\n *p = [%f][%f][%f]", p[X], p[Y], p[Z]);
-	fprintf(stderr, "\n *ab = [%f][%f][%f]", ab[X], ab[Y], ab[Z]);
-	fprintf(stderr, "\n *ac = [%f][%f][%f]", ac[X], ac[Y], ac[Z]);
-	fprintf(stderr, "\n *ap = [%f][%f][%f]", ap[X], ap[Y], ap[Z]);
-	}
-	*/
 
-	d1 = ab[0]*ap[0] + ab[1]*ap[1] + ab[2]*ap[2];
-	d2 = ac[0]*ap[0] + ac[1]*ap[1] + ac[2]*ap[2];
+	const float  d1 = ab[0]*ap[0] + ab[1]*ap[1] + ab[2]*ap[2];
+	const float  d2 = ac[0]*ap[0] + ac[1]*ap[1] + ac[2]*ap[2];
 
-	/*
-	if(flag == 1){
-		fprintf(stderr, "\n *d1 = [%f]", d1);
-		fprintf(stderr, "\n *d2 = [%f]", d2);
-	}
-	*/
 
 	//First Region Check: nearest -> a vertex
 	if (d1 <= 0.0 && d2 <= 0.0){
-		//if (flag == 1) fprintf(stderr, "\n *1 - a vertex");
+		
 		for(int i = 0; i<=2; i++) nearest[i]=a[i];
 		return squaredDist(nearest,p);
 	} 
 
-	double bp[3];
-	double d3, d4;
-	subtraction(p,b,bp);
+	const float bp[3] = {p[0]-b[0],p[1]-b[1],p[2]-b[2]};
 
-	d3 = ab[0]*bp[0] + ab[1]*bp[1] + ab[2]*bp[2];
-	d4 = ac[0]*bp[0] + ac[1]*bp[1] + ac[2]*bp[2];
-	/*
-	if(flag == 1){
-		fprintf(stderr, "\n *d3 = [%f]", d3);
-		fprintf(stderr, "\n *d4 = [%f]", d4);
-	}
-	*/
+	const float  d3 = ab[0]*bp[0] + ab[1]*bp[1] + ab[2]*bp[2];
+	const float  d4 = ac[0]*bp[0] + ac[1]*bp[1] + ac[2]*bp[2];
+
 
 	//Second Region Check: nearest -> b vertex
 	if (d3 >= 0.0 && d4 <= d3){
-		//if (flag == 1) fprintf(stderr, "\n *2 - b vertex");
+		
 		for(int i = 0; i<=2; i++) nearest[i]=b[i];
 		return squaredDist(nearest,p);
 	} 
 
-	double vc = d1*d4 - d3*d2;
+	const float  vc = d1*d4 - d3*d2;
 	//Third Region Check: nearest -> point in ab edge
 	if (vc <= 0.0 && d1 >= 0.0 && d3 <= 0.0) {
-		//if (flag == 1) fprintf(stderr, "\n *3 - ab edge");
-		double v = d1 / (d1 - d3);
+		
+		const float  v = d1 / (d1 - d3);
 		for(int i = 0; i<=2; i++) nearest[i]= a[i] + v * ab[i];
 		return squaredDist(nearest,p);
 	}
 
-	double cp[3];
-	double d5, d6;
-	subtraction(p,c,cp);
-	d5 = ab[0]*cp[0] + ab[1]*cp[1] + ab[2]*cp[2];
-	d6 = ac[0]*cp[0] + ac[1]*cp[1] + ac[2]*cp[2];	
+	const float cp[3] = {p[0]-c[0],p[1]-c[1],p[2]-c[2]};
+	const float  d5 = ab[0]*cp[0] + ab[1]*cp[1] + ab[2]*cp[2];
+	const float  d6 = ac[0]*cp[0] + ac[1]*cp[1] + ac[2]*cp[2];	
 
-	/*if(flag == 1){
-		fprintf(stderr, "\n *d5 = [%f]", d5);
-		fprintf(stderr, "\n *d6 = [%f]", d6);
-	}*/
 
 	//Fourth Region Check: nearest -> c vertex
 	if  (d6 >= 0.0 && d5 <= d6){
-		//if (flag == 1) fprintf(stderr, "\n *4 - c vertex");
+		
 		for(int i = 0; i<=2; i++) nearest[i]=c[i];
 		return squaredDist(nearest,p);
 	} 
 
-	double vb = d5*d2 - d1*d6;
+	const float  vb = d5*d2 - d1*d6;
 	
 	//Fifth Region Check: nearest -> point in ac edge 
 	if (vb <= 0.0 && d2 >= 0.0 && d6 <= 0.0) {
-		//if (flag == 1) fprintf(stderr, "\n *5 - ac edge");
-		double w = d2 / (d2 - d6);
-		for(int i = 0; i<=2; i++) nearest[i] = a[i] + w * ac[i];
+		
+		 const float  w = d2 / (d2 - d6);
+		for( int  i = 0; i<=2; i++) nearest[i] = a[i] + w * ac[i];
 		return squaredDist(nearest,p);
 	}
 
-	double va = d3*d6 - d5*d4;
+	const float  va = d3*d6 - d5*d4;
 	
 	//Sixth Region Check: nearest -> point in bc edge 
 	if (va <= 0.0 && (d4 - d3) >= 0.0 && (d5 - d6) >= 0.0) {
-		//if (flag == 1) fprintf(stderr, "\n *6 - bc edge");
-		double w = (d4 - d3) / ((d4 - d3) + (d5 - d6));
-		for(int i = 0; i<=2; i++) nearest[i] = b[i] + w * (c[i] - b[i]); 
+		
+		const float  w = (d4 - d3) / ((d4 - d3) + (d5 - d6));
+		for( int  i = 0; i<=2; i++) nearest[i] = b[i] + w * (c[i] - b[i]); 
 		return squaredDist(nearest,p);
 	}
-	double denom = 1.0 / (va + vb + vc);
-	double v = vb * denom;
-	double w = vc * denom;
+	 const float  denom = 1.0 / (va + vb + vc);
+	 const float  v = vb * denom;
+	 const float  w = vc * denom;
 	
 	//Seventh Region Check: nearest -> point inside triangle 
-	//if (flag == 1) fprintf(stderr, "\n *7 - triangle");
-	for(int i = 0; i<=2; i++) nearest[i] = a[i] + ab[i] * v + ac[i] * w;
+	
+	for( int  i = 0; i<=2; i++) nearest[i] = a[i] + ab[i] * v + ac[i] * w;
 	return squaredDist(nearest,p);
 
+}
+void mesh::writeCellBufferToFile(const std::string& filename) {
+    std::ofstream outFile(filename);
+
+    // Verifica se o arquivo foi aberto corretamente
+    if (!outFile.is_open()) {
+        std::cerr << "Erro ao abrir o arquivo " << filename << std::endl;
+        return;
+    }
+
+    // Percorre o cellBuffer
+    for (int x = 0; x < cellBuffer.size(); ++x) {
+        for (int y = 0; y < cellBuffer[x].size(); ++y) {
+            for (int z = 0; z < cellBuffer[x][y].size(); ++z) {
+				for (const auto& it : cellBuffer[x][y][z]) 
+				outFile << " " << x << " " << y << " " << z << " " << it << std::endl;
+                // for (int w = 0; w < cellBuffer[x][y][z].size(); ++w) {
+                //     // Escreve o ID no arquivo
+                //     // outFile << "Celula (" << x << "," << y << "," << z << "): ID = " << cellBuffer[x][y][z][w] << std::endl;
+                //     outFile << " " << x << " " << y << " " << z << " " << cellBuffer[x][y][z][w] << std::endl;
+                // }
+            }
+        }
+    }
+
+    // Fecha o arquivo
+    outFile.close();
 }

@@ -1,0 +1,3 @@
+"C:\Program Files\CMake\bin\cmake.exe" -E rm -f CMakeFiles\fcpw-libigl-fpdc-example.dir/objects.a
+C:\TDM-GCC-64\bin\ar.exe qc CMakeFiles\fcpw-libigl-fpdc-example.dir/objects.a @CMakeFiles\fcpw-libigl-fpdc-example.dir\objects1.rsp
+C:\TDM-GCC-64\bin\g++.exe  -O3 -fopenmp -O3 -DNDEBUG -Wl,--whole-archive CMakeFiles\fcpw-libigl-fpdc-example.dir/objects.a -Wl,--no-whole-archive -o fcpw-libigl-fpdc-example.exe -Wl,--out-implib,libfcpw-libigl-fpdc-example.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\fcpw-libigl-fpdc-example.dir\linkLibs.rsp

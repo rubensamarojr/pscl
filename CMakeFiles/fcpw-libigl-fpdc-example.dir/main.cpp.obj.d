@@ -210,6 +210,11 @@ CMakeFiles/fcpw-libigl-fpdc-example.dir/main.cpp.obj: \
  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/random \
  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/random.h \
  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/x86_64-w64-mingw32/bits/opt_random.h \
+ C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/pmmintrin.h \
+ C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/emmintrin.h \
+ C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/xmmintrin.h \
+ C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/mmintrin.h \
+ C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/mm_malloc.h \
  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/random.tcc \
  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/numeric \
  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/stl_numeric.h \
@@ -230,11 +235,6 @@ CMakeFiles/fcpw-libigl-fpdc-example.dir/main.cpp.obj: \
  C:/Users/marce/Downloads/fcpw-libigl-example/fcpw/deps/enoki/include/enoki/array_fallbacks.h \
  C:/Users/marce/Downloads/fcpw-libigl-example/fcpw/deps/enoki/include/enoki/array_intrin.h \
  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/immintrin.h \
- C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/mmintrin.h \
- C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/xmmintrin.h \
- C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/mm_malloc.h \
- C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/emmintrin.h \
- C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/pmmintrin.h \
  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/tmmintrin.h \
  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/smmintrin.h \
  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/popcntintrin.h \

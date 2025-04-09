@@ -24,34 +24,7 @@ class Point: public Point2 {
 		float z;
 };
 
-const std::array<std::array<int, 3>, 27> neighPos = {{
-    {{-1, -1, -1}}, // 0
-    {{-1, -1, 0}},  // 1
-    {{-1, -1, 1}},  // 2
-    {{-1, 0, -1}},  // 3
-    {{-1, 0, 0}},   // 4
-    {{-1, 0, 1}},   // 5
-    {{-1, 1, -1}},  // 6
-    {{-1, 1, 0}},   // 7
-    {{-1, 1, 1}},   // 8
-    {{0, -1, -1}},  // 9
-    {{0, -1, 0}},   // 10
-    {{0, -1, 1}},   // 11
-    {{0, 0, -1}},   // 12
-    {{0, 0, 0}},    // 13
-    {{0, 0, 1}},    // 14
-    {{0, 1, -1}},   // 15
-    {{0, 1, 0}},    // 16
-    {{0, 1, 1}},    // 17
-    {{1, -1, -1}},  // 18
-    {{1, -1, 0}},   // 19
-    {{1, -1, 1}},   // 20
-    {{1, 0, -1}},   // 21
-    {{1, 0, 0}},    // 22
-    {{1, 0, 1}},    // 23
-    {{1, 1, -1}},   // 24
-    {{1, 1, 0}},    // 25
-    {{1, 1, 1}}     // 26
+const std::array<std::array<int, 3>, 27> neighPos = {{ 
 }};
 struct hash_tuple { 
   
@@ -186,7 +159,10 @@ public:
 	void fillCandidates_flat();
 
 	int calcDist(const float *p, const double reL2, const int cpx, const int cpy, const int cpz, float *closestPoint, double &cqd);
+	std::array<int, 2> calc2Dist(const double *p, double range, int cpx, int cpy, int cpz, double *closestPoint, double *sclosestPoint, double &cqd, double &scqd);
+    
 	int calcDist_flat(const float *p, const double reL2, const int fIndex, float *closestPoint, double &cqd);
+	int calcDist_SIMD(const float* p, const double range, const int cpx, const int cpy, const int cpz, float* closestPoint, double& cqd);
     /// Find closest point on the mesh from a particle
   	/// Real-time collision detection, Ericson, Chapter 5 - Pg 141 - function ClosestPtPointTriangle
     void closestPointMesh(int nMesh, int *type,  float *quaddev, float *pndS, float pndS0, float reL, int nPart, int *index, float *dMesh,
@@ -194,7 +170,7 @@ public:
 
 
 	///
-	double calcNearestPoint(const float *a, const float *b, const float *c, const float *p, float *nearest);
+	double calcNearestPoint(const float a[3], const float b[3], const float c[3], const float p[3], float *nearest);
 	void writeCellBufferToFile(const std::string& filename);
 private:
 	struct position
@@ -215,6 +191,13 @@ private:
 //		float *ux, *uy, *uz;				/// specifies the node velocity
 //		float *forceX, *forceY, *forceZ;	/// specifies the node force
 	};
+
+	struct elementa{
+		std::vector<float> x0,y0,z0;
+		std::vector<float> x1,y1,z1;
+		std::vector<float> x2,y2,z2;
+	};
+	elementa meshData;
 	/// Mesh elements
 	struct element
 	{

@@ -61,14 +61,14 @@ if d75_q:
 
     dif = 0
     nmin = 10
-    nmax = 80
+    nmax = 60
     nParts = 1000004
     print('Testing Pre Process...')
-    bufferIt1 = np.zeros((16,3))
-    fillIt1 = np.zeros((16,3))
-    bufferMean = np.zeros((16,3))
-    fillMean = np.zeros((16,3))
-    totalppMean = np.zeros((16,3))
+    bufferIt1 = np.zeros((12,3))
+    fillIt1 = np.zeros((12,3))
+    bufferMean = np.zeros((12,3))
+    fillMean = np.zeros((12,3))
+    totalMean = np.zeros((12,3))
     for c,i in enumerate(range(nmin,nmax+1,5)):
         
         
@@ -82,25 +82,21 @@ if d75_q:
        proc2 = subprocess.Popen(command2, shell=False, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
        proc2.wait()
 
-       command3 = f'./fcpw-libigl-fpdc-example ../d75.stl 2 {nParts} {i}'
-
-       proc3 = subprocess.Popen(command3, shell=False, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
-       proc3.wait()
        
-       print(f"c={c}, i={i}, j={j}")
+       print(f"c={c}, i={i}")
     #    command3 = f'../oldfpdc/fcpw-libigl-fpdc-example ../d75.stl {nParts} {i}'
     #    proc3 = subprocess.Popen(command2, shell=False, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
     #    proc3.wait()
     #    print(f"i={i}")     
     
     for c,i in enumerate(range(nmin,nmax+1,5)):
-        for j in range(3):
+        for j in range(2):
         #     if (j<2):  df = pd.read_csv(f'output/bm{j}nP{nParts}res{i}_fpdc.txt', sep= ';',header=None)
         #     if (j==2): df = pd.read_csv(f'output/bmnP{nParts}res{i}_oldfpdc.txt', sep= ';',header=None)
             df = pd.read_csv(f'output/bm{j}nP{nParts}res{i}_fpdc.txt', sep= ';',header=None)
             bufferMean[c,j] = df.iloc[-2,1]
             fillMean[c,j] = df.iloc[-1,1] 
-            fillMean[c,j] = df.iloc[-1,1] 
+            totalMean[c,j] = df.iloc[-2,1] 
 
 
     aa = list(range(nmin,nmax+1,5))
@@ -109,9 +105,9 @@ if d75_q:
     plt.plot(range(nmin,nmax+1,5),bufferMean[:-1,0], label = "Query Optimized Old FPDC", color = 'blue')
     plt.plot(range(nmin,nmax+1,5),bufferMean[:-1,1], label = "Query New FPDC", color = 'blue', linestyle='dashed')
     
-    plt.plot(range(nmin,nmax+1,5),fillMean[:-1,2], label = "Total Flat FPDC", color = 'red', linestyle='dotted')
-    plt.plot(range(nmin,nmax+1,5),fillMean[:-1,0], label = "Total Optimized Old FPDC", color = 'red')
-    plt.plot(range(nmin,nmax+1,5),fillMean[:-1,1], label = "Total New FPDC", color = 'red', linestyle='dashed')
+    plt.plot(range(nmin,nmax+1,5),totalMean[:-1,2], label = "Total Flat FPDC", color = 'red', linestyle='dotted')
+    plt.plot(range(nmin,nmax+1,5),totalMean[:-1,0], label = "Total Optimized Old FPDC", color = 'red')
+    plt.plot(range(nmin,nmax+1,5),totalMean[:-1,1], label = "Total New FPDC", color = 'red', linestyle='dashed')
 
 
     # plt.plot(range(nmin,nmax+1,10),totalppMean[:,0], label = "totalMode0", color = 'orange')
@@ -126,25 +122,25 @@ if minipill_q:
     dif = 0
     nmin = 10
     nmax = 80
-    nParts = 1000004
+    nParts = 10000004
     print('Testing Pre Process...')
     bufferIt1 = np.zeros((16,3))
     fillIt1 = np.zeros((16,3))
     bufferMean = np.zeros((16,3))
     fillMean = np.zeros((16,3))
     totalppMean = np.zeros((16,3))
-    # for c,i in enumerate(range(nmin,nmax+1,5)):
+    for c,i in enumerate(range(nmin,nmax+1,5)):
         
         
-    #    command = f'./fcpw-libigl-fpdc-example ../minipill.stl 0 {nParts} {i}'
+       command = f'./fcpw-libigl-fpdc-example ../minipill.stl 0 {nParts} {i}'
 
-    #    proc = subprocess.Popen(command, shell=False, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+       proc = subprocess.Popen(command, shell=False, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
                
-    #    proc.wait()
-    #    command2 = f'./fcpw-libigl-fpdc-example ../minipill.stl 1 {nParts} {i}'
+       proc.wait()
+       command2 = f'./fcpw-libigl-fpdc-example ../minipill.stl 1 {nParts} {i}'
 
-    #    proc2 = subprocess.Popen(command2, shell=False, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
-    #    proc2.wait()
+       proc2 = subprocess.Popen(command2, shell=False, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+       proc2.wait()
     #    command3 = f'./fcpw-libigl-fpdc-example ../minipill.stl 2 {nParts} {i}'
     #    proc3 = subprocess.Popen(command3, shell=False, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
     #    proc3.wait()

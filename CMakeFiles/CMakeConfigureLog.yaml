@@ -3170,3 +3170,522 @@ events:
         -march=skx
       exitCode: 0
 ...
+
+---
+events:
+  -
+    kind: "try_run-v1"
+    backtrace:
+      - "fcpw/deps/enoki/CMakeLists.txt:78 (try_run)"
+    directories:
+      source: "C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp"
+      binary: "C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " -O3 -msse4.1 -fopenmp -march=native"
+      CMAKE_MODULE_PATH: "C:/Users/marce/Downloads/fcpw-libigl-example/cmake"
+    buildResult:
+      variable: "ENOKI_ARCH_FLAGS_COMPILE_RESULT"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        
+        Run Build Command(s): "C:/Program Files/CMake/bin/cmake.exe" -E env VERBOSE=1 C:/TDM-GCC-64/bin/mingw32-make.exe -f Makefile cmTC_031f9/fast
+        mingw32-make.exe[1]: Entering directory 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        C:/TDM-GCC-64/bin/mingw32-make.exe  -f CMakeFiles\\cmTC_031f9.dir\\build.make CMakeFiles/cmTC_031f9.dir/build
+        mingw32-make.exe[2]: Entering directory 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        Building CXX object CMakeFiles/cmTC_031f9.dir/archflags_unix.cpp.obj
+        C:\\TDM-GCC-64\\bin\\g++.exe   -O3 -msse4.1 -fopenmp -march=native  -o CMakeFiles\\cmTC_031f9.dir\\archflags_unix.cpp.obj -c C:\\Users\\marce\\Downloads\\fcpw-libigl-example\\fcpw\\deps\\enoki\\resources\\archflags_unix.cpp
+        Linking CXX executable cmTC_031f9.exe
+        "C:\\Program Files\\CMake\\bin\\cmake.exe" -E cmake_link_script CMakeFiles\\cmTC_031f9.dir\\link.txt --verbose=1
+        "C:\\Program Files\\CMake\\bin\\cmake.exe" -E rm -f CMakeFiles\\cmTC_031f9.dir/objects.a
+        C:\\TDM-GCC-64\\bin\\ar.exe qc CMakeFiles\\cmTC_031f9.dir/objects.a @CMakeFiles\\cmTC_031f9.dir\\objects1.rsp
+        C:\\TDM-GCC-64\\bin\\g++.exe  -O3 -msse4.1 -fopenmp -march=native  -Wl,--whole-archive CMakeFiles\\cmTC_031f9.dir/objects.a -Wl,--no-whole-archive -o cmTC_031f9.exe -Wl,--out-implib,libcmTC_031f9.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\\cmTC_031f9.dir\\linkLibs.rsp
+        mingw32-make.exe[2]: Leaving directory 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        mingw32-make.exe[1]: Leaving directory 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        
+      exitCode: 0
+    runResult:
+      variable: "ENOKI_ARCH_FLAGS_RETVAL"
+      cached: true
+      stdout: |
+        -march=skx
+      exitCode: 0
+...
+
+---
+events:
+  -
+    kind: "try_run-v1"
+    backtrace:
+      - "fcpw/deps/enoki/CMakeLists.txt:78 (try_run)"
+    directories:
+      source: "C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp"
+      binary: "C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " -O3 -msse4.1 -fopenmp -pg -march=native"
+      CMAKE_MODULE_PATH: "C:/Users/marce/Downloads/fcpw-libigl-example/cmake"
+    buildResult:
+      variable: "ENOKI_ARCH_FLAGS_COMPILE_RESULT"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        
+        Run Build Command(s): "C:/Program Files/CMake/bin/cmake.exe" -E env VERBOSE=1 C:/TDM-GCC-64/bin/mingw32-make.exe -f Makefile cmTC_57e0c/fast
+        mingw32-make.exe[1]: Entering directory 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        C:/TDM-GCC-64/bin/mingw32-make.exe  -f CMakeFiles\\cmTC_57e0c.dir\\build.make CMakeFiles/cmTC_57e0c.dir/build
+        mingw32-make.exe[2]: Entering directory 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        Building CXX object CMakeFiles/cmTC_57e0c.dir/archflags_unix.cpp.obj
+        C:\\TDM-GCC-64\\bin\\g++.exe   -O3 -msse4.1 -fopenmp -pg -march=native  -o CMakeFiles\\cmTC_57e0c.dir\\archflags_unix.cpp.obj -c C:\\Users\\marce\\Downloads\\fcpw-libigl-example\\fcpw\\deps\\enoki\\resources\\archflags_unix.cpp
+        Linking CXX executable cmTC_57e0c.exe
+        "C:\\Program Files\\CMake\\bin\\cmake.exe" -E cmake_link_script CMakeFiles\\cmTC_57e0c.dir\\link.txt --verbose=1
+        "C:\\Program Files\\CMake\\bin\\cmake.exe" -E rm -f CMakeFiles\\cmTC_57e0c.dir/objects.a
+        C:\\TDM-GCC-64\\bin\\ar.exe qc CMakeFiles\\cmTC_57e0c.dir/objects.a @CMakeFiles\\cmTC_57e0c.dir\\objects1.rsp
+        C:\\TDM-GCC-64\\bin\\g++.exe  -O3 -msse4.1 -fopenmp -pg -march=native  -Wl,--whole-archive CMakeFiles\\cmTC_57e0c.dir/objects.a -Wl,--no-whole-archive -o cmTC_57e0c.exe -Wl,--out-implib,libcmTC_57e0c.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\\cmTC_57e0c.dir\\linkLibs.rsp
+        mingw32-make.exe[2]: Leaving directory 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        mingw32-make.exe[1]: Leaving directory 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        
+      exitCode: 0
+    runResult:
+      variable: "ENOKI_ARCH_FLAGS_RETVAL"
+      cached: true
+      stdout: |
+        -march=skx
+      exitCode: 0
+...
+
+---
+events:
+  -
+    kind: "try_run-v1"
+    backtrace:
+      - "fcpw/deps/enoki/CMakeLists.txt:78 (try_run)"
+    directories:
+      source: "C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp"
+      binary: "C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: "-pg -O3 -msse4.1 -fopenmp -pg -march=native"
+      CMAKE_MODULE_PATH: "C:/Users/marce/Downloads/fcpw-libigl-example/cmake"
+    buildResult:
+      variable: "ENOKI_ARCH_FLAGS_COMPILE_RESULT"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        
+        Run Build Command(s): "C:/Program Files/CMake/bin/cmake.exe" -E env VERBOSE=1 C:/TDM-GCC-64/bin/mingw32-make.exe -f Makefile cmTC_e072f/fast
+        C:/TDM-GCC-64/bin/mingw32-make.exe  -f CMakeFiles\\cmTC_e072f.dir\\build.make CMakeFiles/cmTC_e072f.dir/build
+        mingw32-make.exe[1]: Entering directory 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        Building CXX object CMakeFiles/cmTC_e072f.dir/archflags_unix.cpp.obj
+        C:\\TDM-GCC-64\\bin\\g++.exe   -pg -O3 -msse4.1 -fopenmp -pg -march=native  -o CMakeFiles\\cmTC_e072f.dir\\archflags_unix.cpp.obj -c C:\\Users\\marce\\Downloads\\fcpw-libigl-example\\fcpw\\deps\\enoki\\resources\\archflags_unix.cpp
+        Linking CXX executable cmTC_e072f.exe
+        "C:\\Program Files\\CMake\\bin\\cmake.exe" -E cmake_link_script CMakeFiles\\cmTC_e072f.dir\\link.txt --verbose=1
+        "C:\\Program Files\\CMake\\bin\\cmake.exe" -E rm -f CMakeFiles\\cmTC_e072f.dir/objects.a
+        C:\\TDM-GCC-64\\bin\\ar.exe qc CMakeFiles\\cmTC_e072f.dir/objects.a @CMakeFiles\\cmTC_e072f.dir\\objects1.rsp
+        C:\\TDM-GCC-64\\bin\\g++.exe -pg -O3 -msse4.1 -fopenmp -pg -march=native  -Wl,--whole-archive CMakeFiles\\cmTC_e072f.dir/objects.a -Wl,--no-whole-archive -o cmTC_e072f.exe -Wl,--out-implib,libcmTC_e072f.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\\cmTC_e072f.dir\\linkLibs.rsp
+        mingw32-make.exe[1]: Leaving directory 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        
+      exitCode: 0
+    runResult:
+      variable: "ENOKI_ARCH_FLAGS_RETVAL"
+      cached: true
+      stdout: |
+        -march=skx
+      exitCode: 0
+...
+
+---
+events:
+  -
+    kind: "try_run-v1"
+    backtrace:
+      - "fcpw/deps/enoki/CMakeLists.txt:78 (try_run)"
+    directories:
+      source: "C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp"
+      binary: "C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: "-pg -no-pie -fno-builtin -O3 -msse4.1 -fopenmp -pg -march=native"
+      CMAKE_MODULE_PATH: "C:/Users/marce/Downloads/fcpw-libigl-example/cmake"
+    buildResult:
+      variable: "ENOKI_ARCH_FLAGS_COMPILE_RESULT"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        
+        Run Build Command(s): "C:/Program Files/CMake/bin/cmake.exe" -E env VERBOSE=1 C:/TDM-GCC-64/bin/mingw32-make.exe -f Makefile cmTC_e628a/fast
+        C:/TDM-GCC-64/bin/mingw32-make.exe  -f CMakeFiles\\cmTC_e628a.dir\\build.make CMakeFiles/cmTC_e628a.dir/build
+        mingw32-make.exe[1]: Entering directory 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        Building CXX object CMakeFiles/cmTC_e628a.dir/archflags_unix.cpp.obj
+        C:\\TDM-GCC-64\\bin\\g++.exe   -pg -no-pie -fno-builtin -O3 -msse4.1 -fopenmp -pg -march=native  -o CMakeFiles\\cmTC_e628a.dir\\archflags_unix.cpp.obj -c C:\\Users\\marce\\Downloads\\fcpw-libigl-example\\fcpw\\deps\\enoki\\resources\\archflags_unix.cpp
+        Linking CXX executable cmTC_e628a.exe
+        "C:\\Program Files\\CMake\\bin\\cmake.exe" -E cmake_link_script CMakeFiles\\cmTC_e628a.dir\\link.txt --verbose=1
+        "C:\\Program Files\\CMake\\bin\\cmake.exe" -E rm -f CMakeFiles\\cmTC_e628a.dir/objects.a
+        C:\\TDM-GCC-64\\bin\\ar.exe qc CMakeFiles\\cmTC_e628a.dir/objects.a @CMakeFiles\\cmTC_e628a.dir\\objects1.rsp
+        C:\\TDM-GCC-64\\bin\\g++.exe -pg -no-pie -fno-builtin -O3 -msse4.1 -fopenmp -pg -march=native  -Wl,--whole-archive CMakeFiles\\cmTC_e628a.dir/objects.a -Wl,--no-whole-archive -o cmTC_e628a.exe -Wl,--out-implib,libcmTC_e628a.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\\cmTC_e628a.dir\\linkLibs.rsp
+        mingw32-make.exe[1]: Leaving directory 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        
+      exitCode: 0
+    runResult:
+      variable: "ENOKI_ARCH_FLAGS_RETVAL"
+      cached: true
+      stdout: |
+        -march=skx
+      exitCode: 0
+...
+
+---
+events:
+  -
+    kind: "try_run-v1"
+    backtrace:
+      - "fcpw/deps/enoki/CMakeLists.txt:78 (try_run)"
+    directories:
+      source: "C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp"
+      binary: "C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: "-pg --no-pie -fno-builtin -O3 -msse4.1 -fopenmp -pg -march=native"
+      CMAKE_MODULE_PATH: "C:/Users/marce/Downloads/fcpw-libigl-example/cmake"
+    buildResult:
+      variable: "ENOKI_ARCH_FLAGS_COMPILE_RESULT"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        
+        Run Build Command(s): "C:/Program Files/CMake/bin/cmake.exe" -E env VERBOSE=1 C:/TDM-GCC-64/bin/mingw32-make.exe -f Makefile cmTC_e58c9/fast
+        C:/TDM-GCC-64/bin/mingw32-make.exe  -f CMakeFiles\\cmTC_e58c9.dir\\build.make CMakeFiles/cmTC_e58c9.dir/build
+        mingw32-make.exe[1]: Entering directory 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        Building CXX object CMakeFiles/cmTC_e58c9.dir/archflags_unix.cpp.obj
+        C:\\TDM-GCC-64\\bin\\g++.exe   -pg --no-pie -fno-builtin -O3 -msse4.1 -fopenmp -pg -march=native  -o CMakeFiles\\cmTC_e58c9.dir\\archflags_unix.cpp.obj -c C:\\Users\\marce\\Downloads\\fcpw-libigl-example\\fcpw\\deps\\enoki\\resources\\archflags_unix.cpp
+        Linking CXX executable cmTC_e58c9.exe
+        "C:\\Program Files\\CMake\\bin\\cmake.exe" -E cmake_link_script CMakeFiles\\cmTC_e58c9.dir\\link.txt --verbose=1
+        "C:\\Program Files\\CMake\\bin\\cmake.exe" -E rm -f CMakeFiles\\cmTC_e58c9.dir/objects.a
+        C:\\TDM-GCC-64\\bin\\ar.exe qc CMakeFiles\\cmTC_e58c9.dir/objects.a @CMakeFiles\\cmTC_e58c9.dir\\objects1.rsp
+        C:\\TDM-GCC-64\\bin\\g++.exe -pg --no-pie -fno-builtin -O3 -msse4.1 -fopenmp -pg -march=native  -Wl,--whole-archive CMakeFiles\\cmTC_e58c9.dir/objects.a -Wl,--no-whole-archive -o cmTC_e58c9.exe -Wl,--out-implib,libcmTC_e58c9.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\\cmTC_e58c9.dir\\linkLibs.rsp
+        mingw32-make.exe[1]: Leaving directory 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        
+      exitCode: 0
+    runResult:
+      variable: "ENOKI_ARCH_FLAGS_RETVAL"
+      cached: true
+      stdout: |
+        -march=skx
+      exitCode: 0
+...
+
+---
+events:
+  -
+    kind: "try_run-v1"
+    backtrace:
+      - "fcpw/deps/enoki/CMakeLists.txt:78 (try_run)"
+    directories:
+      source: "C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp"
+      binary: "C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: "-pg -fno-pie -fno-builtin -O3 -msse4.1 -fopenmp -pg -march=native"
+      CMAKE_MODULE_PATH: "C:/Users/marce/Downloads/fcpw-libigl-example/cmake"
+    buildResult:
+      variable: "ENOKI_ARCH_FLAGS_COMPILE_RESULT"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        
+        Run Build Command(s): "C:/Program Files/CMake/bin/cmake.exe" -E env VERBOSE=1 C:/TDM-GCC-64/bin/mingw32-make.exe -f Makefile cmTC_abc71/fast
+        C:/TDM-GCC-64/bin/mingw32-make.exe  -f CMakeFiles\\cmTC_abc71.dir\\build.make CMakeFiles/cmTC_abc71.dir/build
+        mingw32-make.exe[1]: Entering directory 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        Building CXX object CMakeFiles/cmTC_abc71.dir/archflags_unix.cpp.obj
+        C:\\TDM-GCC-64\\bin\\g++.exe   -pg -fno-pie -fno-builtin -O3 -msse4.1 -fopenmp -pg -march=native  -o CMakeFiles\\cmTC_abc71.dir\\archflags_unix.cpp.obj -c C:\\Users\\marce\\Downloads\\fcpw-libigl-example\\fcpw\\deps\\enoki\\resources\\archflags_unix.cpp
+        Linking CXX executable cmTC_abc71.exe
+        "C:\\Program Files\\CMake\\bin\\cmake.exe" -E cmake_link_script CMakeFiles\\cmTC_abc71.dir\\link.txt --verbose=1
+        "C:\\Program Files\\CMake\\bin\\cmake.exe" -E rm -f CMakeFiles\\cmTC_abc71.dir/objects.a
+        C:\\TDM-GCC-64\\bin\\ar.exe qc CMakeFiles\\cmTC_abc71.dir/objects.a @CMakeFiles\\cmTC_abc71.dir\\objects1.rsp
+        C:\\TDM-GCC-64\\bin\\g++.exe -pg -fno-pie -fno-builtin -O3 -msse4.1 -fopenmp -pg -march=native  -Wl,--whole-archive CMakeFiles\\cmTC_abc71.dir/objects.a -Wl,--no-whole-archive -o cmTC_abc71.exe -Wl,--out-implib,libcmTC_abc71.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\\cmTC_abc71.dir\\linkLibs.rsp
+        mingw32-make.exe[1]: Leaving directory 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        
+      exitCode: 0
+    runResult:
+      variable: "ENOKI_ARCH_FLAGS_RETVAL"
+      cached: true
+      stdout: |
+        -march=skx
+      exitCode: 0
+...
+
+---
+events:
+  -
+    kind: "try_run-v1"
+    backtrace:
+      - "fcpw/deps/enoki/CMakeLists.txt:78 (try_run)"
+    directories:
+      source: "C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp"
+      binary: "C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: "-pg -fno-pie -fno-builtin -O3 -msse4.1 -fopenmp -pg -no-pie -fno-builtin -march=native"
+      CMAKE_MODULE_PATH: "C:/Users/marce/Downloads/fcpw-libigl-example/cmake"
+    buildResult:
+      variable: "ENOKI_ARCH_FLAGS_COMPILE_RESULT"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        
+        Run Build Command(s): "C:/Program Files/CMake/bin/cmake.exe" -E env VERBOSE=1 C:/TDM-GCC-64/bin/mingw32-make.exe -f Makefile cmTC_41275/fast
+        C:/TDM-GCC-64/bin/mingw32-make.exe  -f CMakeFiles\\cmTC_41275.dir\\build.make CMakeFiles/cmTC_41275.dir/build
+        mingw32-make.exe[1]: Entering directory 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        Building CXX object CMakeFiles/cmTC_41275.dir/archflags_unix.cpp.obj
+        C:\\TDM-GCC-64\\bin\\g++.exe   -pg -fno-pie -fno-builtin -O3 -msse4.1 -fopenmp -pg -no-pie -fno-builtin -march=native  -o CMakeFiles\\cmTC_41275.dir\\archflags_unix.cpp.obj -c C:\\Users\\marce\\Downloads\\fcpw-libigl-example\\fcpw\\deps\\enoki\\resources\\archflags_unix.cpp
+        Linking CXX executable cmTC_41275.exe
+        "C:\\Program Files\\CMake\\bin\\cmake.exe" -E cmake_link_script CMakeFiles\\cmTC_41275.dir\\link.txt --verbose=1
+        "C:\\Program Files\\CMake\\bin\\cmake.exe" -E rm -f CMakeFiles\\cmTC_41275.dir/objects.a
+        C:\\TDM-GCC-64\\bin\\ar.exe qc CMakeFiles\\cmTC_41275.dir/objects.a @CMakeFiles\\cmTC_41275.dir\\objects1.rsp
+        C:\\TDM-GCC-64\\bin\\g++.exe -pg -fno-pie -fno-builtin -O3 -msse4.1 -fopenmp -pg -no-pie -fno-builtin -march=native  -Wl,--whole-archive CMakeFiles\\cmTC_41275.dir/objects.a -Wl,--no-whole-archive -o cmTC_41275.exe -Wl,--out-implib,libcmTC_41275.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\\cmTC_41275.dir\\linkLibs.rsp
+        mingw32-make.exe[1]: Leaving directory 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        
+      exitCode: 0
+    runResult:
+      variable: "ENOKI_ARCH_FLAGS_RETVAL"
+      cached: true
+      stdout: |
+        -march=skx
+      exitCode: 0
+...
+
+---
+events:
+  -
+    kind: "try_run-v1"
+    backtrace:
+      - "fcpw/deps/enoki/CMakeLists.txt:78 (try_run)"
+    directories:
+      source: "C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp"
+      binary: "C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: "-pg -fno-pie -fno-builtin -msse4.1 -fopenmp -pg -no-pie -march=native"
+      CMAKE_MODULE_PATH: "C:/Users/marce/Downloads/fcpw-libigl-example/cmake"
+    buildResult:
+      variable: "ENOKI_ARCH_FLAGS_COMPILE_RESULT"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        
+        Run Build Command(s): "C:/Program Files/CMake/bin/cmake.exe" -E env VERBOSE=1 C:/TDM-GCC-64/bin/mingw32-make.exe -f Makefile cmTC_61050/fast
+        mingw32-make.exe[1]: Entering directory 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        C:/TDM-GCC-64/bin/mingw32-make.exe  -f CMakeFiles\\cmTC_61050.dir\\build.make CMakeFiles/cmTC_61050.dir/build
+        mingw32-make.exe[2]: Entering directory 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        Building CXX object CMakeFiles/cmTC_61050.dir/archflags_unix.cpp.obj
+        C:\\TDM-GCC-64\\bin\\g++.exe   -pg -fno-pie -fno-builtin -msse4.1 -fopenmp -pg -no-pie -march=native  -o CMakeFiles\\cmTC_61050.dir\\archflags_unix.cpp.obj -c C:\\Users\\marce\\Downloads\\fcpw-libigl-example\\fcpw\\deps\\enoki\\resources\\archflags_unix.cpp
+        Linking CXX executable cmTC_61050.exe
+        "C:\\Program Files\\CMake\\bin\\cmake.exe" -E cmake_link_script CMakeFiles\\cmTC_61050.dir\\link.txt --verbose=1
+        "C:\\Program Files\\CMake\\bin\\cmake.exe" -E rm -f CMakeFiles\\cmTC_61050.dir/objects.a
+        C:\\TDM-GCC-64\\bin\\ar.exe qc CMakeFiles\\cmTC_61050.dir/objects.a @CMakeFiles\\cmTC_61050.dir\\objects1.rsp
+        C:\\TDM-GCC-64\\bin\\g++.exe -pg -fno-pie -fno-builtin -msse4.1 -fopenmp -pg -no-pie -march=native  -Wl,--whole-archive CMakeFiles\\cmTC_61050.dir/objects.a -Wl,--no-whole-archive -o cmTC_61050.exe -Wl,--out-implib,libcmTC_61050.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\\cmTC_61050.dir\\linkLibs.rsp
+        mingw32-make.exe[2]: Leaving directory 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        mingw32-make.exe[1]: Leaving directory 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        
+      exitCode: 0
+    runResult:
+      variable: "ENOKI_ARCH_FLAGS_RETVAL"
+      cached: true
+      stdout: |
+        -march=skx
+      exitCode: 0
+...
+
+---
+events:
+  -
+    kind: "try_run-v1"
+    backtrace:
+      - "fcpw/deps/enoki/CMakeLists.txt:78 (try_run)"
+    directories:
+      source: "C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp"
+      binary: "C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: "-pg -fno-pie -fno-builtin -msse4.1 -pg -no-pie -march=native"
+      CMAKE_MODULE_PATH: "C:/Users/marce/Downloads/fcpw-libigl-example/cmake"
+    buildResult:
+      variable: "ENOKI_ARCH_FLAGS_COMPILE_RESULT"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        
+        Run Build Command(s): "C:/Program Files/CMake/bin/cmake.exe" -E env VERBOSE=1 C:/TDM-GCC-64/bin/mingw32-make.exe -f Makefile cmTC_69228/fast
+        mingw32-make.exe[1]: Entering directory 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        C:/TDM-GCC-64/bin/mingw32-make.exe  -f CMakeFiles\\cmTC_69228.dir\\build.make CMakeFiles/cmTC_69228.dir/build
+        mingw32-make.exe[2]: Entering directory 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        Building CXX object CMakeFiles/cmTC_69228.dir/archflags_unix.cpp.obj
+        C:\\TDM-GCC-64\\bin\\g++.exe   -pg -fno-pie -fno-builtin -msse4.1 -pg -no-pie -march=native  -o CMakeFiles\\cmTC_69228.dir\\archflags_unix.cpp.obj -c C:\\Users\\marce\\Downloads\\fcpw-libigl-example\\fcpw\\deps\\enoki\\resources\\archflags_unix.cpp
+        Linking CXX executable cmTC_69228.exe
+        "C:\\Program Files\\CMake\\bin\\cmake.exe" -E cmake_link_script CMakeFiles\\cmTC_69228.dir\\link.txt --verbose=1
+        "C:\\Program Files\\CMake\\bin\\cmake.exe" -E rm -f CMakeFiles\\cmTC_69228.dir/objects.a
+        C:\\TDM-GCC-64\\bin\\ar.exe qc CMakeFiles\\cmTC_69228.dir/objects.a @CMakeFiles\\cmTC_69228.dir\\objects1.rsp
+        C:\\TDM-GCC-64\\bin\\g++.exe -pg -fno-pie -fno-builtin -msse4.1 -pg -no-pie -march=native  -Wl,--whole-archive CMakeFiles\\cmTC_69228.dir/objects.a -Wl,--no-whole-archive -o cmTC_69228.exe -Wl,--out-implib,libcmTC_69228.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\\cmTC_69228.dir\\linkLibs.rsp
+        mingw32-make.exe[2]: Leaving directory 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        mingw32-make.exe[1]: Leaving directory 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        
+      exitCode: 0
+    runResult:
+      variable: "ENOKI_ARCH_FLAGS_RETVAL"
+      cached: true
+      stdout: |
+        -march=skx
+      exitCode: 0
+...
+
+---
+events:
+  -
+    kind: "try_run-v1"
+    backtrace:
+      - "fcpw/deps/enoki/CMakeLists.txt:78 (try_run)"
+    directories:
+      source: "C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp"
+      binary: "C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: "-pg -fno-pie -fno-builtin -O3 -msse4.1 -fopenmp -march=native"
+      CMAKE_MODULE_PATH: "C:/Users/marce/Downloads/fcpw-libigl-example/cmake"
+    buildResult:
+      variable: "ENOKI_ARCH_FLAGS_COMPILE_RESULT"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        
+        Run Build Command(s): "C:/Program Files/CMake/bin/cmake.exe" -E env VERBOSE=1 C:/TDM-GCC-64/bin/mingw32-make.exe -f Makefile cmTC_ade35/fast
+        mingw32-make.exe[1]: Entering directory 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        C:/TDM-GCC-64/bin/mingw32-make.exe  -f CMakeFiles\\cmTC_ade35.dir\\build.make CMakeFiles/cmTC_ade35.dir/build
+        mingw32-make.exe[2]: Entering directory 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        Building CXX object CMakeFiles/cmTC_ade35.dir/archflags_unix.cpp.obj
+        C:\\TDM-GCC-64\\bin\\g++.exe   -pg -fno-pie -fno-builtin -O3 -msse4.1 -fopenmp -march=native  -o CMakeFiles\\cmTC_ade35.dir\\archflags_unix.cpp.obj -c C:\\Users\\marce\\Downloads\\fcpw-libigl-example\\fcpw\\deps\\enoki\\resources\\archflags_unix.cpp
+        Linking CXX executable cmTC_ade35.exe
+        "C:\\Program Files\\CMake\\bin\\cmake.exe" -E cmake_link_script CMakeFiles\\cmTC_ade35.dir\\link.txt --verbose=1
+        "C:\\Program Files\\CMake\\bin\\cmake.exe" -E rm -f CMakeFiles\\cmTC_ade35.dir/objects.a
+        C:\\TDM-GCC-64\\bin\\ar.exe qc CMakeFiles\\cmTC_ade35.dir/objects.a @CMakeFiles\\cmTC_ade35.dir\\objects1.rsp
+        C:\\TDM-GCC-64\\bin\\g++.exe -pg -fno-pie -fno-builtin -O3 -msse4.1 -fopenmp -march=native  -Wl,--whole-archive CMakeFiles\\cmTC_ade35.dir/objects.a -Wl,--no-whole-archive -o cmTC_ade35.exe -Wl,--out-implib,libcmTC_ade35.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\\cmTC_ade35.dir\\linkLibs.rsp
+        mingw32-make.exe[2]: Leaving directory 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        mingw32-make.exe[1]: Leaving directory 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        
+      exitCode: 0
+    runResult:
+      variable: "ENOKI_ARCH_FLAGS_RETVAL"
+      cached: true
+      stdout: |
+        -march=skx
+      exitCode: 0
+...
+
+---
+events:
+  -
+    kind: "try_run-v1"
+    backtrace:
+      - "fcpw/deps/enoki/CMakeLists.txt:78 (try_run)"
+    directories:
+      source: "C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp"
+      binary: "C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: "-pg -fno-pie -fno-builtin -O3 -msse4.1 -fopenmp -march=native"
+      CMAKE_MODULE_PATH: "C:/Users/marce/Downloads/fcpw-libigl-example/cmake"
+    buildResult:
+      variable: "ENOKI_ARCH_FLAGS_COMPILE_RESULT"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        
+        Run Build Command(s): "C:/Program Files/CMake/bin/cmake.exe" -E env VERBOSE=1 C:/TDM-GCC-64/bin/mingw32-make.exe -f Makefile cmTC_f13e6/fast
+        C:/TDM-GCC-64/bin/mingw32-make.exe  -f CMakeFiles\\cmTC_f13e6.dir\\build.make CMakeFiles/cmTC_f13e6.dir/build
+        mingw32-make.exe[1]: Entering directory 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        Building CXX object CMakeFiles/cmTC_f13e6.dir/archflags_unix.cpp.obj
+        C:\\TDM-GCC-64\\bin\\g++.exe   -pg -fno-pie -fno-builtin -O3 -msse4.1 -fopenmp -march=native  -o CMakeFiles\\cmTC_f13e6.dir\\archflags_unix.cpp.obj -c C:\\Users\\marce\\Downloads\\fcpw-libigl-example\\fcpw\\deps\\enoki\\resources\\archflags_unix.cpp
+        Linking CXX executable cmTC_f13e6.exe
+        "C:\\Program Files\\CMake\\bin\\cmake.exe" -E cmake_link_script CMakeFiles\\cmTC_f13e6.dir\\link.txt --verbose=1
+        "C:\\Program Files\\CMake\\bin\\cmake.exe" -E rm -f CMakeFiles\\cmTC_f13e6.dir/objects.a
+        C:\\TDM-GCC-64\\bin\\ar.exe qc CMakeFiles\\cmTC_f13e6.dir/objects.a @CMakeFiles\\cmTC_f13e6.dir\\objects1.rsp
+        C:\\TDM-GCC-64\\bin\\g++.exe -pg -fno-pie -fno-builtin -O3 -msse4.1 -fopenmp -march=native  -Wl,--whole-archive CMakeFiles\\cmTC_f13e6.dir/objects.a -Wl,--no-whole-archive -o cmTC_f13e6.exe -Wl,--out-implib,libcmTC_f13e6.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\\cmTC_f13e6.dir\\linkLibs.rsp
+        mingw32-make.exe[1]: Leaving directory 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        
+      exitCode: 0
+    runResult:
+      variable: "ENOKI_ARCH_FLAGS_RETVAL"
+      cached: true
+      stdout: |
+        -march=skx
+      exitCode: 0
+...
+
+---
+events:
+  -
+    kind: "try_run-v1"
+    backtrace:
+      - "fcpw/deps/enoki/CMakeLists.txt:78 (try_run)"
+    directories:
+      source: "C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp"
+      binary: "C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: "-O3 -fopenmp -O3 -msse4.1 -fopenmp -march=native"
+      CMAKE_MODULE_PATH: "C:/Users/marce/Downloads/fcpw-libigl-example/cmake"
+    buildResult:
+      variable: "ENOKI_ARCH_FLAGS_COMPILE_RESULT"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        
+        Run Build Command(s): "C:/Program Files/CMake/bin/cmake.exe" -E env VERBOSE=1 C:/TDM-GCC-64/bin/mingw32-make.exe -f Makefile cmTC_8f0c7/fast
+        C:/TDM-GCC-64/bin/mingw32-make.exe  -f CMakeFiles\\cmTC_8f0c7.dir\\build.make CMakeFiles/cmTC_8f0c7.dir/build
+        mingw32-make.exe[1]: Entering directory 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        Building CXX object CMakeFiles/cmTC_8f0c7.dir/archflags_unix.cpp.obj
+        C:\\TDM-GCC-64\\bin\\g++.exe   -O3 -fopenmp -O3 -msse4.1 -fopenmp -march=native  -o CMakeFiles\\cmTC_8f0c7.dir\\archflags_unix.cpp.obj -c C:\\Users\\marce\\Downloads\\fcpw-libigl-example\\fcpw\\deps\\enoki\\resources\\archflags_unix.cpp
+        Linking CXX executable cmTC_8f0c7.exe
+        "C:\\Program Files\\CMake\\bin\\cmake.exe" -E cmake_link_script CMakeFiles\\cmTC_8f0c7.dir\\link.txt --verbose=1
+        "C:\\Program Files\\CMake\\bin\\cmake.exe" -E rm -f CMakeFiles\\cmTC_8f0c7.dir/objects.a
+        C:\\TDM-GCC-64\\bin\\ar.exe qc CMakeFiles\\cmTC_8f0c7.dir/objects.a @CMakeFiles\\cmTC_8f0c7.dir\\objects1.rsp
+        C:\\TDM-GCC-64\\bin\\g++.exe -O3 -fopenmp -O3 -msse4.1 -fopenmp -march=native  -Wl,--whole-archive CMakeFiles\\cmTC_8f0c7.dir/objects.a -Wl,--no-whole-archive -o cmTC_8f0c7.exe -Wl,--out-implib,libcmTC_8f0c7.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\\cmTC_8f0c7.dir\\linkLibs.rsp
+        mingw32-make.exe[1]: Leaving directory 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        
+      exitCode: 0
+    runResult:
+      variable: "ENOKI_ARCH_FLAGS_RETVAL"
+      cached: true
+      stdout: |
+        -march=skx
+      exitCode: 0
+...
+
+---
+events:
+  -
+    kind: "try_run-v1"
+    backtrace:
+      - "fcpw/deps/enoki/CMakeLists.txt:78 (try_run)"
+    directories:
+      source: "C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp"
+      binary: "C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: "-O3 -fopenmp -O3 -msse4.1 -fopenmp -march=native"
+      CMAKE_MODULE_PATH: "C:/Users/marce/Downloads/fcpw-libigl-example/cmake"
+    buildResult:
+      variable: "ENOKI_ARCH_FLAGS_COMPILE_RESULT"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        
+        Run Build Command(s): "C:/Program Files/CMake/bin/cmake.exe" -E env VERBOSE=1 C:/TDM-GCC-64/bin/mingw32-make.exe -f Makefile cmTC_2ff46/fast
+        mingw32-make.exe[1]: Entering directory 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        C:/TDM-GCC-64/bin/mingw32-make.exe  -f CMakeFiles\\cmTC_2ff46.dir\\build.make CMakeFiles/cmTC_2ff46.dir/build
+        mingw32-make.exe[2]: Entering directory 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        Building CXX object CMakeFiles/cmTC_2ff46.dir/archflags_unix.cpp.obj
+        C:\\TDM-GCC-64\\bin\\g++.exe   -O3 -fopenmp -O3 -msse4.1 -fopenmp -march=native  -o CMakeFiles\\cmTC_2ff46.dir\\archflags_unix.cpp.obj -c C:\\Users\\marce\\Downloads\\fcpw-libigl-example\\fcpw\\deps\\enoki\\resources\\archflags_unix.cpp
+        Linking CXX executable cmTC_2ff46.exe
+        "C:\\Program Files\\CMake\\bin\\cmake.exe" -E cmake_link_script CMakeFiles\\cmTC_2ff46.dir\\link.txt --verbose=1
+        "C:\\Program Files\\CMake\\bin\\cmake.exe" -E rm -f CMakeFiles\\cmTC_2ff46.dir/objects.a
+        C:\\TDM-GCC-64\\bin\\ar.exe qc CMakeFiles\\cmTC_2ff46.dir/objects.a @CMakeFiles\\cmTC_2ff46.dir\\objects1.rsp
+        C:\\TDM-GCC-64\\bin\\g++.exe -O3 -fopenmp -O3 -msse4.1 -fopenmp -march=native  -Wl,--whole-archive CMakeFiles\\cmTC_2ff46.dir/objects.a -Wl,--no-whole-archive -o cmTC_2ff46.exe -Wl,--out-implib,libcmTC_2ff46.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\\cmTC_2ff46.dir\\linkLibs.rsp
+        mingw32-make.exe[2]: Leaving directory 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        mingw32-make.exe[1]: Leaving directory 'C:/Users/marce/Downloads/fcpw-libigl-example/CMakeFiles/CMakeTmp'
+        
+      exitCode: 0
+    runResult:
+      variable: "ENOKI_ARCH_FLAGS_RETVAL"
+      cached: true
+      stdout: |
+        -march=skx
+      exitCode: 0
+...

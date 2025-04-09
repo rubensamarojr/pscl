@@ -4,6 +4,37 @@
 CMakeFiles/fcpw-libigl-fpdc-example.dir/fpdc/polygon_wall.cpp.obj: fpdc/polygon_wall.cpp \
   C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include-fixed/limits.h \
   C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include-fixed/syslimits.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/adxintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx2intrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx5124fmapsintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx5124vnniwintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512bf16intrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512bf16vlintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512bitalgintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512bwintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512cdintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512dqintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512erintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512fintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512ifmaintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512ifmavlintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512pfintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512vbmi2intrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512vbmi2vlintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512vbmiintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512vbmivlintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512vlbwintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512vldqintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512vlintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512vnniintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512vnnivlintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512vp2intersectintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512vp2intersectvlintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512vpopcntdqintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512vpopcntdqvlintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avxintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/bmi2intrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/bmiintrin.h \
   C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/algorithm \
   C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/array \
   C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/backward/binders.h \
@@ -85,6 +116,7 @@ CMakeFiles/fcpw-libigl-fpdc-example.dir/fpdc/polygon_wall.cpp.obj: fpdc/polygon_
   C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/vector.tcc \
   C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/cctype \
   C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/cerrno \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/cfloat \
   C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/clocale \
   C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/cmath \
   C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/concepts \
@@ -157,9 +189,47 @@ CMakeFiles/fcpw-libigl-fpdc-example.dir/fpdc/polygon_wall.cpp.obj: fpdc/polygon_
   C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/x86_64-w64-mingw32/bits/gthr-default.h \
   C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/x86_64-w64-mingw32/bits/gthr.h \
   C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/x86_64-w64-mingw32/bits/os_defines.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/cetintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/cldemoteintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/clflushoptintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/clwbintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/emmintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/enqcmdintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/f16cintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/float.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/fmaintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/fxsrintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/gfniintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/immintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/lzcntintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/mm_malloc.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/mmintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/movdirintrin.h \
   C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/omp.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/pconfigintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/pkuintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/pmmintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/popcntintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/prfchwintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/rdseedintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/rtmintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/sgxintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/shaintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/smmintrin.h \
   C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/stddef.h \
   C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/stdint.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/tmmintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/vaesintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/vpclmulqdqintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/waitpkgintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/wbnoinvdintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/wmmintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/xmmintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/xsavecintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/xsaveintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/xsaveoptintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/xsavesintrin.h \
+  C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/xtestintrin.h \
   C:/TDM-GCC-64/x86_64-w64-mingw32/include/_mingw.h \
   C:/TDM-GCC-64/x86_64-w64-mingw32/include/_mingw_mac.h \
   C:/TDM-GCC-64/x86_64-w64-mingw32/include/_mingw_off_t.h \
@@ -172,6 +242,7 @@ CMakeFiles/fcpw-libigl-fpdc-example.dir/fpdc/polygon_wall.cpp.obj: fpdc/polygon_
   C:/TDM-GCC-64/x86_64-w64-mingw32/include/crtdefs.h \
   C:/TDM-GCC-64/x86_64-w64-mingw32/include/ctype.h \
   C:/TDM-GCC-64/x86_64-w64-mingw32/include/errno.h \
+  C:/TDM-GCC-64/x86_64-w64-mingw32/include/float.h \
   C:/TDM-GCC-64/x86_64-w64-mingw32/include/limits.h \
   C:/TDM-GCC-64/x86_64-w64-mingw32/include/locale.h \
   C:/TDM-GCC-64/x86_64-w64-mingw32/include/malloc.h \
@@ -935,18 +1006,6 @@ CMakeFiles/fcpw-libigl-fpdc-example.dir/main.cpp.obj: main.cpp \
   fpdc/stl_reader.h
 
 
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/stl_function.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/basic_ios.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/list.tcc:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/unique_ptr.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/algorithmfwd.h:
-
-fpdc/polygon_wall.cpp:
-
 C:/TDM-GCC-64/x86_64-w64-mingw32/include/sec_api/sys/timeb_s.h:
 
 _deps/libigl-src/include/igl/min_size.cpp:
@@ -955,9 +1014,119 @@ C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/backward/binders.h:
 
 _deps/libigl-src/include/igl/barycentric_coordinates.cpp:
 
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/exception:
+fpdc/polygon_wall.cpp:
 
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/std_function.h:
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include-fixed/limits.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/basic_string.tcc:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512vp2intersectvlintrin.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512bf16intrin.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512ifmavlintrin.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/math.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512cdintrin.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512vpopcntdqvlintrin.h:
+
+fcpw/deps/eigen-git-mirror/Eigen/src/Core/MathFunctions.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include-fixed/syslimits.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/cxxabi_init_exception.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/adxintrin.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx5124vnniwintrin.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512vbmi2intrin.h:
+
+fcpw/deps/eigen-git-mirror/Eigen/LU:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/debug/debug.h:
+
+fcpw/deps/eigen-git-mirror/Eigen/QR:
+
+fcpw/deps/eigen-git-mirror/Eigen/SparseLU:
+
+fcpw/deps/eigen-git-mirror/Eigen/src/Core/VectorwiseOp.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx2intrin.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/emmintrin.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx5124fmapsintrin.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/pstl/glue_memory_defs.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512vldqintrin.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512bf16vlintrin.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512bitalgintrin.h:
+
+_deps/libigl-src/include/igl/writeDMAT.cpp:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/typeinfo:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/hashtable_policy.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/type_traits:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512bwintrin.h:
+
+_deps/libigl-src/include/igl/sort.h:
+
+C:/TDM-GCC-64/x86_64-w64-mingw32/include/corecrt_stdio_config.h:
+
+fcpw/deps/eigen-git-mirror/Eigen/src/SparseCore/SparseAssign.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512dqintrin.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/ios_base.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/x86_64-w64-mingw32/bits/gthr.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512erintrin.h:
+
+_deps/libigl-src/include/igl/igl_inline.h:
+
+_deps/libigl-src/include/igl/tinyply.cpp:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/x86_64-w64-mingw32/bits/gthr-default.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512fintrin.h:
+
+fcpw/deps/eigen-git-mirror/Eigen/src/Core/Fuzzy.h:
+
+C:/TDM-GCC-64/x86_64-w64-mingw32/include/swprintf.inl:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/shared_ptr.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/chrono:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/shaintrin.h:
+
+_deps/libigl-src/include/igl/read_triangle_mesh.cpp:
+
+fcpw/deps/eigen-git-mirror/Eigen/Sparse:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/cxxabi_forced.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/new:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/locale_facets.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/sstream.tcc:
+
+fcpw/deps/eigen-git-mirror/Eigen/src/OrderingMethods/Amd.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512vp2intersectintrin.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512ifmaintrin.h:
 
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/codecvt.h:
 
@@ -967,19 +1136,95 @@ C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/array:
 
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/sstream:
 
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/std_abs.h:
+fcpw/deps/eigen-git-mirror/Eigen/src/Eigenvalues/RealSchur.h:
 
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include-fixed/limits.h:
+fcpw/deps/eigen-git-mirror/Eigen/src/Eigenvalues/ComplexSchur.h:
 
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/basic_string.tcc:
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/stl_pair.h:
 
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/locale_classes.tcc:
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512pfintrin.h:
 
-fcpw/deps/eigen-git-mirror/Eigen/src/Core/MathFunctions.h:
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/exception_defines.h:
 
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include-fixed/syslimits.h:
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/fxsrintrin.h:
 
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/specfun.h:
+C:/TDM-GCC-64/x86_64-w64-mingw32/include/stddef.h:
+
+fcpw/deps/eigen-git-mirror/Eigen/src/Core/DiagonalMatrix.h:
+
+fcpw/deps/eigen-git-mirror/Eigen/src/Core/util/Macros.h:
+
+_deps/libigl-src/include/igl/polygons_to_triangles.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512vbmi2vlintrin.h:
+
+fcpw/deps/enoki/include/enoki/array_traits.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/hashtable.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avxintrin.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/ostream:
+
+fcpw/deps/eigen-git-mirror/Eigen/Dense:
+
+fcpw/deps/eigen-git-mirror/Eigen/src/SparseCore/SparseCompressedBase.h:
+
+fcpw/deps/eigen-git-mirror/Eigen/src/IterativeLinearSolvers/BiCGSTAB.h:
+
+fcpw/deps/eigen-git-mirror/Eigen/src/Geometry/Umeyama.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512vbmiintrin.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/hash_bytes.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/debug/assertions.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/erase_if.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512vbmivlintrin.h:
+
+_deps/libigl-src/include/igl/find.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512vlbwintrin.h:
+
+_deps/libigl-src/include/igl/boundary_facets.cpp:
+
+fcpw/include/fcpw/aggregates/csg_node.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512vlintrin.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/memoryfwd.h:
+
+C:/TDM-GCC-64/x86_64-w64-mingw32/include/pthread_unistd.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/x86_64-w64-mingw32/bits/atomic_word.h:
+
+fcpw/deps/eigen-git-mirror/Eigen/src/Core/arch/Default/ConjHelper.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512vnniintrin.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/xsavecintrin.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512vnnivlintrin.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/stl_uninitialized.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512vpopcntdqintrin.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/vector.tcc:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/bmi2intrin.h:
+
+C:/TDM-GCC-64/x86_64-w64-mingw32/include/_mingw.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/allocator.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/x86_64-w64-mingw32/bits/time_members.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/locale_facets.tcc:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/bmiintrin.h:
 
 _deps/libigl-src/include/igl/LinSpaced.h:
 
@@ -989,17 +1234,17 @@ fcpw/deps/eigen-git-mirror/Eigen/src/SparseCore/SparseMap.h:
 
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/algorithm:
 
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/basic_ios.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/list.tcc:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/unique_ptr.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/algorithmfwd.h:
+
 fcpw/include/fcpw/core/bounding_volumes.h:
 
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/alloc_traits.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/bmiintrin.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/locale_facets.tcc:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/allocator.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/x86_64-w64-mingw32/bits/time_members.h:
 
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/basic_ios.tcc:
 
@@ -1021,8 +1266,6 @@ fcpw/deps/enoki/include/enoki/array_math.h:
 
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/concept_check.h:
 
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/iterator_concepts.h:
-
 fcpw/deps/eigen-git-mirror/Eigen/src/Core/products/TriangularSolverVector.h:
 
 _deps/libigl-src/include/igl/readWRL.h:
@@ -1032,30 +1275,6 @@ C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/functional_hash
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/cpp_type_traits.h:
 
 _deps/libigl-src/include/igl/ray_mesh_intersect.cpp:
-
-fcpw/deps/eigen-git-mirror/Eigen/src/OrderingMethods/Amd.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512vp2intersectintrin.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/sstream.tcc:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/locale_facets.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/shaintrin.h:
-
-_deps/libigl-src/include/igl/read_triangle_mesh.cpp:
-
-fcpw/deps/eigen-git-mirror/Eigen/Sparse:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/cxxabi_forced.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/new:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/cxxabi_init_exception.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/istream.tcc:
-
-fcpw/deps/eigen-git-mirror/Eigen/Householder:
 
 fcpw/deps/eigen-git-mirror/Eigen/src/SparseLU/SparseLU_copy_to_ucol.h:
 
@@ -1067,67 +1286,29 @@ C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/enable_special_
 
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/gfniintrin.h:
 
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/stl_iterator.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/hash_bytes.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/debug/assertions.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/erase_if.h:
-
 fcpw/deps/eigen-git-mirror/Eigen/src/SparseLU/SparseLU_Utils.h:
 
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/exception.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/stl_heap.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/tr1/modified_bessel_func.tcc:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/stl_stack.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/range_cmp.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/exception_defines.h:
-
-C:/TDM-GCC-64/x86_64-w64-mingw32/include/stddef.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/fxsrintrin.h:
-
-fcpw/deps/eigen-git-mirror/Eigen/src/Core/DiagonalMatrix.h:
 
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/exception_ptr.h:
 
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/fstream.tcc:
 
-fcpw/deps/enoki/include/enoki/array_traits.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/hashtable.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/hashtable_policy.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/type_traits:
-
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/invoke.h:
 
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/ios_base.h:
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/istream.tcc:
 
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/x86_64-w64-mingw32/bits/gthr.h:
+fcpw/deps/eigen-git-mirror/Eigen/Householder:
 
-fcpw/deps/eigen-git-mirror/Eigen/src/Core/util/IndexedViewHelper.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/stl_algo.h:
-
-fcpw/deps/enoki/include/enoki/array_static.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/stream_iterator.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/nested_exception.h:
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/iterator_concepts.h:
 
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/locale_classes.h:
 
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/stl_construct.h:
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/locale_classes.tcc:
 
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/predefined_ops.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/stl_construct.h:
 
 fcpw/deps/eigen-git-mirror/Eigen/src/Core/Diagonal.h:
 
@@ -1137,19 +1318,15 @@ C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/cwchar:
 
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/locale_facets_nonio.h:
 
-fcpw/include/fcpw/aggregates/csg_node.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/memoryfwd.h:
-
-C:/TDM-GCC-64/x86_64-w64-mingw32/include/pthread_unistd.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512vlintrin.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/x86_64-w64-mingw32/bits/atomic_word.h:
-
 _deps/libigl-src/include/igl/slice_sorted.h:
 
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/move.h:
+
+fcpw/deps/enoki/include/enoki/array_static.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/stream_iterator.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/nested_exception.h:
 
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/node_handle.h:
 
@@ -1179,9 +1356,33 @@ C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/wmmintrin.h:
 
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/range_access.h:
 
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/range_cmp.h:
+
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/refwrap.h:
 
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/specfun.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/std_abs.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/exception:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/std_function.h:
+
+fcpw/deps/eigen-git-mirror/Eigen/src/Core/util/IndexedViewHelper.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/stl_algo.h:
+
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/stl_bvector.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/stl_function.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/stl_heap.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/tr1/modified_bessel_func.tcc:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/stl_stack.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/stl_iterator.h:
 
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/stl_iterator_base_funcs.h:
 
@@ -1191,14 +1392,6 @@ C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/stl_iterator_ba
 
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/stl_multiset.h:
 
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512pfintrin.h:
-
-fcpw/deps/eigen-git-mirror/Eigen/src/Eigenvalues/RealSchur.h:
-
-fcpw/deps/eigen-git-mirror/Eigen/src/Eigenvalues/ComplexSchur.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/stl_pair.h:
-
 _deps/libigl-src/include/igl/readOFF.cpp:
 
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/stl_relops.h:
@@ -1207,21 +1400,17 @@ C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/streambuf_itera
 
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/stl_set.h:
 
+C:/TDM-GCC-64/x86_64-w64-mingw32/include/ctype.h:
+
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/stl_tempbuf.h:
 
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/set:
 
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/xtestintrin.h:
 
-C:/TDM-GCC-64/x86_64-w64-mingw32/include/ctype.h:
-
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/ext/alloc_traits.h:
 
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/stl_tree.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/stl_uninitialized.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512vnnivlintrin.h:
 
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/stl_vector.h:
 
@@ -1265,10 +1454,6 @@ C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/uses_allocator.
 
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/stl_list.h:
 
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/vector.tcc:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512vpopcntdqintrin.h:
-
 fcpw/deps/eigen-git-mirror/Eigen/src/Geometry/ParametrizedLine.h:
 
 _deps/libigl-src/include/igl/MshLoader.cpp:
@@ -1280,6 +1465,8 @@ C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/cctype:
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/random:
 
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/cerrno:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/cfloat:
 
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/clocale:
 
@@ -1324,12 +1511,6 @@ C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/climits:
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/cwctype:
 
 _deps/libigl-src/include/igl/boundary_facets.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512vbmi2intrin.h:
-
-fcpw/deps/eigen-git-mirror/Eigen/LU:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/debug/debug.h:
 
 _deps/libigl-src/include/igl/readMSH.cpp:
 
@@ -1389,10 +1570,6 @@ C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/x86_64-w64-mingw32/b
 
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/optional:
 
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/ostream:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avxintrin.h:
-
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/pstl/execution_defs.h:
 
 C:/TDM-GCC-64/x86_64-w64-mingw32/include/corecrt.h:
@@ -1429,13 +1606,13 @@ _deps/libigl-src/include/igl/string_utils.cpp:
 
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/tr1/exp_integral.tcc:
 
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/tr1/gamma.tcc:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/vpclmulqdqintrin.h:
-
 fcpw/deps/enoki/include/enoki/array_fallbacks.h:
 
 C:/TDM-GCC-64/x86_64-w64-mingw32/include/stdlib.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/tr1/gamma.tcc:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/vpclmulqdqintrin.h:
 
 fcpw/include/fcpw/core/primitive.h:
 
@@ -1467,12 +1644,6 @@ C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/tuple:
 
 _deps/libigl-src/include/igl/reorder.cpp:
 
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512bitalgintrin.h:
-
-_deps/libigl-src/include/igl/writeDMAT.cpp:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/typeinfo:
-
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/unordered_map:
 
 _deps/libigl-src/include/igl/remove_duplicate_vertices.cpp:
@@ -1489,9 +1660,9 @@ C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/x86_64-w64-mingw32/b
 
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/shared_ptr_atomic.h:
 
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/atomic_base.h:
-
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/mmintrin.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/atomic_base.h:
 
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/x86_64-w64-mingw32/bits/c++config.h:
 
@@ -1507,21 +1678,63 @@ C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/x86_64-w64-mingw32/b
 
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/stl_raw_storage_iter.h:
 
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512erintrin.h:
-
-_deps/libigl-src/include/igl/igl_inline.h:
-
-_deps/libigl-src/include/igl/tinyply.cpp:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/x86_64-w64-mingw32/bits/gthr-default.h:
-
 fcpw/deps/eigen-git-mirror/Eigen/src/Core/products/GeneralMatrixVector.h:
 
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/x86_64-w64-mingw32/bits/os_defines.h:
 
 _deps/libigl-src/include/igl/readMESH.cpp:
 
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/cetintrin.h:
+
+fcpw/deps/eigen-git-mirror/Eigen/src/SparseLU/SparseLUImpl.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/clflushoptintrin.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/clwbintrin.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/pstl/glue_numeric_defs.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/enqcmdintrin.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/f16cintrin.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/float.h:
+
+_deps/libigl-src/include/igl/read_file_binary.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/immintrin.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/lzcntintrin.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/mm_malloc.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/movdirintrin.h:
+
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/omp.h:
+
+fcpw/deps/eigen-git-mirror/Eigen/src/SparseCore/SparseRef.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/pconfigintrin.h:
+
+_deps/libigl-src/include/igl/pathinfo.cpp:
+
+_deps/libigl-src/include/igl/doublearea.h:
+
+fcpw/include/fcpw/core/ray.h:
+
+fcpw/deps/eigen-git-mirror/Eigen/src/SparseCore/SparseMatrix.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/pkuintrin.h:
+
+fcpw/deps/eigen-git-mirror/Eigen/src/Core/EigenBase.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/pmmintrin.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/popcntintrin.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/sgxintrin.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/smmintrin.h:
 
 fcpw/include/fcpw/aggregates/baseline.h:
 
@@ -1531,9 +1744,27 @@ _deps/libigl-src/include/igl/AABB.h:
 
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/stdint.h:
 
-C:/TDM-GCC-64/x86_64-w64-mingw32/include/_mingw.h:
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/tmmintrin.h:
 
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/bmi2intrin.h:
+fcpw/deps/eigen-git-mirror/Eigen/src/SparseCore/SparseSelfAdjointView.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/wbnoinvdintrin.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/xmmintrin.h:
+
+_deps/libigl-src/include/igl/IndexComparison.h:
+
+fcpw/deps/eigen-git-mirror/Eigen/src/Core/DenseStorage.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/xsaveintrin.h:
+
+fcpw/deps/eigen-git-mirror/Eigen/src/Core/ArrayWrapper.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/xsaveoptintrin.h:
+
+_deps/libigl-src/include/igl/max_size.h:
+
+C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/xsavesintrin.h:
 
 fcpw/deps/eigen-git-mirror/Eigen/Geometry:
 
@@ -1555,12 +1786,6 @@ C:/TDM-GCC-64/x86_64-w64-mingw32/include/_mingw_stat64.h:
 
 C:/TDM-GCC-64/x86_64-w64-mingw32/include/malloc.h:
 
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512bwintrin.h:
-
-_deps/libigl-src/include/igl/sort.h:
-
-C:/TDM-GCC-64/x86_64-w64-mingw32/include/corecrt_stdio_config.h:
-
 C:/TDM-GCC-64/x86_64-w64-mingw32/include/corecrt_wstdlib.h:
 
 fcpw/deps/eigen-git-mirror/Eigen/src/Core/IO.h:
@@ -1568,6 +1793,10 @@ fcpw/deps/eigen-git-mirror/Eigen/src/Core/IO.h:
 C:/TDM-GCC-64/x86_64-w64-mingw32/include/crtdefs.h:
 
 C:/TDM-GCC-64/x86_64-w64-mingw32/include/errno.h:
+
+_deps/libigl-src/include/igl/readPLY.h:
+
+C:/TDM-GCC-64/x86_64-w64-mingw32/include/float.h:
 
 C:/TDM-GCC-64/x86_64-w64-mingw32/include/math.h:
 
@@ -1607,16 +1836,6 @@ C:/TDM-GCC-64/x86_64-w64-mingw32/include/stdint.h:
 
 C:/TDM-GCC-64/x86_64-w64-mingw32/include/stdio.h:
 
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512fintrin.h:
-
-fcpw/deps/eigen-git-mirror/Eigen/src/Core/Fuzzy.h:
-
-C:/TDM-GCC-64/x86_64-w64-mingw32/include/swprintf.inl:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/bits/shared_ptr.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/chrono:
-
 C:/TDM-GCC-64/x86_64-w64-mingw32/include/sys/timeb.h:
 
 C:/TDM-GCC-64/x86_64-w64-mingw32/include/time.h:
@@ -1642,76 +1861,6 @@ _deps/libigl-src/include/igl/sort.cpp:
 fcpw/deps/eigen-git-mirror/Eigen/src/SparseCore/SparseRedux.h:
 
 main.cpp:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/adxintrin.h:
-
-fcpw/deps/eigen-git-mirror/Eigen/QR:
-
-fcpw/deps/eigen-git-mirror/Eigen/SparseLU:
-
-fcpw/deps/eigen-git-mirror/Eigen/src/Core/VectorwiseOp.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx2intrin.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/emmintrin.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx5124fmapsintrin.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/pstl/glue_memory_defs.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx5124vnniwintrin.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512bf16intrin.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512vp2intersectvlintrin.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512bf16vlintrin.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/math.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512cdintrin.h:
-
-fcpw/deps/eigen-git-mirror/Eigen/src/SparseCore/SparseAssign.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512dqintrin.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512ifmaintrin.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512ifmavlintrin.h:
-
-fcpw/deps/eigen-git-mirror/Eigen/src/Core/util/Macros.h:
-
-_deps/libigl-src/include/igl/polygons_to_triangles.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512vbmi2vlintrin.h:
-
-fcpw/deps/eigen-git-mirror/Eigen/Dense:
-
-fcpw/deps/eigen-git-mirror/Eigen/src/SparseCore/SparseCompressedBase.h:
-
-fcpw/deps/eigen-git-mirror/Eigen/src/IterativeLinearSolvers/BiCGSTAB.h:
-
-fcpw/deps/eigen-git-mirror/Eigen/src/Geometry/Umeyama.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512vbmiintrin.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512vbmivlintrin.h:
-
-_deps/libigl-src/include/igl/find.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512vlbwintrin.h:
-
-_deps/libigl-src/include/igl/boundary_facets.cpp:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512vldqintrin.h:
-
-fcpw/deps/eigen-git-mirror/Eigen/src/Core/arch/Default/ConjHelper.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512vnniintrin.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/xsavecintrin.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/avx512vpopcntdqvlintrin.h:
 
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/atomic:
 
@@ -1813,10 +1962,6 @@ fcpw/deps/eigen-git-mirror/Eigen/src/Core/SelfAdjointView.h:
 
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/numeric:
 
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/pstl/glue_numeric_defs.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/clwbintrin.h:
-
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/ratio:
 
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/stack:
@@ -1824,72 +1969,6 @@ C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/stack:
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/thread:
 
 C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/c++/x86_64-w64-mingw32/bits/messages_members.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/cetintrin.h:
-
-fcpw/deps/eigen-git-mirror/Eigen/src/SparseLU/SparseLUImpl.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/clflushoptintrin.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/enqcmdintrin.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/f16cintrin.h:
-
-_deps/libigl-src/include/igl/read_file_binary.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/immintrin.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/lzcntintrin.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/mm_malloc.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/movdirintrin.h:
-
-fcpw/deps/eigen-git-mirror/Eigen/src/SparseCore/SparseRef.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/pconfigintrin.h:
-
-_deps/libigl-src/include/igl/pathinfo.cpp:
-
-_deps/libigl-src/include/igl/doublearea.h:
-
-fcpw/include/fcpw/core/ray.h:
-
-fcpw/deps/eigen-git-mirror/Eigen/src/SparseCore/SparseMatrix.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/pkuintrin.h:
-
-fcpw/deps/eigen-git-mirror/Eigen/src/Core/EigenBase.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/pmmintrin.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/popcntintrin.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/sgxintrin.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/smmintrin.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/tmmintrin.h:
-
-fcpw/deps/eigen-git-mirror/Eigen/src/SparseCore/SparseSelfAdjointView.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/wbnoinvdintrin.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/xmmintrin.h:
-
-_deps/libigl-src/include/igl/IndexComparison.h:
-
-fcpw/deps/eigen-git-mirror/Eigen/src/Core/DenseStorage.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/xsaveintrin.h:
-
-fcpw/deps/eigen-git-mirror/Eigen/src/Core/ArrayWrapper.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/xsaveoptintrin.h:
-
-_deps/libigl-src/include/igl/max_size.h:
-
-C:/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/10.3.0/include/xsavesintrin.h:
 
 C:/TDM-GCC-64/x86_64-w64-mingw32/include/_timeval.h:
 
@@ -1991,10 +2070,6 @@ _deps/libigl-src/include/igl/project_to_line_segment.h:
 
 fcpw/deps/eigen-git-mirror/Eigen/src/Core/GenericPacketMath.h:
 
-fcpw/deps/eigen-git-mirror/Eigen/src/Core/Random.h:
-
-fcpw/deps/eigen-git-mirror/Eigen/src/Core/Ref.h:
-
 _deps/libigl-src/include/igl/ray_mesh_intersect.h:
 
 _deps/libigl-src/include/igl/raytri.c:
@@ -2006,8 +2081,6 @@ _deps/libigl-src/include/igl/readMSH.h:
 _deps/libigl-src/include/igl/readOBJ.cpp:
 
 _deps/libigl-src/include/igl/readPLY.cpp:
-
-_deps/libigl-src/include/igl/readPLY.h:
 
 fcpw/include/fcpw/aggregates/csg_node.inl:
 
@@ -2128,6 +2201,10 @@ fcpw/deps/eigen-git-mirror/Eigen/src/Core/NumTraits.h:
 fcpw/deps/eigen-git-mirror/Eigen/src/Core/PartialReduxEvaluator.h:
 
 fcpw/deps/eigen-git-mirror/Eigen/src/Core/ProductEvaluators.h:
+
+fcpw/deps/eigen-git-mirror/Eigen/src/Core/Ref.h:
+
+fcpw/deps/eigen-git-mirror/Eigen/src/Core/Random.h:
 
 fcpw/deps/eigen-git-mirror/Eigen/src/Core/Redux.h:
 

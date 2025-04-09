@@ -330,7 +330,7 @@ int main(int argc, char * argv[]){
 			mesh1.fillCandidates4();
 		} else if (option==2){ 
 			mesh1.fillCandidates_flat();
-		}
+		} 
 
 
 		double tPreFpdc2_loop = tictoc();

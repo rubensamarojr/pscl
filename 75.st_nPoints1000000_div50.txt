@@ -1,0 +1,14 @@
+Number of Particles: 1000000
+Particle distance: 0.00230804 m
+Effective radius: 0.00484689 m
+Min mesh dimensions: -0.0375 m -0.0375 m -0.0375 m 
+Max mesh dimensions: 0.95131 m 2.03562 m 0.0779022 m 
+
+Pre process FPDC: 1.43775
+Query FPDC (0): 0.0900507 s
+Pre process + Query FPDC: 1.5278 s
+Query FPDC (1): 0.0996795 s
+Pre process + Query FPDC: 1.53743 s
+Query FPDC (2): 0.0930884 s
+Pre process + Query FPDC: 1.53083 s
+Pre process + Query FPDC Mean: 1.53202 s

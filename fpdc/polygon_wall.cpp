@@ -5,6 +5,9 @@
 
 #include "polygon_wall.h"
 //#include "mps.h"
+#include <immintrin.h> // For SIMD intrinsics
+#include <algorithm>   // For std::min, std::max
+#include <cfloat>      // For FLT_MAX
 #include <iostream>
 #include <cmath>
 #include <omp.h>
@@ -475,22 +478,46 @@ int mesh::getnElements(void)
 
 int mesh::getnNodes(int ielem)
 {
-   return elem[ielem].nNodes;
+   return 3;
 }
 
 float mesh::getNodePositionX(int ielem, int inode)
 {
-   return elem[ielem].node[inode].pos->x;
+	if (inode == 0){
+		return meshData.x0[ielem];
+	}
+	if (inode == 1){
+		return meshData.x1[ielem];
+	}
+	if (inode == 2){
+		return meshData.x2[ielem];
+	}
 }
 
 float mesh::getNodePositionY(int ielem, int inode)
 {
-   return elem[ielem].node[inode].pos->y;
+	if (inode == 0){
+		return meshData.y0[ielem];
+	}
+	if (inode == 1){
+		return meshData.y1[ielem];
+	}
+	if (inode == 2){
+		return meshData.y2[ielem];
+	}
 }
 
 float mesh::getNodePositionZ(int ielem, int inode)
 {
-   return elem[ielem].node[inode].pos->z;
+	if (inode == 0){
+		return meshData.z0[ielem];
+	}
+	if (inode == 1){
+		return meshData.z1[ielem];
+	}
+	if (inode == 2){
+		return meshData.z2[ielem];
+	}
 }
 
 float mesh::getNormalX(int ielem)
@@ -555,19 +582,33 @@ void mesh::readMeshFile(const char * meshfilename,const float dcell,const float 
 		// printf("\nnElements = %d\n", nElements );
 		elem = (struct element*) malloc(nElements*sizeof(struct element));
 		
+		
+		meshData.x0.resize(nElements);
+		meshData.y0.resize(nElements);
+		meshData.z0.resize(nElements);
+		meshData.x1.resize(nElements);
+		meshData.y1.resize(nElements);
+		meshData.z1.resize(nElements);
+		meshData.x2.resize(nElements);
+		meshData.y2.resize(nElements);
+		meshData.z2.resize(nElements);
+
 		for(size_t ielem = 0; ielem < nElements; ++ielem) {
-			//std::cout << "\ncoordinates of triangle " << ielem << ": ";
-			elem[ielem].nNodes = 3; /// number of nodes per element
-			elem[ielem].node = (struct nodes*) malloc(3*sizeof(struct nodes));
-			for(int inode = 0; inode < 3; ++inode) {
-				float* c = &coords[3 * elems [3 * ielem + inode]];
-          		//std::cout << "(" << c[0] << ", " << c[1] << ", " << c[2] << ") \n";
-				elem[ielem].node[inode].pos = (struct position*) malloc(1*sizeof(struct position));
-				elem[ielem].node[inode].pos->x = c[0];
-				elem[ielem].node[inode].pos->y = c[1];
-				elem[ielem].node[inode].pos->z = c[2];
-          		//std::cout << "(" << elem[ielem].node[inode].pos->x << ", " << elem[ielem].node[inode].pos->y << ", " << elem[ielem].node[inode].pos->z << ") \n";
-			}
+			
+			float* c0 = &coords[3 * elems[3 * ielem]];
+			meshData.x0[ielem] = c0[0];
+			meshData.y0[ielem] = c0[1];
+			meshData.z0[ielem] = c0[2];
+	
+			float* c1 = &coords[3 * elems[3 * ielem + 1]];
+			meshData.x1[ielem] = c1[0];
+			meshData.y1[ielem] = c1[1];
+			meshData.z1[ielem] = c1[2];
+
+			float* c2 = &coords[3 * elems[3 * ielem + 2]];
+			meshData.x2[ielem] = c2[0];
+			meshData.y2[ielem] = c2[1];
+			meshData.z2[ielem] = c2[2];	
 			
 			//std::cout << std::endl;
 		
@@ -585,42 +626,6 @@ void mesh::readMeshFile(const char * meshfilename,const float dcell,const float 
 	std::cout << e.what() << std::endl;
 	}
 
-
-	/// Print to check
- 	/*for(size_t ielem = 0; ielem < nElements; ++ielem)
- 	{
- 		std::cerr << "coordinates of element " << ielem << std::endl;
-		for(size_t inode = 0; inode < elem[ielem].nNodes; ++inode)
-		{
-			std::cerr << "" << elem[ielem].node[inode].pos->x << ", " << elem[ielem].node[inode].pos->y << ", " << elem[ielem].node[inode].pos->z << " ; ";
-		}
-		std::cerr	<< "normal of element " << ielem << ": "
- 		  				<< "" << elem[ielem].normal.pos->x << ", " << elem[ielem].normal.pos->y << ", " << elem[ielem].normal.pos->z << std::endl;
-        std::cerr << "transformation matrix of element " << ielem << std::endl;
-        std::cerr << elem[ielem].Rref[0] << ", " << elem[ielem].Rref[1] << ", " << elem[ielem].Rref[2] << ", "
-                  << elem[ielem].Rref[3] << ", " << elem[ielem].Rref[4] << ", " << elem[ielem].Rref[5] << ", "
-                  << elem[ielem].Rref[6] << ", " << elem[ielem].Rref[7] << ", " << elem[ielem].Rref[8] << ", " << std::endl;
-	}*/
-
-
-	// float minx = elem[0].node[0].pos->x;
-	// float miny = elem[0].node[0].pos->y;
-	// float minz = elem[0].node[0].pos->z;
-
-	// float maxx = elem[0].node[0].pos->x;
-	// float maxy = elem[0].node[0].pos->y;
-	// float maxz = elem[0].node[0].pos->z;
-
-	// for (int t = 0; t< nElements; t++){
-	// 	for(int inode = 0;inode<3;inode++){
-	// 		if(elem[t].node[inode].pos->x<minx) minx = elem[t].node[inode].pos->x;
-	// 		if(elem[t].node[inode].pos->y<miny) miny = elem[t].node[inode].pos->y;
-	// 		if(elem[t].node[inode].pos->z<minz) minz = elem[t].node[inode].pos->z;
-	// 		if(elem[t].node[inode].pos->x>maxx) maxx = elem[t].node[inode].pos->x;
-	// 		if(elem[t].node[inode].pos->y>maxy) maxy = elem[t].node[inode].pos->y;
-	// 		if(elem[t].node[inode].pos->z>maxz) maxz = elem[t].node[inode].pos->z;
-	// 	}	
-	// }
 	simResolution = simR;
 	initCell(dcell, VminX, VminY, VminZ, VmaxX, VmaxY, VmaxZ, nElements);
 	
@@ -651,29 +656,33 @@ Point2 mesh::intersectionPointZ(const Point& p1, const Point& p2, const float p)
 // CORTAPLANO - 1 -> RETORNA LINHA
 bool mesh::intersectTrianglePlaneZ(const float z, std::vector<Point2> &intersectionPoints, const int t) {
     int c = 0;
-    for(int i = 0; i < 3; i++) {
-        int j = (i + 1) % 3; 
-        Point p1 (elem[t].node[i].pos->x,elem[t].node[i].pos->y,elem[t].node[i].pos->z);
-        Point p2 (elem[t].node[j].pos->x,elem[t].node[j].pos->y,elem[t].node[j].pos->z);
-        // float s = (p1.z - z) * (p2.z - z);
-        if (fabs(p1.z - p2.z) < eps && fabs(p1.z - z) < eps){
-			Point2 pa (p1.x,p1.y);
-			Point2 pb (p2.x,p2.y);
-			intersectionPoints[0] = pa;
-			
-			intersectionPoints[1] = pb;
-			return true;
-		}
-		if ((p1.z - z) * (p2.z - z) <= 0) {
-            Point2 pt = intersectionPointZ(p1, p2,z);
-            intersectionPoints[c] = pt;
+
+    // Define triangle vertices
+    Point p0(meshData.x0[t], meshData.y0[t], meshData.z0[t]);
+    Point p1(meshData.x1[t], meshData.y1[t], meshData.z1[t]);
+    Point p2(meshData.x2[t], meshData.y2[t], meshData.z2[t]);
+
+    Point triangle[3] = {p0, p1, p2};
+
+    for (int i = 0; i < 3; i++) {
+        int j = (i + 1) % 3;
+        Point p1 = triangle[i];
+        Point p2 = triangle[j];
+
+        if (fabs(p1.z - p2.z) < eps && fabs(p1.z - z) < eps) {
+            intersectionPoints[0] = Point2(p1.x, p1.y);
+            intersectionPoints[1] = Point2(p2.x, p2.y);
+            return true;
+        }
+
+        if ((p1.z - z) * (p2.z - z) <= 0) {
+            intersectionPoints[c] = intersectionPointZ(p1, p2, z);
             c++;
         }
     }
-    // printf("\nintersectionPoints[0].x=%f,\nintersectionPoints[0].y=%f, \nintersectionPoints[1].x=%f,\nintersectionPoints[1].y=%f\n",
-    // intersectionPoints[0].x,intersectionPoints[0].y,intersectionPoints[1].x,intersectionPoints[1].y);
-	if (c == 1) intersectionPoints[1] = intersectionPoints[0];
-    return c!=0;
+
+    if (c == 1) intersectionPoints[1] = intersectionPoints[0];
+    return c != 0;
 }
 // LINHA PRA CELULA - 2 - RETORNA CELULA
 void mesh::planeInterpolationXY(const Point2 &a, const Point2 &b, const float e, std::vector<std::set<int>>& cellcoords) {
@@ -906,14 +915,14 @@ void mesh::fillBopt(){
 			std::vector<std::set<int> > cellcd;
 				
 			// test if in plane yz
-			if (static_cast<int>((elem[t].node[0].pos->x-minSpc[0])*invEc0) == static_cast<int>((elem[t].node[1].pos->x-minSpc[0])*invEc0) && static_cast<int>((elem[t].node[0].pos->x-minSpc[0])*invEc0) == static_cast<int>((elem[t].node[2].pos->x-minSpc[0])*invEc0)){
+			if (static_cast<int>((meshData.x0[t]-minSpc[0])*invEc0) == static_cast<int>((meshData.x1[t]-minSpc[0])*invEc0) && static_cast<int>((meshData.x0[t]-minSpc[0])*invEc0) == static_cast<int>((meshData.x2[t]-minSpc[0])*invEc0)){
 				cellcd.resize(numCells[1]);
 				
 				for (auto &p : cellcd) p.clear();	// clear cellcd previous iteration
-				planeInterpolationYZ(Point2(elem[t].node[2].pos->y,elem[t].node[2].pos->z),Point2(elem[t].node[0].pos->y,elem[t].node[0].pos->z),eCells[0],cellcd);
-				planeInterpolationYZ(Point2(elem[t].node[1].pos->y,elem[t].node[1].pos->z),Point2(elem[t].node[0].pos->y,elem[t].node[0].pos->z),eCells[0],cellcd);
-				planeInterpolationYZ(Point2(elem[t].node[2].pos->y,elem[t].node[2].pos->z),Point2(elem[t].node[1].pos->y,elem[t].node[1].pos->z),eCells[0],cellcd);
-				const int x = ((elem[t].node[0].pos->x-minSpc[0])*invEc0);
+				planeInterpolationYZ(Point2(meshData.y2[t],meshData.z2[t]),Point2(meshData.y0[t],meshData.z0[t]),eCells[0],cellcd);
+				planeInterpolationYZ(Point2(meshData.y1[t],meshData.z1[t]),Point2(meshData.y0[t],meshData.z0[t]),eCells[0],cellcd);
+				planeInterpolationYZ(Point2(meshData.y2[t],meshData.z2[t]),Point2(meshData.y1[t],meshData.z1[t]),eCells[0],cellcd);
+				const int x = ((meshData.x0[t]-minSpc[0])*invEc0);
 				for (int i = 0; i< cellcd.size();i++){
 					if(cellcd[i].size() == 0) continue;
 					
@@ -931,14 +940,14 @@ void mesh::fillBopt(){
 
 			// test if in plane xz
 			if (generalcase == true)
-			if (static_cast<int>((elem[t].node[0].pos->y-minSpc[1])*invEc1) == static_cast<int>((elem[t].node[1].pos->y-minSpc[1])*invEc1) && static_cast<int>((elem[t].node[0].pos->y-minSpc[1])*invEc1) == static_cast<int>((elem[t].node[2].pos->y-minSpc[1])*invEc1)){
+			if (static_cast<int>((meshData.y0[t]-minSpc[1])*invEc1) == static_cast<int>((meshData.y1[t]-minSpc[1])*invEc1) && static_cast<int>((meshData.y0[t]-minSpc[1])*invEc1) == static_cast<int>((meshData.y2[t]-minSpc[1])*invEc1)){
 				
 				for (auto &p : cellcd) p.clear();	// clear cellcd previous iteration
 				cellcd.resize(numCells[0]);
-				planeInterpolationXZ(Point2(elem[t].node[2].pos->x,elem[t].node[2].pos->z),Point2(elem[t].node[0].pos->x,elem[t].node[0].pos->z),eCells[0],cellcd);
-				planeInterpolationXZ(Point2(elem[t].node[1].pos->x,elem[t].node[1].pos->z),Point2(elem[t].node[0].pos->x,elem[t].node[0].pos->z),eCells[0],cellcd);
-				planeInterpolationXZ(Point2(elem[t].node[2].pos->x,elem[t].node[2].pos->z),Point2(elem[t].node[1].pos->x,elem[t].node[1].pos->z),eCells[0],cellcd);
-				const int y = ((elem[t].node[0].pos->y-minSpc[1])*invEc1);
+				planeInterpolationXZ(Point2(meshData.x2[t],meshData.z2[t]),Point2(meshData.x0[t],meshData.z0[t]),eCells[0],cellcd);
+				planeInterpolationXZ(Point2(meshData.x1[t],meshData.z1[t]),Point2(meshData.x0[t],meshData.z0[t]),eCells[0],cellcd);
+				planeInterpolationXZ(Point2(meshData.x2[t],meshData.z2[t]),Point2(meshData.x1[t],meshData.z1[t]),eCells[0],cellcd);
+				const int y = ((meshData.y0[t]-minSpc[1])*invEc1);
 				for (int i = 0; i< cellcd.size();i++){
 					if(cellcd[i].size() == 0) continue;
 					for(int j = *cellcd[i].begin(); j<=*--cellcd[i].end();++j){
@@ -954,14 +963,14 @@ void mesh::fillBopt(){
 			
 			// test if in plane xy
 			if (generalcase == true)
-			if (static_cast<int>((elem[t].node[0].pos->z-minSpc[2])*invEc2) == static_cast<int>((elem[t].node[1].pos->z-minSpc[2])*invEc2) && static_cast<int>((elem[t].node[0].pos->z-minSpc[2])*invEc2) == static_cast<int>((elem[t].node[2].pos->z-minSpc[2])*invEc2)){
+			if (static_cast<int>((meshData.z0[t]-minSpc[2])*invEc2) == static_cast<int>((meshData.z1[t]-minSpc[2])*invEc2) && static_cast<int>((meshData.z0[t]-minSpc[2])*invEc2) == static_cast<int>((meshData.z2[t]-minSpc[2])*invEc2)){
 				
 				for (auto &p : cellcd) p.clear();	// clear cellcd previous iteration
 				cellcd.resize(numCells[0]);
-				planeInterpolationXY(Point2(elem[t].node[2].pos->x,elem[t].node[2].pos->y),Point2(elem[t].node[0].pos->x,elem[t].node[0].pos->y),eCells[0],cellcd);
-				planeInterpolationXY(Point2(elem[t].node[1].pos->x,elem[t].node[1].pos->y),Point2(elem[t].node[0].pos->x,elem[t].node[0].pos->y),eCells[0],cellcd);
-				planeInterpolationXY(Point2(elem[t].node[2].pos->x,elem[t].node[2].pos->y),Point2(elem[t].node[1].pos->x,elem[t].node[1].pos->y),eCells[0],cellcd);
-				const int z = ((elem[t].node[0].pos->z-minSpc[2])*invEc2);
+				planeInterpolationXY(Point2(meshData.x2[t],meshData.y2[t]),Point2(meshData.x0[t],meshData.y0[t]),eCells[0],cellcd);
+				planeInterpolationXY(Point2(meshData.x1[t],meshData.y1[t]),Point2(meshData.x0[t],meshData.y0[t]),eCells[0],cellcd);
+				planeInterpolationXY(Point2(meshData.x2[t],meshData.y2[t]),Point2(meshData.x1[t],meshData.y1[t]),eCells[0],cellcd);
+				const int z = ((meshData.z0[t]-minSpc[2])*invEc2);
 				for (int i = 0; i< cellcd.size();i++){
 					if(cellcd[i].size() == 0) continue;
 					
@@ -977,22 +986,40 @@ void mesh::fillBopt(){
 			}
 
 			if(generalcase){
-				float zvert[] = {elem[t].node[0].pos->z, elem[t].node[1].pos->z, elem[t].node[2].pos->z};
+				float zvert[] = {meshData.z0[t], meshData.z1[t], meshData.z2[t]};
 
-				auto [min, max] = std::minmax_element(zvert,zvert+3);
-				
-				int mid = 3 - (min-zvert) - (max-zvert); 
-				float midx = elem[t].node[mid].pos->x;
-				float midy = elem[t].node[mid].pos->y;
-				float midz = elem[t].node[mid].pos->z;
+				auto [min, max] = std::minmax_element(zvert, zvert + 3);
+				int mid = 3 - (min - zvert) - (max - zvert);
 
-				float minx = elem[t].node[min-zvert].pos->x;
-				float miny = elem[t].node[min-zvert].pos->y;
-				float minz = *min;
+				// Extracting corresponding x and y values
+				float midx, midy, midz;
+				float minx, miny, minz;
+				float maxx, maxy, maxz;
 
-				float maxx = elem[t].node[max - zvert].pos->x;
-				float maxy = elem[t].node[max - zvert].pos->y;
-				float maxz = *max;
+				if ((min - zvert) == 0) {
+					minx = meshData.x0[t]; miny = meshData.y0[t]; minz = meshData.z0[t];
+				} else if ((min - zvert) == 1) {
+					minx = meshData.x1[t]; miny = meshData.y1[t]; minz = meshData.z1[t];
+				} else {
+					minx = meshData.x2[t]; miny = meshData.y2[t]; minz = meshData.z2[t];
+				}
+
+				if ((max - zvert) == 0) {
+					maxx = meshData.x0[t]; maxy = meshData.y0[t]; maxz = meshData.z0[t];
+				} else if ((max - zvert) == 1) {
+					maxx = meshData.x1[t]; maxy = meshData.y1[t]; maxz = meshData.z1[t];
+				} else {
+					maxx = meshData.x2[t]; maxy = meshData.y2[t]; maxz = meshData.z2[t];
+				}
+
+				if (mid == 0) {
+					midx = meshData.x0[t]; midy = meshData.y0[t]; midz = meshData.z0[t];
+				} else if (mid == 1) {
+					midx = meshData.x1[t]; midy = meshData.y1[t]; midz = meshData.z1[t];
+				} else {
+					midx = meshData.x2[t]; midy = meshData.y2[t]; midz = meshData.z2[t];
+				}
+
 				
 				// maxz = *max ; minz = *min
 
@@ -1163,22 +1190,39 @@ void mesh::fillBopt_flat(){
 			bool generalcase = true;
 			std::vector<std::set<int> > cellcd;
 
-			float zvert[] = {elem[t].node[0].pos->z, elem[t].node[1].pos->z, elem[t].node[2].pos->z};
+			float zvert[] = {meshData.z0[t], meshData.z1[t], meshData.z2[t]};
 
-			auto [min, max] = std::minmax_element(zvert,zvert+3);
-				
-			int mid = 3 - (min-zvert) - (max-zvert); 
-			float midx = elem[t].node[mid].pos->x;
-			float midy = elem[t].node[mid].pos->y;
-			float midz = elem[t].node[mid].pos->z;
+			auto [min, max] = std::minmax_element(zvert, zvert + 3);
+			int mid = 3 - (min - zvert) - (max - zvert);
 
-			float minx = elem[t].node[min-zvert].pos->x;
-			float miny = elem[t].node[min-zvert].pos->y;
-			float minz = *min;
+			// Extracting corresponding x and y values
+			float midx, midy, midz;
+			float minx, miny, minz;
+			float maxx, maxy, maxz;
 
-			float maxx = elem[t].node[max - zvert].pos->x;
-			float maxy = elem[t].node[max - zvert].pos->y;
-			float maxz = *max;	
+			if ((min - zvert) == 0) {
+				minx = meshData.x0[t]; miny = meshData.y0[t]; minz = meshData.z0[t];
+			} else if ((min - zvert) == 1) {
+				minx = meshData.x1[t]; miny = meshData.y1[t]; minz = meshData.z1[t];
+			} else {
+				minx = meshData.x2[t]; miny = meshData.y2[t]; minz = meshData.z2[t];
+			}
+
+			if ((max - zvert) == 0) {
+				maxx = meshData.x0[t]; maxy = meshData.y0[t]; maxz = meshData.z0[t];
+			} else if ((max - zvert) == 1) {
+				maxx = meshData.x1[t]; maxy = meshData.y1[t]; maxz = meshData.z1[t];
+			} else {
+				maxx = meshData.x2[t]; maxy = meshData.y2[t]; maxz = meshData.z2[t];
+			}
+
+			if (mid == 0) {
+				midx = meshData.x0[t]; midy = meshData.y0[t]; midz = meshData.z0[t];
+			} else if (mid == 1) {
+				midx = meshData.x1[t]; midy = meshData.y1[t]; midz = meshData.z1[t];
+			} else {
+				midx = meshData.x2[t]; midy = meshData.y2[t]; midz = meshData.z2[t];
+			}
 
 			// test if in plane yz
 			if (static_cast<int>((minx-minSpc[0])*invEc0) == static_cast<int>((midx-minSpc[0])*invEc0) && static_cast<int>((minx-minSpc[0])*invEc0) == static_cast<int>((maxx-minSpc[0])*invEc0)){
@@ -1377,6 +1421,7 @@ void mesh::fillBopt_flat(){
 
 		
 }
+
 void mesh::fillBopt_reserveflat(){    
 	
 
@@ -1390,22 +1435,39 @@ void mesh::fillBopt_reserveflat(){
 			bool generalcase = true;
 			std::vector<std::set<int> > cellcd;
 
-			float zvert[] = {elem[t].node[0].pos->z, elem[t].node[1].pos->z, elem[t].node[2].pos->z};
+			float zvert[] = {meshData.z0[t], meshData.z1[t], meshData.z2[t]};
 
-			auto [min, max] = std::minmax_element(zvert,zvert+3);
-				
-			int mid = 3 - (min-zvert) - (max-zvert); 
-			float midx = elem[t].node[mid].pos->x;
-			float midy = elem[t].node[mid].pos->y;
-			float midz = elem[t].node[mid].pos->z;
+			auto [min, max] = std::minmax_element(zvert, zvert + 3);
+			int mid = 3 - (min - zvert) - (max - zvert);
 
-			float minx = elem[t].node[min-zvert].pos->x;
-			float miny = elem[t].node[min-zvert].pos->y;
-			float minz = *min;
+			// Extracting corresponding x and y values
+			float midx, midy, midz;
+			float minx, miny, minz;
+			float maxx, maxy, maxz;
 
-			float maxx = elem[t].node[max - zvert].pos->x;
-			float maxy = elem[t].node[max - zvert].pos->y;
-			float maxz = *max;	
+			if ((min - zvert) == 0) {
+				minx = meshData.x0[t]; miny = meshData.y0[t]; minz = meshData.z0[t];
+			} else if ((min - zvert) == 1) {
+				minx = meshData.x1[t]; miny = meshData.y1[t]; minz = meshData.z1[t];
+			} else {
+				minx = meshData.x2[t]; miny = meshData.y2[t]; minz = meshData.z2[t];
+			}
+
+			if ((max - zvert) == 0) {
+				maxx = meshData.x0[t]; maxy = meshData.y0[t]; maxz = meshData.z0[t];
+			} else if ((max - zvert) == 1) {
+				maxx = meshData.x1[t]; maxy = meshData.y1[t]; maxz = meshData.z1[t];
+			} else {
+				maxx = meshData.x2[t]; maxy = meshData.y2[t]; maxz = meshData.z2[t];
+			}
+
+			if (mid == 0) {
+				midx = meshData.x0[t]; midy = meshData.y0[t]; midz = meshData.z0[t];
+			} else if (mid == 1) {
+				midx = meshData.x1[t]; midy = meshData.y1[t]; midz = meshData.z1[t];
+			} else {
+				midx = meshData.x2[t]; midy = meshData.y2[t]; midz = meshData.z2[t];
+			}
 
 			// test if in plane yz
 			if (static_cast<int>((minx-minSpc[0])*invEc0) == static_cast<int>((midx-minSpc[0])*invEc0) && static_cast<int>((minx-minSpc[0])*invEc0) == static_cast<int>((maxx-minSpc[0])*invEc0)){
@@ -1597,15 +1659,22 @@ void mesh::fillBopt_reserveflat(){
 		
 }
 
+void mesh::fillCandidates_flat() {
+    #pragma omp parallel for
+    for (int i = 0; i < numCells[0] * numCells[1] * numCells[2]; ++i) {
+        auto& local = candidatesSet_flat[i];
 
-void mesh::fillCandidates_flat(){
-    #pragma omp parallel for 
-    for (int i = 0; i < numCells[0]*numCells[1]*numCells[2]; i++) {
-        for (const auto &n : neighborIndices[i]) {
-                candidatesSet_flat[i].insert(cellBufferFlattened[n].begin(), cellBufferFlattened[n].end());
+        for (const int n : neighborIndices[i]) {
+            const auto& cb = cellBufferFlattened[n];
+
+            if (!cb.empty()) {
+                local.insert(cb.begin(), cb.end());
+            }
         }
     }
 }
+
+
 void mesh::fillBopt_reserve(){    
 	const float invEc0 = 1/eCells[0];
 	const float invEc1 = 1/eCells[1];
@@ -1618,14 +1687,14 @@ void mesh::fillBopt_reserve(){
 		std::vector<std::set<int> > cellcd;
 			
 		// test if in plane yz
-		if (static_cast<int>((elem[t].node[0].pos->x-minSpc[0])*invEc0) == static_cast<int>((elem[t].node[1].pos->x-minSpc[0])*invEc0) && static_cast<int>((elem[t].node[0].pos->x-minSpc[0])*invEc0) == static_cast<int>((elem[t].node[2].pos->x-minSpc[0])*invEc0)){
+		if (static_cast<int>((meshData.x0[t]-minSpc[0])*invEc0) == static_cast<int>((meshData.x1[t]-minSpc[0])*invEc0) && static_cast<int>((meshData.x0[t]-minSpc[0])*invEc0) == static_cast<int>((meshData.x2[t]-minSpc[0])*invEc0)){
 			cellcd.resize(numCells[1]);
 			
 			for (auto &p : cellcd) p.clear();	// clear cellcd previous iteration
-			planeInterpolationYZ(Point2(elem[t].node[2].pos->y,elem[t].node[2].pos->z),Point2(elem[t].node[0].pos->y,elem[t].node[0].pos->z),eCells[0],cellcd);
-			planeInterpolationYZ(Point2(elem[t].node[1].pos->y,elem[t].node[1].pos->z),Point2(elem[t].node[0].pos->y,elem[t].node[0].pos->z),eCells[0],cellcd);
-			planeInterpolationYZ(Point2(elem[t].node[2].pos->y,elem[t].node[2].pos->z),Point2(elem[t].node[1].pos->y,elem[t].node[1].pos->z),eCells[0],cellcd);
-			const int x = ((elem[t].node[0].pos->x-minSpc[0])*invEc0);
+			planeInterpolationYZ(Point2(meshData.y2[t],meshData.z2[t]),Point2(meshData.y0[t],meshData.z0[t]),eCells[0],cellcd);
+			planeInterpolationYZ(Point2(meshData.y1[t],meshData.z1[t]),Point2(meshData.y0[t],meshData.z0[t]),eCells[0],cellcd);
+			planeInterpolationYZ(Point2(meshData.y2[t],meshData.z2[t]),Point2(meshData.y1[t],meshData.z1[t]),eCells[0],cellcd);
+			const int x = ((meshData.x0[t]-minSpc[0])*invEc0);
 			for (int i = 0; i< cellcd.size();i++){
 				if(cellcd[i].size() == 0) continue;
 				
@@ -1642,14 +1711,14 @@ void mesh::fillBopt_reserve(){
 
 		// test if in plane xz
 		if (generalcase == true)
-		if (static_cast<int>((elem[t].node[0].pos->y-minSpc[1])*invEc1) == static_cast<int>((elem[t].node[1].pos->y-minSpc[1])*invEc1) && static_cast<int>((elem[t].node[0].pos->y-minSpc[1])*invEc1) == static_cast<int>((elem[t].node[2].pos->y-minSpc[1])*invEc1)){
+		if (static_cast<int>((meshData.y0[t]-minSpc[1])*invEc1) == static_cast<int>((meshData.y1[t]-minSpc[1])*invEc1) && static_cast<int>((meshData.y0[t]-minSpc[1])*invEc1) == static_cast<int>((meshData.y2[t]-minSpc[1])*invEc1)){
 			
 			for (auto &p : cellcd) p.clear();	// clear cellcd previous iteration
 			cellcd.resize(numCells[0]);
-			planeInterpolationXZ(Point2(elem[t].node[2].pos->x,elem[t].node[2].pos->z),Point2(elem[t].node[0].pos->x,elem[t].node[0].pos->z),eCells[0],cellcd);
-			planeInterpolationXZ(Point2(elem[t].node[1].pos->x,elem[t].node[1].pos->z),Point2(elem[t].node[0].pos->x,elem[t].node[0].pos->z),eCells[0],cellcd);
-			planeInterpolationXZ(Point2(elem[t].node[2].pos->x,elem[t].node[2].pos->z),Point2(elem[t].node[1].pos->x,elem[t].node[1].pos->z),eCells[0],cellcd);
-			const int y = ((elem[t].node[0].pos->y-minSpc[1])*invEc1);
+			planeInterpolationXZ(Point2(meshData.x2[t],meshData.z2[t]),Point2(meshData.x0[t],meshData.z0[t]),eCells[0],cellcd);
+			planeInterpolationXZ(Point2(meshData.x1[t],meshData.z1[t]),Point2(meshData.x0[t],meshData.z0[t]),eCells[0],cellcd);
+			planeInterpolationXZ(Point2(meshData.x2[t],meshData.z2[t]),Point2(meshData.x1[t],meshData.z1[t]),eCells[0],cellcd);
+			const int y = ((meshData.y0[t]-minSpc[1])*invEc1);
 			for (int i = 0; i< cellcd.size();i++){
 				if(cellcd[i].size() == 0) continue;
 				for(int j = *cellcd[i].begin(); j<=*--cellcd[i].end();++j){
@@ -1664,14 +1733,14 @@ void mesh::fillBopt_reserve(){
 		
 		// test if in plane xy
 		if (generalcase == true)
-		if (static_cast<int>((elem[t].node[0].pos->z-minSpc[2])*invEc2) == static_cast<int>((elem[t].node[1].pos->z-minSpc[2])*invEc2) && static_cast<int>((elem[t].node[0].pos->z-minSpc[2])*invEc2) == static_cast<int>((elem[t].node[2].pos->z-minSpc[2])*invEc2)){
+		if (static_cast<int>((meshData.z0[t]-minSpc[2])*invEc2) == static_cast<int>((meshData.z1[t]-minSpc[2])*invEc2) && static_cast<int>((meshData.z0[t]-minSpc[2])*invEc2) == static_cast<int>((meshData.z2[t]-minSpc[2])*invEc2)){
 			
 			for (auto &p : cellcd) p.clear();	// clear cellcd previous iteration
 			cellcd.resize(numCells[0]);
-			planeInterpolationXY(Point2(elem[t].node[2].pos->x,elem[t].node[2].pos->y),Point2(elem[t].node[0].pos->x,elem[t].node[0].pos->y),eCells[0],cellcd);
-			planeInterpolationXY(Point2(elem[t].node[1].pos->x,elem[t].node[1].pos->y),Point2(elem[t].node[0].pos->x,elem[t].node[0].pos->y),eCells[0],cellcd);
-			planeInterpolationXY(Point2(elem[t].node[2].pos->x,elem[t].node[2].pos->y),Point2(elem[t].node[1].pos->x,elem[t].node[1].pos->y),eCells[0],cellcd);
-			const int z = ((elem[t].node[0].pos->z-minSpc[2])*invEc2);
+			planeInterpolationXY(Point2(meshData.x2[t],meshData.y2[t]),Point2(meshData.x0[t],meshData.y0[t]),eCells[0],cellcd);
+			planeInterpolationXY(Point2(meshData.x1[t],meshData.y1[t]),Point2(meshData.x0[t],meshData.y0[t]),eCells[0],cellcd);
+			planeInterpolationXY(Point2(meshData.x2[t],meshData.y2[t]),Point2(meshData.x1[t],meshData.y1[t]),eCells[0],cellcd);
+			const int z = ((meshData.z0[t]-minSpc[2])*invEc2);
 			for (int i = 0; i< cellcd.size();i++){
 				if(cellcd[i].size() == 0) continue;
 				
@@ -1686,23 +1755,41 @@ void mesh::fillBopt_reserve(){
 		}
 
 		if(generalcase){
-			float zvert[] = {elem[t].node[0].pos->z, elem[t].node[1].pos->z, elem[t].node[2].pos->z};
+			float zvert[] = {meshData.z0[t], meshData.z1[t], meshData.z2[t]};
 
 			auto [min, max] = std::minmax_element(zvert,zvert+3);
 			
-			int mid = 3 - (min-zvert) - (max-zvert); 
-			float midx = elem[t].node[mid].pos->x;
-			float midy = elem[t].node[mid].pos->y;
-			float midz = elem[t].node[mid].pos->z;
+			int mid = 3 - (min - zvert) - (max - zvert);
 
-			float minx = elem[t].node[min-zvert].pos->x;
-			float miny = elem[t].node[min-zvert].pos->y;
-			float minz = *min;
+			// Extracting corresponding x and y values
+			float midx, midy, midz;
+			float minx, miny, minz;
+			float maxx, maxy, maxz;
 
-			float maxx = elem[t].node[max - zvert].pos->x;
-			float maxy = elem[t].node[max - zvert].pos->y;
-			float maxz = *max;
-			
+			if ((min - zvert) == 0) {
+				minx = meshData.x0[t]; miny = meshData.y0[t]; minz = meshData.z0[t];
+			} else if ((min - zvert) == 1) {
+				minx = meshData.x1[t]; miny = meshData.y1[t]; minz = meshData.z1[t];
+			} else {
+				minx = meshData.x2[t]; miny = meshData.y2[t]; minz = meshData.z2[t];
+			}
+
+			if ((max - zvert) == 0) {
+				maxx = meshData.x0[t]; maxy = meshData.y0[t]; maxz = meshData.z0[t];
+			} else if ((max - zvert) == 1) {
+				maxx = meshData.x1[t]; maxy = meshData.y1[t]; maxz = meshData.z1[t];
+			} else {
+				maxx = meshData.x2[t]; maxy = meshData.y2[t]; maxz = meshData.z2[t];
+			}
+
+			if (mid == 0) {
+				midx = meshData.x0[t]; midy = meshData.y0[t]; midz = meshData.z0[t];
+			} else if (mid == 1) {
+				midx = meshData.x1[t]; midy = meshData.y1[t]; midz = meshData.z1[t];
+			} else {
+				midx = meshData.x2[t]; midy = meshData.y2[t]; midz = meshData.z2[t];
+			}
+
 			// maxz = *max ; minz = *min
 
 			//min-zvert = min index
@@ -2095,6 +2182,7 @@ void mesh::fillCandidates() {
     }
 	else fillCandidates_seq();
 }
+
 void mesh::fillCandidates2() {
     #pragma omp parallel for collapse(3)
     for (int i = 0; i < numCells[0]; i++) {
@@ -2173,27 +2261,56 @@ void mesh::fillCandidates3() {
     }
 }
 
-void mesh::fillCandidates4(){
+// void mesh::fillCandidates4(){
 	
-	#pragma omp parallel for collapse(3) 
-		for(int i =0; i < numCells[0]; i++){
-			for(int j = 0; j < numCells[1]; j++){
-				for(int k = 0; k < numCells[2]; k++){
-					for (int c = 0; c<27; c++){
-						if(neighPos[c][0]+i < 0 or neighPos[c][0]+i >= numCells[0]) continue;
-						if(neighPos[c][1]+j < 0 or neighPos[c][1]+j >= numCells[1]) continue;
-						if(neighPos[c][2]+k < 0 or neighPos[c][2]+k >= numCells[2]) continue;
-						candidates_set[i][j][k].insert(cellBuffer[i+neighPos[c][0]][j+neighPos[c][1]][k+neighPos[c][2]].begin(), cellBuffer[i+neighPos[c][0]][j+neighPos[c][1]][k+neighPos[c][2]].end());
+// 	#pragma omp parallel for collapse(3) 
+// 		for(int i =0; i < numCells[0]; i++){
+// 			for(int j = 0; j < numCells[1]; j++){
+// 				for(int k = 0; k < numCells[2]; k++){
+// 					for (int c = 0; c<27; c++){
+// 						if(neighPos[c][0]+i < 0 or neighPos[c][0]+i >= numCells[0]) continue;
+// 						if(neighPos[c][1]+j < 0 or neighPos[c][1]+j >= numCells[1]) continue;
+// 						if(neighPos[c][2]+k < 0 or neighPos[c][2]+k >= numCells[2]) continue;
+// 						candidates_set[i][j][k].insert(cellBuffer[i+neighPos[c][0]][j+neighPos[c][1]][k+neighPos[c][2]].begin(), cellBuffer[i+neighPos[c][0]][j+neighPos[c][1]][k+neighPos[c][2]].end());
 						
+// 					}
+// 				}
+// 			}
+			
+// 		}
+	
+// }
+void mesh::fillCandidates4() {
+	#pragma omp parallel for collapse(3)
+	for (int i = 0; i < numCells[0]; ++i) {
+		for (int j = 0; j < numCells[1]; ++j) {
+			for (int k = 0; k < numCells[2]; ++k) {
+
+				auto& cellCandidates = candidates_set[i][j][k];
+
+
+				for (int c = 0; c < 27; ++c) {
+					const int ni = i + neighPos[c][0];
+					const int nj = j + neighPos[c][1];
+					const int nk = k + neighPos[c][2];
+
+					if ((unsigned)ni >= (unsigned)numCells[0] ||
+						(unsigned)nj >= (unsigned)numCells[1] ||
+						(unsigned)nk >= (unsigned)numCells[2])
+						continue;
+
+					const auto& neighborCell = cellBuffer[ni][nj][nk];
+
+					if (!neighborCell.empty()) {
+						cellCandidates.insert(neighborCell.begin(), neighborCell.end());
 					}
 					
-					// cellBuffer[i][j][k].clear();
 				}
 			}
-			
 		}
-	
+	}
 }
+
 void mesh::fillCandidates5(){
 	
 	#pragma omp parallel for collapse(3)
@@ -2244,68 +2361,159 @@ void mesh::fillCandidates_seq(){
 		}
 	
 }
-int mesh::calcDist(const float *p, const double range, const int cpx, const int cpy, const int cpz, float *closestPoint, double &cqd){
-	if(candidates_set[cpx][cpy][cpz].empty()){
+
+// int mesh::calcDist(const float *p, const double range, const int cpx, const int cpy, const int cpz, float *closestPoint, double &cqd) {
+//     if (candidates_set[cpx][cpy][cpz].empty()) {
+//         return -1;
+//     }
+
+//     int cid = -1;
+//     double threshold = 0.2 * partdist2;
+//     float point[3] = {-1.0, -1.0, -1.0};
+
+//     // Loop through candidates (use iterator since unordered_set doesn't support indexing)
+//     int i = 0;
+//     for (auto it = candidates_set[cpx][cpy][cpz].begin(); it != candidates_set[cpx][cpy][cpz].end(); ++it) {
+//         int id = *it;
+
+//         const float a[3] = { meshData.x0[id], meshData.y0[id], meshData.z0[id] };
+//         const float b[3] = { meshData.x1[id], meshData.y1[id], meshData.z1[id] };
+//         const float c[3] = { meshData.x2[id], meshData.y2[id], meshData.z2[id] };
+
+//         // Compute the closest point (normal calculation)
+//         double quadDist = calcNearestPoint(a, b, c, p, point);
+
+//         if (quadDist < cqd) {
+//             cqd = quadDist;
+//             cid = id;
+			
+// 			closestPoint[0] = point[0];
+// 			closestPoint[1] = point[1];
+// 			closestPoint[2] = point[2]; 
+//             // memcpy(closestPoint, point, 3 * sizeof(float));
+
+//             if (cqd < threshold) return cid; // Early exit if the distance is below threshold
+//         }
+//         i++;
+//     }
+
+//     return cid;
+// }
+
+
+int mesh::calcDist(const float * __restrict p, const double range, const int cpx, const int cpy, const int cpz, float * __restrict closestPoint, double &cqd) {
+    const auto& candidates = candidates_set[cpx][cpy][cpz];
+    if (candidates.empty()) return -1;
+
+    int cid = -1;
+    const double threshold = 0.2 * partdist2;
+
+    float tmpClosest[3]; 
+
+    for (int id : candidates) {
 		
-		return -1;
-	}
-	int cid = -1;
-	int id;
-	double threshold = 0.2*partdist2;
-	double quadDist;
-	float point[3] = {-1.0,-1.0,-1.0};
-	float a[3], b[3], c[3];	
-	for (const auto& it : candidates_set[cpx][cpy][cpz]) {
-        id = it;
-        const auto& elem_id = elem[id];
-		float a[3] = { elem_id.node[0].pos->x, elem_id.node[0].pos->y, elem_id.node[0].pos->z };
-        float b[3] = { elem_id.node[1].pos->x, elem_id.node[1].pos->y, elem_id.node[1].pos->z };
-        float c[3] = { elem_id.node[2].pos->x, elem_id.node[2].pos->y, elem_id.node[2].pos->z };
-		quadDist = calcNearestPoint(a,b,c,p,point);
-		if(quadDist < cqd){
-			cqd = quadDist;
-			cid = id;
-			closestPoint[0] = point[0];
-			closestPoint[1] = point[1];
-			closestPoint[2] = point[2]; 
-			// if (cqd < threshold) return cid;
-		}
+        const float a[3] = { meshData.x0[id], meshData.y0[id], meshData.z0[id] };
+        const float b[3] = { meshData.x1[id], meshData.y1[id], meshData.z1[id] };
+        const float c[3] = { meshData.x2[id], meshData.y2[id], meshData.z2[id] };
 
-	}
-	return cid;
+        const double quadDist = calcNearestPoint(a, b, c, p, tmpClosest);
 
+        if (quadDist < cqd) {
+			
+            cqd = quadDist;
+            cid = id;
+
+            closestPoint[0] = tmpClosest[0];
+            closestPoint[1] = tmpClosest[1];
+            closestPoint[2] = tmpClosest[2];
+
+            if (quadDist < threshold) break; 
+        }
+    }
+
+    return cid;
 }
-int mesh::calcDist_flat(const float *p, const double range, const int fIndex, float *closestPoint, double &cqd){
-	if(candidatesSet_flat[fIndex].empty()){
+
+// std::array<int, 2> elemId2 = mesh.calc2Dist(testPoint, range, grid.getCellPosX(testPoint[0]), grid.getCellPosY(testPoint[1]), grid.getCellPosZ(testPoint[2]), closestPoint, sclosestPoint, closestPointDist2, sclosestPointDist2);
+      
+// std::array<int, 2> mesh::calc2Dist(const double *p, double range, int cpx, int cpy, int cpz, double *closestPoint, double *sclosestPoint, double &cqd, double &scqd){
+
+// 	cqd = range;
+// 	scqd = range/3;
+// 	std::array<int, 2> cid = {-1,-1};
+// 	double quadDist;
+// 	double point[3] = {-1.0,-1.0,-1.0};
+// 	//fprintf(stderr, "i = [%f], j = [%f], k = [%f]", p[X], p[Y], p[Z]);
+// 	//fprintf(stderr, "Pi = [%d], Pj = [%d], Pk = [%d]", grid->getCellPosX(p[X]), grid->getCellPosY(p[Y]), grid->getCellPosZ(p[Z]));
+
+// 	double a[3], b[3], c[3];
+// 	long id;
+	
+// 	for (std::set<long>::iterator it=candidates_set[cpx][cpy][cpz].begin(); it!=candidates_set[cpx][cpy][cpz].end(); ++it){
+// 		id = *it;
+// 		a[0] = elem[id].node[0].pos->x;
+// 		a[1] = elem[id].node[0].pos->y;
+// 		a[2] = elem[id].node[0].pos->z;
+
+// 		b[0] = elem[id].node[1].pos->x;
+// 		b[1] = elem[id].node[1].pos->y;
+// 		b[2] = elem[id].node[1].pos->z;
+
+// 		c[0] = elem[id].node[2].pos->x;
+// 		c[1] = elem[id].node[2].pos->y;
+// 		c[2] = elem[id].node[2].pos->z;
+// 		quadDist = calcNearestPoint(a,b,c,p,point);
 		
-		return -1;
-	}
-	int cid = -1;
-	int id;
-	double threshold = 0.2*partdist2; 
-	double quadDist;
-	float point[3] = {-1.0,-1.0,-1.0};
-	float a[3], b[3], c[3];	
-	for (const auto& it : candidatesSet_flat[fIndex]) {
-        id = it;
-        const auto& elem_id = elem[id];
-		float a[3] = { elem_id.node[0].pos->x, elem_id.node[0].pos->y, elem_id.node[0].pos->z };
-        float b[3] = { elem_id.node[1].pos->x, elem_id.node[1].pos->y, elem_id.node[1].pos->z };
-        float c[3] = { elem_id.node[2].pos->x, elem_id.node[2].pos->y, elem_id.node[2].pos->z };
-		quadDist = calcNearestPoint(a,b,c,p,point);
-		if(quadDist < cqd){
-			cqd = quadDist;
-			cid = id;
-			closestPoint[0] = point[0];
-			closestPoint[1] = point[1];
-			closestPoint[2] = point[2]; 
-			// if (cqd < threshold) return cid;
-		}
+// 		if(quadDist < cqd){
+// 			cqd = quadDist;
+// 			cid[0] = id;
+// 			closestPoint[0] = point[0];
+// 			closestPoint[1] = point[1];
+// 			closestPoint[2] = point[2]; 
+// 		}
+// 		else if(quadDist < scqd){
+// 			scqd = quadDist;
+// 			cid[1] = id;
+// 			sclosestPoint[0] = point[0];
+// 			sclosestPoint[1] = point[1];
+// 			sclosestPoint[2] = point[2]; 
+// 		}
 
-	}
-	return cid;
+// 	}
+// 	return  cid;
 
+// }
+int mesh::calcDist_flat(const float* __restrict p, const double range, const int fIndex, float* __restrict closestPoint, double& cqd) {
+    const auto& candidates = candidatesSet_flat[fIndex];
+    if (candidates.empty()) return -1;
+
+    int cid = -1;
+    const double threshold = 0.2 * partdist2;
+
+    float tmpClosest[3]; // Scratch space
+
+    for (const int id : candidates) {
+        const float a[3] = { meshData.x0[id], meshData.y0[id], meshData.z0[id] };
+        const float b[3] = { meshData.x1[id], meshData.y1[id], meshData.z1[id] };
+        const float c[3] = { meshData.x2[id], meshData.y2[id], meshData.z2[id] };
+
+        const double quadDist = calcNearestPoint(a, b, c, p, tmpClosest);
+
+        if (quadDist < cqd) {
+            cqd = quadDist;
+            cid = id;
+
+            closestPoint[0] = tmpClosest[0];
+            closestPoint[1] = tmpClosest[1];
+            closestPoint[2] = tmpClosest[2];
+
+            if (cqd < threshold) return cid; // Early exit
+        }
+    }
+
+    return cid;
 }
+
 
 /*
 /// Find closest point on the mesh from a particle i
@@ -2428,93 +2636,173 @@ void mesh::closestPointMesh(int nMesh, int *type, float *quaddev, float *pndS, f
 		}
 	}
 }
-
 */
-
-double mesh::calcNearestPoint(const float  *a, const float  *b, const float  *c, const float *p, float *nearest){
+	
+double mesh::calcNearestPoint(const float* __restrict a, const float* __restrict b, const float* __restrict c, const float* __restrict p, float* __restrict nearest) {
 	/// Real-time collision detection, Ericson, Chapter 5 - Pg 141 - function ClosestPtPointTriangle
 	/// Returns the nearest point of the triangle a,b,c to particle p on pointer *nearest and squaredDistance(nearest, p)
+
+		float abx = b[0] - a[0], aby = b[1] - a[1], abz = b[2] - a[2];
+		float acx = c[0] - a[0], acy = c[1] - a[1], acz = c[2] - a[2];
+		float apx = p[0] - a[0], apy = p[1] - a[1], apz = p[2] - a[2];
 	
+		float d1 = abx * apx + aby * apy + abz * apz;
+		float d2 = acx * apx + acy * apy + acz * apz;
 	
-	const float ab[3] = {b[0]-a[0],b[1]-a[1],b[2]-a[2]};
-	const float ac[3] = {c[0]-a[0],c[1]-a[1],c[2]-a[2]};
-	const float ap[3] = {p[0]-a[0],p[1]-a[1],p[2]-a[2]};
-
-
-	const float  d1 = ab[0]*ap[0] + ab[1]*ap[1] + ab[2]*ap[2];
-	const float  d2 = ac[0]*ap[0] + ac[1]*ap[1] + ac[2]*ap[2];
-
-
-	//First Region Check: nearest -> a vertex
-	if (d1 <= 0.0 && d2 <= 0.0){
-		
-		for(int i = 0; i<=2; i++) nearest[i]=a[i];
-		return squaredDist(nearest,p);
-	} 
-
-	const float bp[3] = {p[0]-b[0],p[1]-b[1],p[2]-b[2]};
-
-	const float  d3 = ab[0]*bp[0] + ab[1]*bp[1] + ab[2]*bp[2];
-	const float  d4 = ac[0]*bp[0] + ac[1]*bp[1] + ac[2]*bp[2];
-
-
-	//Second Region Check: nearest -> b vertex
-	if (d3 >= 0.0 && d4 <= d3){
-		
-		for(int i = 0; i<=2; i++) nearest[i]=b[i];
-		return squaredDist(nearest,p);
-	} 
-
-	const float  vc = d1*d4 - d3*d2;
-	//Third Region Check: nearest -> point in ab edge
-	if (vc <= 0.0 && d1 >= 0.0 && d3 <= 0.0) {
-		
-		const float  v = d1 / (d1 - d3);
-		for(int i = 0; i<=2; i++) nearest[i]= a[i] + v * ab[i];
-		return squaredDist(nearest,p);
+		// Region 1: Vertex A
+		if (d1 <= 0.0f && d2 <= 0.0f) {
+			nearest[0] = a[0]; nearest[1] = a[1]; nearest[2] = a[2];
+			return squaredDist(nearest, p);
+		}
+	
+		float bpx = p[0] - b[0], bpy = p[1] - b[1], bpz = p[2] - b[2];
+		float d3 = abx * bpx + aby * bpy + abz * bpz;
+		float d4 = acx * bpx + acy * bpy + acz * bpz;
+	
+		// Region 2: Vertex B
+		if (d3 >= 0.0f && d4 <= d3) {
+			nearest[0] = b[0]; nearest[1] = b[1]; nearest[2] = b[2];
+			return squaredDist(nearest, p);
+		}
+	
+		float vc = d1 * d4 - d3 * d2;
+		// Region 3: Edge AB
+		if (vc <= 0.0f && d1 >= 0.0f && d3 <= 0.0f) {
+			float v = d1 / (d1 - d3);
+			nearest[0] = a[0] + v * abx;
+			nearest[1] = a[1] + v * aby;
+			nearest[2] = a[2] + v * abz;
+			return squaredDist(nearest, p);
+		}
+	
+		float cpx = p[0] - c[0], cpy = p[1] - c[1], cpz = p[2] - c[2];
+		float d5 = abx * cpx + aby * cpy + abz * cpz;
+		float d6 = acx * cpx + acy * cpy + acz * cpz;
+	
+		// Region 4: Vertex C
+		if (d6 >= 0.0f && d5 <= d6) {
+			nearest[0] = c[0]; nearest[1] = c[1]; nearest[2] = c[2];
+			return squaredDist(nearest, p);
+		}
+	
+		float vb = d5 * d2 - d1 * d6;
+		// Region 5: Edge AC
+		if (vb <= 0.0f && d2 >= 0.0f && d6 <= 0.0f) {
+			float w = d2 / (d2 - d6);
+			nearest[0] = a[0] + w * acx;
+			nearest[1] = a[1] + w * acy;
+			nearest[2] = a[2] + w * acz;
+			return squaredDist(nearest, p);
+		}
+	
+		float va = d3 * d6 - d5 * d4;
+		// Region 6: Edge BC
+		if (va <= 0.0f && (d4 - d3) >= 0.0f && (d5 - d6) >= 0.0f) {
+			float w = (d4 - d3) / ((d4 - d3) + (d5 - d6));
+			nearest[0] = b[0] + w * (c[0] - b[0]);
+			nearest[1] = b[1] + w * (c[1] - b[1]);
+			nearest[2] = b[2] + w * (c[2] - b[2]);
+			return squaredDist(nearest, p);
+		}
+	
+		// Region 7: Inside face
+		float denom = 1.0f / (va + vb + vc);
+		float v = vb * denom;
+		float w = vc * denom;
+		nearest[0] = a[0] + abx * v + acx * w;
+		nearest[1] = a[1] + aby * v + acy * w;
+		nearest[2] = a[2] + abz * v + acz * w;
+		return squaredDist(nearest, p);
 	}
+	
 
-	const float cp[3] = {p[0]-c[0],p[1]-c[1],p[2]-c[2]};
-	const float  d5 = ab[0]*cp[0] + ab[1]*cp[1] + ab[2]*cp[2];
-	const float  d6 = ac[0]*cp[0] + ac[1]*cp[1] + ac[2]*cp[2];	
-
-
-	//Fourth Region Check: nearest -> c vertex
-	if  (d6 >= 0.0 && d5 <= d6){
+// double mesh::calcNearestPoint(const float  *a, const float  *b, const float  *c, const float *p, float *nearest){
+// 		/// Real-time collision detection, Ericson, Chapter 5 - Pg 141 - function ClosestPtPointTriangle
+// 		/// Returns the nearest point of the triangle a,b,c to particle p on pointer *nearest and squaredDistance(nearest, p)
 		
-		for(int i = 0; i<=2; i++) nearest[i]=c[i];
-		return squaredDist(nearest,p);
-	} 
-
-	const float  vb = d5*d2 - d1*d6;
-	
-	//Fifth Region Check: nearest -> point in ac edge 
-	if (vb <= 0.0 && d2 >= 0.0 && d6 <= 0.0) {
 		
-		 const float  w = d2 / (d2 - d6);
-		for( int  i = 0; i<=2; i++) nearest[i] = a[i] + w * ac[i];
-		return squaredDist(nearest,p);
-	}
-
-	const float  va = d3*d6 - d5*d4;
+// 		const float ab[3] = {b[0]-a[0],b[1]-a[1],b[2]-a[2]};
+// 		const float ac[3] = {c[0]-a[0],c[1]-a[1],c[2]-a[2]};
+// 		const float ap[3] = {p[0]-a[0],p[1]-a[1],p[2]-a[2]};
 	
-	//Sixth Region Check: nearest -> point in bc edge 
-	if (va <= 0.0 && (d4 - d3) >= 0.0 && (d5 - d6) >= 0.0) {
+	
+// 		const float  d1 = ab[0]*ap[0] + ab[1]*ap[1] + ab[2]*ap[2];
+// 		const float  d2 = ac[0]*ap[0] + ac[1]*ap[1] + ac[2]*ap[2];
+	
+	
+// 		//First Region Check: nearest -> a vertex
+// 		if (d1 <= 0.0 && d2 <= 0.0){
+			
+// 			for(int i = 0; i<=2; i++) nearest[i]=a[i];
+// 			return squaredDist(nearest,p);
+// 		}
+	
+// 		const float bp[3] = {p[0]-b[0],p[1]-b[1],p[2]-b[2]};
+	
+// 		const float  d3 = ab[0]*bp[0] + ab[1]*bp[1] + ab[2]*bp[2];
+// 		const float  d4 = ac[0]*bp[0] + ac[1]*bp[1] + ac[2]*bp[2];
+	
+	
+// 		//Second Region Check: nearest -> b vertex
+// 		if (d3 >= 0.0 && d4 <= d3){
+			
+// 			for(int i = 0; i<=2; i++) nearest[i]=b[i];
+// 			return squaredDist(nearest,p);
+// 		}
+	
+// 		const float  vc = d1*d4 - d3*d2;
+// 		//Third Region Check: nearest -> point in ab edge
+// 		if (vc <= 0.0 && d1 >= 0.0 && d3 <= 0.0) {
+			
+// 			const float  v = d1 / (d1 - d3);
+// 			for(int i = 0; i<=2; i++) nearest[i]= a[i] + v * ab[i];
+// 			return squaredDist(nearest,p);
+// 	}
 		
-		const float  w = (d4 - d3) / ((d4 - d3) + (d5 - d6));
-		for( int  i = 0; i<=2; i++) nearest[i] = b[i] + w * (c[i] - b[i]); 
-		return squaredDist(nearest,p);
-	}
-	 const float  denom = 1.0 / (va + vb + vc);
-	 const float  v = vb * denom;
-	 const float  w = vc * denom;
+// 		const float cp[3] = {p[0]-c[0],p[1]-c[1],p[2]-c[2]};
+// 		const float  d5 = ab[0]*cp[0] + ab[1]*cp[1] + ab[2]*cp[2];
+// 		const float  d6 = ac[0]*cp[0] + ac[1]*cp[1] + ac[2]*cp[2];	
 	
-	//Seventh Region Check: nearest -> point inside triangle 
 	
-	for( int  i = 0; i<=2; i++) nearest[i] = a[i] + ab[i] * v + ac[i] * w;
-	return squaredDist(nearest,p);
+// 		//Fourth Region Check: nearest -> c vertex
+// 		if  (d6 >= 0.0 && d5 <= d6){
+			
+// 			for(int i = 0; i<=2; i++) nearest[i]=c[i];
+// 			return squaredDist(nearest,p);
+// 		} 
+	
+// 		const float  vb = d5*d2 - d1*d6;
+		
+// 		//Fifth Region Check: nearest -> point in ac edge 
+// 		if (vb <= 0.0 && d2 >= 0.0 && d6 <= 0.0) {
+			
+// 			 const float  w = d2 / (d2 - d6);
+// 			for( int  i = 0; i<=2; i++) nearest[i] = a[i] + w * ac[i];
+// 			return squaredDist(nearest,p);
+// 		}
+	
+// 		const float  va = d3*d6 - d5*d4;
+		
+// 		//Sixth Region Check: nearest -> point in bc edge 
+// 		if (va <= 0.0 && (d4 - d3) >= 0.0 && (d5 - d6) >= 0.0) {
+			
+// 			const float  w = (d4 - d3) / ((d4 - d3) + (d5 - d6));
+// 			for( int  i = 0; i<=2; i++) nearest[i] = b[i] + w * (c[i] - b[i]); 
+// 			return squaredDist(nearest,p);
+// 		}
+// 		 const float  denom = 1.0 / (va + vb + vc);
+// 		 const float  v = vb * denom;
+// 		 const float  w = vc * denom;
+		
+// 		//Seventh Region Check: nearest -> point inside triangle 
+		
+// 		for( int  i = 0; i<=2; i++) nearest[i] = a[i] + ab[i] * v + ac[i] * w;
+// 		return squaredDist(nearest,p);
+	
+// 	}
 
-}
+
+
 void mesh::writeCellBufferToFile(const std::string& filename) {
     std::ofstream outFile(filename);
 

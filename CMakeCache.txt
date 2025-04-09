@@ -35,7 +35,7 @@ CMAKE_CXX_COMPILER_AR:FILEPATH=C:/TDM-GCC-64/bin/gcc-ar.exe
 CMAKE_CXX_COMPILER_RANLIB:FILEPATH=C:/TDM-GCC-64/bin/gcc-ranlib.exe
 
 //Flags used by the CXX compiler during all build types.
-CMAKE_CXX_FLAGS:STRING=
+CMAKE_CXX_FLAGS:STRING=-O3 -fopenmp
 
 //Flags used by the CXX compiler during DEBUG builds.
 CMAKE_CXX_FLAGS_DEBUG:STRING=-g

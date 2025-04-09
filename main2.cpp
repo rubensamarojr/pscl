@@ -245,7 +245,7 @@ int main(int argc, char * argv[])
 	mesh1.readMeshFile(argv[1],dcell, Vmin(0), Vmin(1), Vmin(2), Vmax(0), Vmax(1), Vmax(2),initOption);
 
 	tictoc();
-	mesh1.fillCandidates();
+	mesh1.fillCandidates4();
 	double tPreFpdc = tictoc();
 	printf("Pre process FPDC: %g s\n",tPreFpdc);
 	outfile << std::endl << "Pre process FPDC: " << tPreFpdc << std::endl;

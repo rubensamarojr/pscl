@@ -14,15 +14,15 @@
 #include <string>
 
 // COMMENT LINE TO DISABLE TEST
-// #define LIBIGL_TEST
-// #define FCPW_TEST
+#define LIBIGL_TEST
+#define FCPW_TEST
 #define FPDC_TEST
-// #define BRUTE_TEST
+#define BRUTE_TEST
 
 #define INPUTBYARGS
 #define PARALLEL_PROC
-// #define BENCHMARKFILE
-// #define WRITE_DMAT_FILES
+#define BENCHMARKFILE
+#define WRITE_DMAT_FILES
 
 int main(int argc, char * argv[]){
 	
@@ -82,7 +82,7 @@ int main(int argc, char * argv[]){
 	partdist /= division; // Minimum dimension divided by 20
 	double reL = 2.1*partdist;  // 3D MPS effective radius
 	double reL2 = reL*reL;
-	double dcell = 1.02*reL;
+	double dcell = 1.05*reL;
 	printf("Particle distance: %.3e\n", partdist);
 	outfile << "Number of Particles: " << numPoints << std::endl;
 	outfile << "Particle distance: " << partdist << " m" << std::endl;
@@ -265,7 +265,7 @@ int main(int argc, char * argv[]){
 	#endif
 	
 	mesh mesh1;
-	mesh1.readMeshFile(argv[1],dcell, Vmin(0), Vmin(1), Vmin(2), Vmax(0), Vmax(1), Vmax(2),option,division);
+	mesh1.readMeshFile(argv[1],dcell, Vmin(0), Vmin(1), Vmin(2), Vmax(0), Vmax(1), Vmax(2),option);
 	mesh1.set_partdist(partdist);
 	int totalcells = mesh1.getNumCells(0)*mesh1.getNumCells(1)*mesh1.getNumCells(2);
 	
@@ -297,7 +297,8 @@ int main(int argc, char * argv[]){
 		mesh1.fillCandidates_flat();
 	}
 
-	double tPreFpdc, tPreFpdc2;
+	double tPreFpdc = 0.0;
+	double tPreFpdc2 = 0.0;
 	
 	// PRE PROCESS LOOP
 	for (int ii = 0; ii < numTests; ++ii){
@@ -416,11 +417,13 @@ int main(int argc, char * argv[]){
 	#endif
 
 #ifdef WRITE_DMAT_FILES
-	igl::writeDMAT("Q_fpdc.dmat", Q);
-	igl::writeDMAT(std::string("I" + std::string(option) + "_fpdc.dmat"), I_fpdc);
-	igl::writeDMAT("UV_fpdc.dmat", CQD_fpdc);
-	mesh1.writeCellBufferToFile("id_mode"+std::string(option)+"cellb.txt");
-	std::cout << "Candidates set description available at " << "id_mode"+std::string(option) << "cellb" << std::endl;
+std::string opt_str = std::to_string(option);
+igl::writeDMAT("Q_fpdc.dmat", Q);
+igl::writeDMAT("I" + opt_str + "_fpdc.dmat", I_fpdc);
+igl::writeDMAT("UV_fpdc.dmat", CQD_fpdc);
+mesh1.writeCellBufferToFile("id_mode" + opt_str + "cellb.txt");
+std::cout << "Candidates set description available at id_mode" + opt_str + "cellb.txt" << std::endl;
+
 #endif
 #ifdef BENCHMARKFILE
 	bmfile.close();
@@ -434,10 +437,12 @@ int main(int argc, char * argv[]){
 #ifdef BRUTE_TEST
 	
 	mesh mesh2;
-	mesh2.readMeshFile(argv[1],dcell, Vmin(0), Vmin(1), Vmin(2), Vmax(0), Vmax(1), Vmax(2));
+	mesh2.readMeshFile(argv[1],2*std::max(std::max(Vmax(0) - Vmin(0), Vmax(1) - Vmin(1)), Vmax(2) - Vmin(2)), Vmin(0), Vmin(1), Vmin(2), Vmax(0), Vmax(1), Vmax(2), option);
 
 	tictoc();
-	mesh2.fillCandidates();
+	
+	mesh2.fillBuffer();
+	mesh2.fillCandidates4();
 
 	double tPreBrute = tictoc();
 	printf("Pre process Brute: %g s\n",tPreBrute);
@@ -456,11 +461,10 @@ int main(int argc, char * argv[]){
 		for(int q = 0;q<Q.rows();q++)
 		{
 			int elemId_brute;
-			double closestPointDist2;
-			double testPoint[3] = {Q(q,0),Q(q,1),Q(q,2)};
-			double closestPoint[3] = {0.0,0.0,0.0};
-			closestPointDist2 = 0; 
-			elemId_brute = mesh2.calcDist(testPoint, reL, mesh2.getCellPosX(testPoint[0]), mesh2.getCellPosY(testPoint[1]), mesh2.getCellPosZ(testPoint[2]), closestPoint, closestPointDist2);
+			double closestPointDist2 = reL2;
+			float testPoint[3] = {static_cast<float>(Q(q,0)),static_cast<float>(Q(q,1)),static_cast<float>(Q(q,2))};
+			float closestPoint[3] = {0.0,0.0,0.0};
+			elemId_brute = mesh2.calcDist(testPoint, reL2, mesh2.getCellPosX(testPoint[0]), mesh2.getCellPosY(testPoint[1]), mesh2.getCellPosZ(testPoint[2]), closestPoint, closestPointDist2);
 			I_brute(q) = elemId_brute;
 			CQD_brute(q) = closestPointDist2;
 		}

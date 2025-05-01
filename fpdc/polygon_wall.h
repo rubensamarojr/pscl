@@ -127,7 +127,7 @@ public:
 	void set_reserve(bool flat);
 	bool do_reserve(){return enoughmemory;};
   	/// Read mesh file (STL)
-  	void readMeshFile(const char * meshfilename,const float dcell,const float  VminX,const float  VminY,const float  VminZ,const float  VmaxX,const float  VmaxY,const float  VmaxZ, int opt, int simR);
+  	void readMeshFile(const char * meshfilename,const float dcell,const float  VminX,const float  VminY,const float  VminZ,const float  VmaxX,const float  VmaxY,const float  VmaxZ, int opt);
   	/// Initialize the component values of PND and number of neighbors
 
 	static Point2 intersectionPointZ(const Point& p1, const Point& p2, const float p);

@@ -92,6 +92,7 @@
         "queue": "cpp",
         "span": "cpp",
         "stack": "cpp",
-        "shared_mutex": "cpp"
+        "shared_mutex": "cpp",
+        "semaphore": "cpp"
     }
 }

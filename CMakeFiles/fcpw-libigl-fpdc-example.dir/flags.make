@@ -6,5 +6,5 @@ CXX_DEFINES = -DFCPW_SIMD_WIDTH=16 -DFCPW_USE_ENOKI
 
 CXX_INCLUDES = @CMakeFiles/fcpw-libigl-fpdc-example.dir/includes_CXX.rsp
 
-CXX_FLAGS = -O3 -fopenmp -O3 -msse4.1 -fopenmp -O3 -DNDEBUG -std=gnu++17
+CXX_FLAGS =  -O3 -msse4.1 -fopenmp -O3 -DNDEBUG -std=gnu++17
 

@@ -1,0 +1,41 @@
+Number of Particles: 10000
+Particle distance: 0.00333308 m
+Effective radius: 0.00699947 m
+Min mesh dimensions: -0.0499924 m -0.05 m -0.05 m 
+Max mesh dimensions: 0.05 m 0.15 m 0.05 m 
+
+Pre process LIBIGL: 0.00252104
+Query LIBIGL (0): 0.0137916 s
+Pre process + Query LIBIGL: 0.0163126 s
+Query LIBIGL (1): 0.0154345 s
+Pre process + Query LIBIGL: 0.0179555 s
+Query LIBIGL (2): 0.0148404 s
+Pre process + Query LIBIGL: 0.0173614 s
+Pre process + Query LIBIGL Mean: 0.0172098 s
+
+Pre process FCPW: 0.00401425
+Query FCPW (0): 0.00452781 s
+Pre process + Query FCPW: 0.00854206 s
+Query FCPW (1): 0.00548887 s
+Pre process + Query FCPW: 0.00950313 s
+Query FCPW (2): 0.00504303 s
+Pre process + Query FCPW: 0.00905728 s
+Pre process + Query FCPW Mean: 0.00903416 s
+
+Pre process FPDC: 0.00408824
+Query FPDC (0): 0 s
+Pre process + Query FPDC: 0.00408824 s
+Query FPDC (1): 0 s
+Pre process + Query FPDC: 0.00408824 s
+Query FPDC (2): 0 s
+Pre process + Query FPDC: 0.00408824 s
+Pre process + Query FPDC Mean: 0.00408824 s
+
+Pre process Brute: 0.00146341
+Query Brute (0): 0.144136 s
+Pre process + Query Brute: 0.1456 s
+Query Brute (1): 0.155977 s
+Pre process + Query Brute: 0.15744 s
+Query Brute (2): 0.181644 s
+Pre process + Query Brute: 0.183108 s
+Pre process + Query Brute Mean: 0.162049 s

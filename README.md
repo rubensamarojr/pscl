@@ -1,4 +1,4 @@
-# Modified project mixing libigl, fcpw and fpdc
+# Modified project mixing PSCL, libigl and FCPW
 
 ### Mesh geometries
 
